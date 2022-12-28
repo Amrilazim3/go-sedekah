@@ -26,7 +26,11 @@ class RoleSeeder extends Seeder
 
         User::chunk(20, function ($users) {
             foreach ($users as $user) {
-                $user->assignRole('donor');
+                if ($user->email == 'a.azim0711@gmail.com') {
+                    $user->assignRole('admin');
+                } else {
+                    $user->assignRole('donor');
+                }
             }
         });
     }
