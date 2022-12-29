@@ -27,32 +27,31 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
+    Route::get('/dashboard', function (Request $request) {
+        return redirect()->route($request->user()->getRoleNames()[0] . '.dashboard');
+    })->name('dashboard');
 
     // admin routes
-    Route::group([
-        'prefix' => 'admin',
-        'middleware' => 'role:admin',
-        'name' => 'admin.'
-    ], function () {
-        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-    });
+    Route::prefix('admin')
+        ->middleware('role:admin')
+        ->name('admin.')
+        ->group(function () {
+            Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+        });
 
     // donor routes
-    Route::group([
-        'prefix' => 'donor',
-        'middleware' => 'role:donor',
-        'name' => 'donor.'
-    ], function () {
-        Route::get('/dashboard', [DonorDashboardController::class, 'index'])->name('dashboard');
-    });
+    Route::prefix('donor')
+        ->middleware('role:donor')
+        ->name('donor.')
+        ->group(function () {
+            Route::get('/dashboard', [DonorDashboardController::class, 'index'])->name('dashboard');
+        });
 
     // needy routes
-    Route::group([
-        'prefix' => 'needy',
-        'middleware' => 'role:needy',
-        'name' => 'needy.'
-    ], function () {
-        Route::get('/dashboard', [NeedyDashboardController::class, 'index'])->name('dashboard');
-    });
-
+    Route::prefix('needy')
+        ->middleware('role:needy')
+        ->name('needy.')
+        ->group(function () {
+            Route::get('/dashboard', [NeedyDashboardController::class, 'index'])->name('dashboard');
+        });
 });
