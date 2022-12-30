@@ -33,6 +33,7 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
+                <h3 class="font-semibold text-xl mb-4 text-gray-700">Register</h3>
                 <InputLabel for="name" value="Name" />
                 <TextInput
                     id="name"
@@ -98,7 +99,7 @@ const submit = () => {
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                <Link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900">
+                <Link :href="route('login')" class="text-sm text-indigo-500 hover:underline">
                     Already registered?
                 </Link>
 
