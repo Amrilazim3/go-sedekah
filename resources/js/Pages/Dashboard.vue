@@ -14,6 +14,7 @@ import { Inertia } from '@inertiajs/inertia';
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white p-2 overflow-hidden shadow-xl sm:rounded-lg">
+                    <h2>Hye, {{ $page.props.inertia.user.roles[0] }}</h2>
                 </div>
             </div>
         </div>
