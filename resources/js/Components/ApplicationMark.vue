@@ -6,7 +6,7 @@
         height="225.000000pt"
         viewBox="0 0 225.000000 225.000000"
         preserveAspectRatio="xMidYMid meet"
-        class="h-14 w-14 fill-indigo-500"
+        class="h-10 w-10 fill-indigo-500"
     >
         <g
             transform="translate(0.000000,225.000000) scale(0.100000,-0.100000)"
