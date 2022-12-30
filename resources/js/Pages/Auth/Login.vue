@@ -43,6 +43,7 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
+                <h3 class="font-semibold text-xl mb-4 text-gray-700">Login</h3>
                 <InputLabel for="email" value="Email" />
                 <TextInput
                     id="email"
@@ -98,7 +99,7 @@ const submit = () => {
                     Don't have an account?
                     <Link
                         :href="route('register')"
-                        class="text-blue-500 hover:underline"
+                        class="text-indigo-500 hover:underline"
                         >Register here</Link
                     >
                 </p>
