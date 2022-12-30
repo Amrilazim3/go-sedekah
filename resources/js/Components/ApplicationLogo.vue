@@ -5,6 +5,6 @@ import ApplicationMark from '@/Components/ApplicationMark.vue';
 <template>
     <div class="flex">
         <ApplicationMark />
-        <h3 class="text-3xl self-center font-semibold ml-4">Go Sedekah</h3>
+        <h3 class="self-center font-semibold ml-2 text-white">Go Sedekah</h3>
     </div>
 </template>
