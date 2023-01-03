@@ -35,7 +35,7 @@ const logout = () => {
         <Banner />
 
         <div class="min-h-screen bg-gray-100">
-            <nav class="bg-white border-b border-gray-100">
+            <nav class="bg-gray-900 border-b border-gray-100">
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
@@ -63,8 +63,8 @@ const logout = () => {
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
+                            <!-- Teams Dropdown -->
                             <div class="ml-3 relative">
-                                <!-- Teams Dropdown -->
                                 <Dropdown v-if="$page.props.jetstream.hasTeamFeatures" align="right" width="60">
                                     <template #trigger>
                                         <span class="inline-flex rounded-md">
@@ -170,7 +170,7 @@ const logout = () => {
                                             API Tokens
                                         </DropdownLink>
 
-                                        <div class="border-t border-gray-100" />
+                                        <div class="border-t border-gray-200" />
 
                                         <!-- Authentication -->
                                         <form @submit.prevent="logout">
@@ -231,10 +231,10 @@ const logout = () => {
                             </div>
 
                             <div>
-                                <div class="font-medium text-base text-gray-800">
+                                <div class="font-medium text-base text-white">
                                     {{ $page.props.user.name }}
                                 </div>
-                                <div class="font-medium text-sm text-gray-500">
+                                <div class="font-medium text-sm text-gray-400">
                                     {{ $page.props.user.email }}
                                 </div>
                             </div>
