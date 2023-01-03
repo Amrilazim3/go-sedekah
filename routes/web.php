@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Foundation\Application;
@@ -26,4 +27,11 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::middleware('role:admin')
+        ->prefix('admin')
+        ->name('admin.')
+        ->group(function () {
+            Route::get('/users', [UserController::class, 'index'])->name('users');
+        });
 });
