@@ -2,6 +2,7 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import SearchInput from "@/Components/SearchInput.vue";
 import UsersDataTable from "@/Components/UsersDataTable.vue";
+import PaginationBar from "@/Components/PaginationBar.vue";
 import { Inertia } from "@inertiajs/inertia";
 import { onMounted, reactive, ref, computed } from "vue";
 import { debounce } from "lodash";
@@ -12,9 +13,9 @@ const props = defineProps({
     requestedData: Object,
 });
 
-const admins = computed(() => props.usersData.admins.data);
-const donors = computed(() => props.usersData.donors.data);
-const needy = computed(() => props.usersData.needy.data);
+const admins = computed(() => props.usersData.admins);
+const donors = computed(() => props.usersData.donors);
+const needy = computed(() => props.usersData.needy);
 
 const params = reactive({
     name: props.requestedData.name,
@@ -85,9 +86,10 @@ const approveNeedy = (userId) => {
                     />
                     <UsersDataTable
                         :header-data="headerData"
-                        :body-data="admins"
+                        :body-data="admins.data"
                         type="admin"
                     />
+                    <PaginationBar :links="admins.links" />
                 </div>
             </div>
 
@@ -107,11 +109,12 @@ const approveNeedy = (userId) => {
                     />
                     <UsersDataTable
                         :header-data="headerData"
-                        :body-data="donors"
+                        :body-data="donors.data"
                         type="donor"
                         @approve-admin="approveAdmin"
                         @approve-needy="approveNeedy"
                     />
+                    <PaginationBar :links="donors.links" />
                 </div>
             </div>
 
@@ -131,9 +134,10 @@ const approveNeedy = (userId) => {
                     />
                     <UsersDataTable
                         :header-data="headerData"
-                        :body-data="needy"
+                        :body-data="needy.data"
                         type="needy"
                     />
+                    <PaginationBar :links="needy.links" />
                 </div>
             </div>
         </div>
