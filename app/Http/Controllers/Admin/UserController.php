@@ -11,7 +11,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $admins = User::select(['id', 'name', 'email'])->role('admin')->get();
+        $admins = User::select(['id', 'name', 'email'])->role('admin')->paginate(20);
         $donors = User::select(['id', 'name', 'email'])->role('donor')->paginate(20);
         $needy = User::select(['id', 'name', 'email'])->role('needy')->paginate(20);
 
