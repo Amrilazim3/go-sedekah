@@ -15,12 +15,20 @@ class UserController extends Controller
         $donors = User::select(['id', 'name', 'email'])->role('donor')->paginate(20);
         $needy = User::select(['id', 'name', 'email'])->role('needy')->paginate(20);
 
+        $filteredData = User::select(['id', 'name', 'email'])
+            ->filter(request('name'))
+            ->role(request('role'))
+            ->limit(10)
+            ->get();
+        
         return Inertia::render('Admin/Users', [
             'usersData' => [
                 'admins' => $admins,
                 'donors' => $donors,
                 'needy' => $needy
-            ]
+            ],
+            'filteredData' => $filteredData,
+            'requestedData' => request(['name', 'role']),
         ]);
     }
 }
