@@ -62,4 +62,12 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function scopeFilter($query, $name)
+    {
+        $query->when($name ?? false, function ($query, $name) {
+            $query->where('name', 'like', '%' . $name . '%')
+                ->orWhere('email', 'like', '%' . $name . '%');
+        });
+    }
 }
