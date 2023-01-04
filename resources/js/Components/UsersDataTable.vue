@@ -7,6 +7,13 @@ defineProps({
     bodyData: Object || Array,
     type: String,
 });
+
+defineEmits([
+    "removeAdmin",
+    "approveAdmin",
+    "approveNeedy",
+    "removeNeedy"
+]);
 </script>
 
 <template>
@@ -37,7 +44,8 @@ defineProps({
                             <template
                                 v-if="
                                     type == 'admin' &&
-                                    $page.props.user.email == 'go.sedekah0711@gmail.com' &&
+                                    $page.props.user.email ==
+                                        'go.sedekah0711@gmail.com' &&
                                     bData.email != 'go.sedekah0711@gmail.com'
                                 "
                             >
@@ -58,76 +66,21 @@ defineProps({
                                         <MenuItems
                                             class="sm:absolute z-40 mt-1 origin-top-left divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                                         >
-                                            <template v-if="type == 'admin'">
-                                                <div class="px-1 py-1">
-                                                    <MenuItem
-                                                        v-slot="{ active }"
+                                            <div class="px-1 py-1">
+                                                <MenuItem v-slot="{ active }">
+                                                    <button
+                                                        :class="[
+                                                            active
+                                                                ? 'bg-indigo-500 text-white'
+                                                                : 'text-gray-900',
+                                                            'group flex w-full items-center rounded-md px-2 py-2 text-sm',
+                                                        ]"
+                                                        @click="$emit('removeAdmin', bData.id)"
                                                     >
-                                                        <button
-                                                            :class="[
-                                                                active
-                                                                    ? 'bg-indigo-500 text-white'
-                                                                    : 'text-gray-900',
-                                                                'group flex w-full items-center rounded-md px-2 py-2 text-sm',
-                                                            ]"
-                                                        >
-                                                            Remove from admin
-                                                        </button>
-                                                    </MenuItem>
-                                                </div>
-                                            </template>
-                                            <template
-                                                v-else-if="type == 'donor'"
-                                            >
-                                                <div class="px-1 py-1">
-                                                    <MenuItem
-                                                        v-slot="{ active }"
-                                                    >
-                                                        <button
-                                                            :class="[
-                                                                active
-                                                                    ? 'bg-indigo-500 text-white'
-                                                                    : 'text-gray-900',
-                                                                'group flex w-full items-center rounded-md px-2 py-2 text-sm',
-                                                            ]"
-                                                        >
-                                                            Approve to admin
-                                                        </button>
-                                                    </MenuItem>
-                                                    <MenuItem
-                                                        v-slot="{ active }"
-                                                    >
-                                                        <button
-                                                            :class="[
-                                                                active
-                                                                    ? 'bg-indigo-500 text-white'
-                                                                    : 'text-gray-900',
-                                                                'group flex w-full items-center rounded-md px-2 py-2 text-sm',
-                                                            ]"
-                                                        >
-                                                            Approve to needy
-                                                        </button>
-                                                    </MenuItem>
-                                                </div>
-                                            </template>
-                                            <template v-else>
-                                                <div class="px-1 py-1">
-                                                    <MenuItem
-                                                        v-slot="{ active }"
-                                                    >
-                                                        <button
-                                                            :class="[
-                                                                active
-                                                                    ? 'bg-indigo-500 text-white'
-                                                                    : 'text-gray-900',
-                                                                'group flex w-full items-center rounded-md px-2 py-2 text-sm',
-                                                            ]"
-                                                        >
-                                                            Remove from needy
-                                                        </button>
-                                                    </MenuItem>
-                                                </div>
-                                            </template>
+                                                        Remove from admin
+                                                    </button>
+                                                </MenuItem>
+                                            </div>
                                         </MenuItems>
                                     </transition>
                                 </Menu>
@@ -169,6 +122,7 @@ defineProps({
                                                                     : 'text-gray-900',
                                                                 'group flex w-full items-center rounded-md px-2 py-2 text-sm',
                                                             ]"
+                                                            @click="$emit('approveAdmin', bData.id)"
                                                         >
                                                             Approve to admin
                                                         </button>
@@ -182,6 +136,7 @@ defineProps({
                                                                 : 'text-gray-900',
                                                             'group flex w-full items-center rounded-md px-2 py-2 text-sm',
                                                         ]"
+                                                        @click="$emit('approveNeedy', bData.id)"
                                                     >
                                                         Approve to needy
                                                     </button>
@@ -219,6 +174,7 @@ defineProps({
                                                                 : 'text-gray-900',
                                                             'group flex w-full items-center rounded-md px-2 py-2 text-sm',
                                                         ]"
+                                                        @click="$emit('removeNeedy', bData.id)"
                                                     >
                                                         Remove from needy
                                                     </button>
