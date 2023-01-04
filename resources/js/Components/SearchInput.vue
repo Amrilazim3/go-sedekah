@@ -1,15 +1,29 @@
 <script setup>
-defineProps({
+import { onMounted, ref } from 'vue';
+
+const props = defineProps({
     placeholder: String,
     modelValue: String,
+    focusInput: Boolean
 });
 
 defineEmits(["update:modelValue"]);
+
+const input = ref(null);
+
+onMounted(() => {
+    if (props.focusInput) {
+        input.value.focus();
+    }
+});
+
+defineExpose({ focus: () => input.value.focus() });
 </script>
 
 <template>
     <div class="relative rounded-md py-2 sm:py-4">
         <input
+            ref="input"
             type="search"
             class="form-input py-2 pl-10 block w-full leading-5 transition duration-150 ease-in-out bg-white border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:border-indigo-300 focus:shadow-outline-blue sm:text-sm sm:leading-5"
             :placeholder="placeholder"
