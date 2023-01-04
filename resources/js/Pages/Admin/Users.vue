@@ -13,9 +13,24 @@ const props = defineProps({
     requestedData: Object,
 });
 
-const admins = computed(() => props.usersData.admins);
-const donors = computed(() => props.usersData.donors);
-const needy = computed(() => props.usersData.needy);
+const admins = computed(() => {
+    if (props.requestedData.name && props.requestedData.role == "admin") {
+        props.usersData.admins.data = props.filteredData;
+    }
+    return props.usersData.admins;
+});
+const donors = computed(() => {
+    if (props.requestedData.name && props.requestedData.role == "donor") {
+        props.usersData.donors.data = props.filteredData;
+    }
+    return props.usersData.donors;
+});
+const needy = computed(() => {
+    if (props.requestedData.name && props.requestedData.role == "needy") {
+        props.usersData.needy.data = props.filteredData;
+    }
+    return props.usersData.needy;
+});
 
 const params = reactive({
     name: props.requestedData.name,
@@ -42,7 +57,6 @@ onMounted(() => {
     }
 });
 
-// use debounce
 const searchUserByRole = debounce((name, role) => {
     params.name = name;
     params.role = role;
@@ -83,13 +97,16 @@ const approveNeedy = (userId) => {
                         placeholder="Search admin"
                         v-model="searchAdminValue"
                         @input="searchUserByRole(searchAdminValue, 'admin')"
+                        @click="searchUserByRole(searchAdminValue, 'admin')"
                     />
                     <UsersDataTable
                         :header-data="headerData"
                         :body-data="admins.data"
                         type="admin"
                     />
-                    <PaginationBar :links="admins.links" />
+                    <template v-if="!props.requestedData.name || props.requestedData.role !== 'admin'">
+                        <PaginationBar :links="admins.links" />
+                    </template>
                 </div>
             </div>
 
@@ -106,6 +123,7 @@ const approveNeedy = (userId) => {
                         placeholder="Search donor"
                         v-model="searchDonorValue"
                         @input="searchUserByRole(searchDonorValue, 'donor')"
+                        @click="searchUserByRole(searchAdminValue, 'donor')"
                     />
                     <UsersDataTable
                         :header-data="headerData"
@@ -114,7 +132,9 @@ const approveNeedy = (userId) => {
                         @approve-admin="approveAdmin"
                         @approve-needy="approveNeedy"
                     />
-                    <PaginationBar :links="donors.links" />
+                    <template v-if="!props.requestedData.name || props.requestedData.role !== 'donor'">
+                        <PaginationBar :links="donors.links" />
+                    </template>
                 </div>
             </div>
 
@@ -131,13 +151,16 @@ const approveNeedy = (userId) => {
                         placeholder="Search donor"
                         v-model="searchNeedyValue"
                         @input="searchUserByRole(searchNeedyValue, 'needy')"
+                        @click="searchUserByRole(searchAdminValue, 'needy')"
                     />
                     <UsersDataTable
                         :header-data="headerData"
                         :body-data="needy.data"
                         type="needy"
                     />
-                    <PaginationBar :links="needy.links" />
+                    <template v-if="!props.requestedData.name || props.requestedData.role !== 'needy'">
+                        <PaginationBar :links="needy.links" />
+                    </template>
                 </div>
             </div>
         </div>
