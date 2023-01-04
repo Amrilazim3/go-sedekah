@@ -4,6 +4,7 @@ import SearchInput from "@/Components/SearchInput.vue";
 import UsersDataTable from "@/Components/UsersDataTable.vue";
 import { Inertia } from "@inertiajs/inertia";
 import { onMounted, reactive, ref, computed } from "vue";
+import { debounce } from "lodash";
 
 const props = defineProps({
     usersData: Object,
@@ -15,14 +16,14 @@ const admins = computed(() => props.usersData.admins.data);
 const donors = computed(() => props.usersData.donors.data);
 const needy = computed(() => props.usersData.needy.data);
 
-const searchAdminValue = ref("");
-const searchDonorValue = ref("");
-const searchNeedyValue = ref("");
-
 const params = reactive({
     name: props.requestedData.name,
     role: props.requestedData.role,
 });
+
+const searchAdminValue = ref("");
+const searchDonorValue = ref("");
+const searchNeedyValue = ref("");
 
 const headerData = ["Name", "Email", "Actions"];
 
@@ -41,14 +42,14 @@ onMounted(() => {
 });
 
 // use debounce
-const searchUserByRole = (name, role) => {
+const searchUserByRole = debounce((name, role) => {
     params.name = name;
     params.role = role;
 
     Inertia.get("/admin/users", params, {
         preserveScroll: true,
     });
-};
+}, 500);
 
 const approveAdmin = (userId) => {
     console.log("approving user id " + userId + " to become an admin");
