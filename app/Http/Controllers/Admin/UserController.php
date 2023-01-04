@@ -11,9 +11,15 @@ class UserController extends Controller
 {
     public function index()
     {
-        $admins = User::select(['id', 'name', 'email'])->role('admin')->paginate(20);
-        $donors = User::select(['id', 'name', 'email'])->role('donor')->paginate(20);
-        $needy = User::select(['id', 'name', 'email'])->role('needy')->paginate(20);
+        $admins = User::select(['id', 'name', 'email'])
+            ->role('admin')
+            ->paginate(13, ['*'], 'admins');
+        $donors = User::select(['id', 'name', 'email'])
+            ->role('donor')
+            ->paginate(13, ['*'], 'donors');
+        $needy = User::select(['id', 'name', 'email'])
+            ->role('needy')
+            ->paginate(13, ['*'], 'needy');
 
         $filteredData = User::select(['id', 'name', 'email'])
             ->filter(request('name'))
