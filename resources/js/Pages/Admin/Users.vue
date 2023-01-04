@@ -3,7 +3,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import SearchInput from "@/Components/SearchInput.vue";
 import UsersDataTable from "@/Components/UsersDataTable.vue";
 import { Inertia } from "@inertiajs/inertia";
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, reactive, ref, computed } from "vue";
 
 const props = defineProps({
     usersData: Object,
@@ -11,9 +11,9 @@ const props = defineProps({
     requestedData: Object,
 });
 
-const admins = reactive(props.usersData.admins.data);
-const donors = reactive(props.usersData.donors.data);
-const needy = reactive(props.usersData.needy.data);
+const admins = computed(() => props.usersData.admins.data);
+const donors = computed(() => props.usersData.donors.data);
+const needy = computed(() => props.usersData.needy.data);
 
 const searchAdminValue = ref("");
 const searchDonorValue = ref("");
@@ -45,9 +45,17 @@ const searchUserByRole = (name, role) => {
     params.name = name;
     params.role = role;
 
-    Inertia.get('/admin/users', params, {
+    Inertia.get("/admin/users", params, {
         preserveScroll: true,
-    })
+    });
+};
+
+const approveAdmin = (userId) => {
+    console.log("approving user id " + userId + " to become an admin");
+};
+
+const approveNeedy = (userId) => {
+    Inertia.post(`/admin/users/${userId}/assign-role/needy`, null);
 };
 </script>
 
@@ -67,7 +75,9 @@ const searchUserByRole = (name, role) => {
                 >
                     <h2 class="text-lg font-semibold">Admins</h2>
                     <SearchInput
-                        :focus-input="props.requestedData.role == 'admin' ? true : false"
+                        :focus-input="
+                            props.requestedData.role == 'admin' ? true : false
+                        "
                         placeholder="Search admin"
                         v-model="searchAdminValue"
                         @input="searchUserByRole(searchAdminValue, 'admin')"
@@ -87,7 +97,9 @@ const searchUserByRole = (name, role) => {
                 >
                     <h2 class="text-lg font-semibold">Donors</h2>
                     <SearchInput
-                        :focus-input="props.requestedData.role == 'donor' ? true : false"
+                        :focus-input="
+                            props.requestedData.role == 'donor' ? true : false
+                        "
                         placeholder="Search donor"
                         v-model="searchDonorValue"
                         @input="searchUserByRole(searchDonorValue, 'donor')"
@@ -96,6 +108,8 @@ const searchUserByRole = (name, role) => {
                         :header-data="headerData"
                         :body-data="donors"
                         type="donor"
+                        @approve-admin="approveAdmin"
+                        @approve-needy="approveNeedy"
                     />
                 </div>
             </div>
@@ -107,7 +121,9 @@ const searchUserByRole = (name, role) => {
                 >
                     <h2 class="text-lg font-semibold">Needy</h2>
                     <SearchInput
-                        :focus-input="props.requestedData.role == 'needy' ? true : false"
+                        :focus-input="
+                            props.requestedData.role == 'needy' ? true : false
+                        "
                         placeholder="Search donor"
                         v-model="searchNeedyValue"
                         @input="searchUserByRole(searchNeedyValue, 'needy')"
