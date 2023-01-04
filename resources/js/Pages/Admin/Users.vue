@@ -3,13 +3,15 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import SearchInput from "@/Components/SearchInput.vue";
 import UsersDataTable from "@/Components/UsersDataTable.vue";
 import { Inertia } from "@inertiajs/inertia";
-import { reactive, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 
 const props = defineProps({
     usersData: Object,
+    filteredData: Array,
+    requestedData: Object,
 });
 
-const admins = reactive(props.usersData.admins);
+const admins = reactive(props.usersData.admins.data);
 const donors = reactive(props.usersData.donors.data);
 const needy = reactive(props.usersData.needy.data);
 
@@ -17,11 +19,35 @@ const searchAdminValue = ref("");
 const searchDonorValue = ref("");
 const searchNeedyValue = ref("");
 
-const headerData = ['Name', 'Email', 'Actions'];
+const params = reactive({
+    name: props.requestedData.name,
+    role: props.requestedData.role,
+});
 
-// futrue feature (use debounce)
-const searchUserByRole = (name) => {
-    console.log(name);
+const headerData = ["Name", "Email", "Actions"];
+
+onMounted(() => {
+    if (props.requestedData.role == "admin") {
+        searchAdminValue.value = props.requestedData.name;
+    }
+
+    if (props.requestedData.role == "donor") {
+        searchDonorValue.value = props.requestedData.name;
+    }
+
+    if (props.requestedData.role == "needy") {
+        searchNeedyValue.value = props.requestedData.name;
+    }
+});
+
+// use debounce
+const searchUserByRole = (name, role) => {
+    params.name = name;
+    params.role = role;
+
+    Inertia.get('/admin/users', params, {
+        preserveScroll: true,
+    })
 };
 </script>
 
@@ -41,9 +67,10 @@ const searchUserByRole = (name) => {
                 >
                     <h2 class="text-lg font-semibold">Admins</h2>
                     <SearchInput
+                        :focus-input="props.requestedData.role == 'admin' ? true : false"
                         placeholder="Search admin"
                         v-model="searchAdminValue"
-                        @keydown="searchUserByRole('admin')"
+                        @input="searchUserByRole(searchAdminValue, 'admin')"
                     />
                     <UsersDataTable
                         :header-data="headerData"
@@ -60,9 +87,10 @@ const searchUserByRole = (name) => {
                 >
                     <h2 class="text-lg font-semibold">Donors</h2>
                     <SearchInput
+                        :focus-input="props.requestedData.role == 'donor' ? true : false"
                         placeholder="Search donor"
                         v-model="searchDonorValue"
-                        @keydown="searchUserByRole('donor')"
+                        @input="searchUserByRole(searchDonorValue, 'donor')"
                     />
                     <UsersDataTable
                         :header-data="headerData"
@@ -79,9 +107,10 @@ const searchUserByRole = (name) => {
                 >
                     <h2 class="text-lg font-semibold">Needy</h2>
                     <SearchInput
+                        :focus-input="props.requestedData.role == 'needy' ? true : false"
                         placeholder="Search donor"
                         v-model="searchNeedyValue"
-                        @keydown="searchUserByRole('needy')"
+                        @input="searchUserByRole(searchNeedyValue, 'needy')"
                     />
                     <UsersDataTable
                         :header-data="headerData"
