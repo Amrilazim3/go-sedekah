@@ -33,5 +33,7 @@ Route::middleware([
         ->name('admin.')
         ->group(function () {
             Route::get('/users', [UserController::class, 'index'])->name('users');
+
+            Route::post('/users/{user}/assign-role/needy', [UserController::class, 'assignNeedyRole'])->name('users.assignNeedyRole');
         });
 });
