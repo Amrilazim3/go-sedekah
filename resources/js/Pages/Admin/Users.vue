@@ -37,7 +37,7 @@ const searchUserByRole = (name) => {
             <!-- admin users -->
             <div class="max-w-7xl mx-auto mb-8 sm:px-6 lg:px-8">
                 <div
-                    class="bg-white p-2 overflow-hidden shadow-md sm:rounded-lg"
+                    class="bg-white p-2 overflow-x-scroll shadow-md sm:rounded-lg"
                 >
                     <h2 class="text-lg font-semibold">Admins</h2>
                     <SearchInput
@@ -48,6 +48,7 @@ const searchUserByRole = (name) => {
                     <UsersDataTable
                         :header-data="headerData"
                         :body-data="admins"
+                        type="admin"
                     />
                 </div>
             </div>
@@ -66,6 +67,7 @@ const searchUserByRole = (name) => {
                     <UsersDataTable
                         :header-data="headerData"
                         :body-data="donors"
+                        type="donor"
                     />
                 </div>
             </div>
@@ -73,7 +75,7 @@ const searchUserByRole = (name) => {
             <!-- needy users -->
             <div class="max-w-7xl mx-auto mb-8 sm:px-6 lg:px-8">
                 <div
-                    class="bg-white p-2 overflow-hidden shadow-md sm:rounded-lg"
+                    class="bg-white p-2 overflow-x-scroll shadow-md sm:rounded-lg"
                 >
                     <h2 class="text-lg font-semibold">Needy</h2>
                     <SearchInput
@@ -84,6 +86,7 @@ const searchUserByRole = (name) => {
                     <UsersDataTable
                         :header-data="headerData"
                         :body-data="needy"
+                        type="needy"
                     />
                 </div>
             </div>
