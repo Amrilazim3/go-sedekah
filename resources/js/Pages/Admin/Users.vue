@@ -58,6 +58,10 @@ onMounted(() => {
 });
 
 const searchUserByRole = debounce((name, role) => {
+    if (!name && !params.name) {
+        return;
+    }
+
     params.name = name;
     params.role = role;
 
