@@ -62,10 +62,61 @@ class UserController extends Controller
             return redirect()->route('admin.users');
         }
 
-        // perform database insertion.
+        // assign role
         $user->assignRole('needy');
 
         $request->session()->flash('jetstream.flash.banner', 'Needy role successfully assigned!');
+        $request->session()->flash('jetstream.flash.bannerStyle', 'success');
+
+        return redirect()->route('admin.users');
+    }
+
+    public function assignAdminRole(User $user, Request $request)
+    {
+        // check if user has needy role
+        $needyValidate = User::role('needy')->where('id', $user->id)->exists();
+
+        // check if user has admin role
+        $adminValidate = User::role('admin')->where('id', $user->id)->exists();
+
+        if ($needyValidate) {
+            $request->session()->flash('jetstream.flash.banner', 'User is an needy, cannot assigned to this role.');
+            $request->session()->flash('jetstream.flash.bannerStyle', 'danger');
+
+            return redirect()->route('admin.users');
+        }
+
+        if ($adminValidate) {
+            $request->session()->flash('jetstream.flash.banner', 'User is already an admin.');
+            $request->session()->flash('jetstream.flash.bannerStyle', 'danger');
+
+            return redirect()->route('admin.users');
+        }
+
+        // assign role
+        $user->assignRole('admin');
+
+        $request->session()->flash('jetstream.flash.banner', 'Admin role successfully assigned!');
+        $request->session()->flash('jetstream.flash.bannerStyle', 'success');
+
+        return redirect()->route('admin.users');
+    }
+
+    public function removeAdminRole(User $user, Request $request)
+    {
+        $user->removeRole('admin');
+
+        $request->session()->flash('jetstream.flash.banner', 'Admin role successfully removed!');
+        $request->session()->flash('jetstream.flash.bannerStyle', 'success');
+
+        return redirect()->route('admin.users');
+    }
+
+    public function removeNeedyRole(User $user, Request $request)
+    {
+        $user->removeRole('needy');
+
+        $request->session()->flash('jetstream.flash.banner', 'Needy role successfully removed!');
         $request->session()->flash('jetstream.flash.bannerStyle', 'success');
 
         return redirect()->route('admin.users');
