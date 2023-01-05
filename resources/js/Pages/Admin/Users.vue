@@ -123,7 +123,7 @@ const approveNeedy = (userId) => {
                         placeholder="Search donor"
                         v-model="searchDonorValue"
                         @input="searchUserByRole(searchDonorValue, 'donor')"
-                        @click="searchUserByRole(searchAdminValue, 'donor')"
+                        @click="searchUserByRole(searchDonorValue, 'donor')"
                     />
                     <UsersDataTable
                         :header-data="headerData"
@@ -151,7 +151,7 @@ const approveNeedy = (userId) => {
                         placeholder="Search donor"
                         v-model="searchNeedyValue"
                         @input="searchUserByRole(searchNeedyValue, 'needy')"
-                        @click="searchUserByRole(searchAdminValue, 'needy')"
+                        @click="searchUserByRole(searchNeedyValue, 'needy')"
                     />
                     <UsersDataTable
                         :header-data="headerData"
