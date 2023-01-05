@@ -71,12 +71,20 @@ const searchUserByRole = debounce((name, role) => {
 }, 500);
 
 const approveAdmin = (userId) => {
-    console.log("approving user id " + userId + " to become an admin");
+    Inertia.post(`/admin/users/${userId}/assign-role/admin`, null);
 };
 
 const approveNeedy = (userId) => {
     Inertia.post(`/admin/users/${userId}/assign-role/needy`, null);
 };
+
+const removeAdmin = (userId) => { 
+    Inertia.delete(`/admin/users/${userId}/remove-role/admin`, null);
+}
+
+const removeNeedy = (userId) => { 
+    Inertia.delete(`/admin/users/${userId}/remove-role/needy`, null);
+}
 </script>
 
 <template>
@@ -107,6 +115,7 @@ const approveNeedy = (userId) => {
                         :header-data="headerData"
                         :body-data="admins.data"
                         type="admin"
+                        @remove-admin="removeAdmin"
                     />
                     <template v-if="!props.requestedData.name || props.requestedData.role !== 'admin'">
                         <PaginationBar :links="admins.links" />
@@ -161,6 +170,7 @@ const approveNeedy = (userId) => {
                         :header-data="headerData"
                         :body-data="needy.data"
                         type="needy"
+                        @remove-needy="removeNeedy"
                     />
                     <template v-if="!props.requestedData.name || props.requestedData.role !== 'needy'">
                         <PaginationBar :links="needy.links" />
