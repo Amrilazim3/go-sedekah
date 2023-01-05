@@ -7,7 +7,7 @@ defineProps({
     bodyData: Object || Array,
     type: String,
 });
-
+ 
 defineEmits([
     "removeAdmin",
     "approveAdmin",
