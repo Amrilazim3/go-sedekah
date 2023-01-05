@@ -34,6 +34,24 @@ Route::middleware([
         ->group(function () {
             Route::get('/users', [UserController::class, 'index'])->name('users');
 
-            Route::post('/users/{user}/assign-role/needy', [UserController::class, 'assignNeedyRole'])->name('users.assignNeedyRole');
+            Route::post(
+                '/users/{user}/assign-role/admin',
+                [UserController::class, 'assignAdminRole']
+            )->name('users.assignAdminRole');
+
+            Route::post(
+                '/users/{user}/assign-role/needy',
+                [UserController::class, 'assignNeedyRole']
+            )->name('users.assignNeedyRole');
+
+            Route::delete(
+                '/users/{user}/remove-role/admin',
+                [UserController::class, 'removeAdminRole']
+            )->name('users.assignNeedyRole');
+
+            Route::delete(
+                '/users/{user}/remove-role/needy',
+                [UserController::class, 'removeNeedyRole']
+            )->name('users.assignNeedyRole');
         });
 });
