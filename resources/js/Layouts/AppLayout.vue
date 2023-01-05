@@ -162,7 +162,7 @@ const logout = () => {
                                             Manage Account
                                         </div>
 
-                                        <DropdownLink :href="route('profile.show')">
+                                        <DropdownLink :href="route('profile.show')" :linkActive="route().current('profile.show')">
                                             Profile
                                         </DropdownLink>
 
