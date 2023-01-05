@@ -15,7 +15,7 @@ import { ChevronUpIcon } from "@heroicons/vue/20/solid";
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <template v-if="$page.props.inertia.user.roles[0] == 'donor'">
+                <template v-if="!$page.props.inertia.user.roles.includes('needy') && !$page.props.inertia.user.roles.includes('admin')">
                     <div
                         class="bg-green-300 px-4 py-5 overflow-hidden mb-10 shadow-md sm:rounded-lg"
                     >
