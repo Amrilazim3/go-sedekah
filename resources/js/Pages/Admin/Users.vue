@@ -91,7 +91,7 @@ const approveNeedy = (userId) => {
             <!-- admin users -->
             <div class="max-w-7xl mx-auto mb-8 sm:px-6 lg:px-8">
                 <div
-                    class="bg-white p-2 overflow-x-scroll shadow-md sm:rounded-lg"
+                    class="bg-white p-2 relative shadow-md sm:rounded-lg"
                 >
                     <h2 class="text-lg font-semibold">Admins</h2>
                     <SearchInput
@@ -117,7 +117,7 @@ const approveNeedy = (userId) => {
             <!-- donor users -->
             <div class="max-w-7xl mx-auto mb-8 sm:px-6 lg:px-8">
                 <div
-                    class="bg-white p-2 overflow-x-scroll shadow-md sm:rounded-lg"
+                    class="bg-white p-2 shadow-md sm:rounded-lg"
                 >
                     <h2 class="text-lg font-semibold">Donors</h2>
                     <SearchInput
@@ -145,7 +145,7 @@ const approveNeedy = (userId) => {
             <!-- needy users -->
             <div class="max-w-7xl mx-auto mb-8 sm:px-6 lg:px-8">
                 <div
-                    class="bg-white p-2 overflow-x-scroll shadow-md sm:rounded-lg"
+                    class="bg-white p-2 relative shadow-md sm:rounded-lg"
                 >
                     <h2 class="text-lg font-semibold">Needy</h2>
                     <SearchInput
