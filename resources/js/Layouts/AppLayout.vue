@@ -218,9 +218,11 @@ const logout = () => {
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('admin.users')" :active="route().current('admin.users')">
-                            Users
-                        </ResponsiveNavLink>
+                        <template v-if="$page.props.inertia.user.roles[0] == 'admin'">
+                            <ResponsiveNavLink :href="route('admin.users')" :active="route().current('admin.users')">
+                                Users
+                            </ResponsiveNavLink>
+                        </template>
                     </div>
 
                     <!-- Responsive Settings Options -->
