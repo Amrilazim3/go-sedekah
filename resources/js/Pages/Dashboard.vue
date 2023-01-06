@@ -2,7 +2,10 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Inertia } from "@inertiajs/inertia";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
-import { ChevronUpIcon } from "@heroicons/vue/20/solid"; 
+import { ChevronUpIcon, XMarkIcon } from "@heroicons/vue/20/solid";
+import { ref } from "vue";
+
+const isOpenPaymentAlert = ref(true);
 </script>
 
 <template>
@@ -15,19 +18,41 @@ import { ChevronUpIcon } from "@heroicons/vue/20/solid";
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <template v-if="!$page.props.inertia.user.roles.includes('needy') && !$page.props.inertia.user.roles.includes('admin')">
+                <!-- visible to every role -->
+                <div
+                    class="bg-red-600 p-2 sm:p-4 overflow-hidden mb-10 shadow-lg sm:rounded-lg"
+                    v-show="isOpenPaymentAlert"
+                >
+                <div class="sm:flex sm:justify-between">
+                        <div class="flex sm:hidden justify-end mb-2">
+                            <XMarkIcon class="text-black h-5 w-5 bg-gray-50 rounded-md cursor-pointer" @click="isOpenPaymentAlert = false" />
+                        </div>
+                        <p class="text-white text-md font-semibold">
+                            For user information, our app only support a payment via
+                            online banking. Thank you!.
+                        </p>
+                        <XMarkIcon class="hidden sm:block self-start text-black h-5 w-5 bg-gray-50 rounded-md cursor-pointer" @click="isOpenPaymentAlert = false" />
+                    </div>
+                </div>
+
+                <template
+                    v-if="
+                        !$page.props.inertia.user.roles.includes('needy') &&
+                        !$page.props.inertia.user.roles.includes('admin')
+                    "
+                >
                     <div
-                        class="bg-green-300 px-4 py-5 overflow-hidden mb-10 shadow-md sm:rounded-lg"
+                        class="bg-green-400 px-4 py-5 overflow-hidden mb-10 shadow-md sm:rounded-lg"
                     >
                         <h2 class="text-black text-xl">
-                            Need financial support? register now!
+                            Need financial support? Register now!.
                         </h2>
                         <p class="text-gray-700 text-base mt-2">
                             If you in need of money help, send us your documents
                             and email it at
                             <a
                                 href="https://mail.google.com/mail/u/0/#sent?compose=GTvVlcSGKZckjCHVvHTMBjSxpjBFFbFrgpHMMwCgRSqxPJMfPbnCHtCWPZqThmVLsJRSgkqLRCWXt"
-                                class="text-indigo-500 underline"
+                                class="text-indigo-600 underline"
                                 >go.sedekah0711@gmail.com</a
                             >
                             for us to validate your documents. After all
@@ -43,7 +68,10 @@ import { ChevronUpIcon } from "@heroicons/vue/20/solid";
                                     <DisclosureButton
                                         class="flex w-full justify-between rounded-lg bg-indigo-500 p-2 text-left text-sm font-medium text-white hover:bg-indigo-400 focus:outline-none focus-visible:ring focus-visible:ring-indigo-500 focus-visible:ring-opacity-75"
                                     >
-                                        <span>What documents you need to provide?</span>
+                                        <span
+                                            >What documents you need to
+                                            provide?</span
+                                        >
                                         <ChevronUpIcon
                                             :class="
                                                 !open
@@ -69,10 +97,33 @@ import { ChevronUpIcon } from "@heroicons/vue/20/solid";
                     </div>
                 </template>
 
+                <!-- visible to every role -->
                 <div
-                    class="bg-white p-2 overflow-hidden shadow-xl sm:rounded-lg"
+                    class="bg-white p-2 sm:p-4 overflow-hidden mb-10 shadow-lg sm:rounded-lg"
                 >
-                    <h2>Hye, {{ $page.props.inertia.user.roles[0] }}</h2>
+                    <h2 class="text-lg">
+                        Welcome, {{ $page.props.user.name }}
+                    </h2>
+                </div>
+
+                <!-- visible to every role -->
+                <div
+                    class="bg-white p-2 sm:p-4 overflow-hidden shadow-lg sm:rounded-lg"
+                >
+                    <div class="sm:flex">
+                        <div class="sm:flex-1">
+                            <h3 class="text-md font-semibold text-indigo-500">
+                                Total amount donated :
+                            </h3>
+                            <p>MYR1000.50</p>
+                        </div>
+                        <div class="mt-6 sm:-mt-0 sm:last:flex-1">
+                            <h3 class="text-md font-semibold text-indigo-500">
+                                Your last donation :
+                            </h3>
+                            <p>2 December 2022 - 50MYR (shawarna)</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
