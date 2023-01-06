@@ -127,7 +127,7 @@ const isOpenPaymentAlert = ref(true);
                                 >
                                     Your donated amount :
                                 </h3>
-                                <h3 class="text-md">MYR1000.50</h3>
+                                <h3 class="text-md">$1000.50</h3>
                             </div>
                             <div class="mt-6 sm:-mt-0 sm:last:flex-1">
                                 <h3
@@ -136,12 +136,13 @@ const isOpenPaymentAlert = ref(true);
                                     Your last donation :
                                 </h3>
                                 <h3 class="text-md">
-                                    2 December 2022 - 50MYR (shawarna)
+                                    2 December 2022 - $50 (shawarna)
                                 </h3>
                             </div>
                         </div>
                     </div>
 
+                    <!-- admin content -->
                     <template
                         v-if="$page.props.inertia.user.roles.includes('admin')"
                     >
@@ -197,7 +198,7 @@ const isOpenPaymentAlert = ref(true);
                             <h3
                                 class="text-lg text-gray-800 font-semibold mb-2"
                             >
-                                Recent approved donation requests
+                                Recent Approved Donation Requests
                             </h3>
                             <div class="relative rounded-md shadow-sm">
                                 <div
@@ -207,31 +208,42 @@ const isOpenPaymentAlert = ref(true);
                                         class="flex items-center justify-between"
                                     >
                                         <div
-                                            class="text-md leading-5 font-medium text-gray-900"
+                                            class="text-md font-semibold leading-5 text-indigo-500"
                                         >
                                             Abu kamil
                                         </div>
+                                    </div>
+                                    <div
+                                        class="mt-2 flex justify-between leading-5"
+                                    >
+                                        <h3
+                                            class="text-md font-medium text-gray-900 underline"
+                                        >
+                                            For new teeth treatment
+                                        </h3>
+                                        <h3 class="text-gray-600 text-sm">
+                                            5 November 2021
+                                        </h3>
                                     </div>
                                     <div
                                         class="mt-2 sm:flex sm:justify-between"
                                     >
                                         <div class="sm:flex">
                                             <div
-                                                class="mr-6 flex items-center text-sm leading-5 text-gray-500"
+                                                class="mr-6 text-sm leading-5 text-gray-500"
                                             >
-                                                <svg
-                                                    class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
-                                                    fill="currentColor"
-                                                    viewBox="0 0 20 20"
-                                                >
-                                                    <path
-                                                        fill-rule="evenodd"
-                                                        d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                                                        clip-rule="evenodd"
-                                                    />
-                                                </svg>
-                                                Need support to buy cancer
-                                                medecine
+                                                <h4 class="text-gray-700">
+                                                    Details
+                                                </h4>
+                                                <p>
+                                                    My teeth last week broke
+                                                    becauase i eat to much crab
+                                                    without stop for 3 hours,
+                                                    right now my teeh is look
+                                                    old lady that need to be
+                                                    replace and the cost for
+                                                    replacement is so high
+                                                </p>
                                             </div>
                                         </div>
                                         <div
@@ -264,18 +276,6 @@ const isOpenPaymentAlert = ref(true);
                                         </div>
                                     </div>
                                 </div>
-                                <!-- <div
-                                    class="bg-gray-100 rounded-br-md rounded-bl-md px-4 py-4 sm:px-6"
-                                >
-                                    <div class="text-sm leading-5">
-                                        <a
-                                            href="#"
-                                            class="font-medium text-indigo-600 hover:text-indigo-500 transition duration-150 ease-in-out"
-                                        >
-                                            View More
-                                        </a>
-                                    </div>
-                                </div> -->
                             </div>
                         </div>
 
@@ -334,6 +334,159 @@ const isOpenPaymentAlert = ref(true);
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </template>
+
+                    <!-- needy content -->
+                    <template
+                        v-if="$page.props.inertia.user.roles.includes('needy')"
+                    >
+                        <div class="py-8">
+                            <div class="border-t border-gray-200" />
+                        </div>
+
+                        <!-- donation received summary -->
+                        <div>
+                            <h3
+                                class="text-lg text-gray-800 font-semibold mb-2"
+                            >
+                                Donation Request Summary
+                            </h3>
+                            <div class="space-y-4">
+                                <div class="sm:flex">
+                                    <div class="sm:flex-1">
+                                        <h3
+                                            class="text-md font-semibold text-indigo-500"
+                                        >
+                                            Donation received total :
+                                        </h3>
+                                        <h3 class="text-md">$500.50</h3>
+                                    </div>
+                                    <div class="sm:flex-1">
+                                        <h3
+                                            class="text-md font-semibold text-indigo-500"
+                                        >
+                                            Donation request made total :
+                                        </h3>
+                                        <h3 class="text-md">5 times</h3>
+                                    </div>
+                                </div>
+                                <div class="sm:flex">
+                                    <div class="mt-6 sm:-mt-0 sm:last:flex-1">
+                                        <h3
+                                            class="text-md font-semibold text-indigo-500"
+                                        >
+                                            This month donation received :
+                                        </h3>
+                                        <p class="text-md">$20</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="py-8">
+                            <div class="border-t border-gray-200" />
+                        </div>
+
+                        <!-- Recent donation request -->
+                        <div>
+                            <h3
+                                class="text-lg text-gray-800 font-semibold mb-2"
+                            >
+                                Recent Donation Request
+                            </h3>
+                            <div class="relative rounded-md shadow-sm">
+                                <div
+                                    class="px-4 py-5 bg-indigo-100 rounded-tr-md rounded-tl-md sm:p-6"
+                                >
+                                    <div
+                                        class="sm:flex sm:justify-between text-md leading-5 font-medium text-gray-900"
+                                    >
+                                        <h3>For my personal medecine</h3>
+                                        <h3 class="text-gray-600 text-sm">
+                                            5 November 2021
+                                        </h3>
+                                    </div>
+                                    <div
+                                        class="mt-2 sm:flex sm:justify-between"
+                                    >
+                                        <div class="sm:flex">
+                                            <div
+                                                class="mr-6 text-sm leading-5 text-gray-500"
+                                            >
+                                                <h4 class="text-gray-700">
+                                                    Details
+                                                </h4>
+                                                <p>
+                                                    My teeth last week broke
+                                                    becauase i eat to much crab
+                                                    without stop for 3 hours,
+                                                    right now my teeh is look
+                                                    old lady that need to be
+                                                    replace and the cost for
+                                                    replacement is so high
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="mt-4 sm:mt-0 sm:ml-4 sm:flex-shrink-0 sm:flex sm:justify-end"
+                                        >
+                                            <dl>
+                                                <dt
+                                                    class="text-sm text-gray-700"
+                                                >
+                                                    Current Donation Received
+                                                </dt>
+                                                <dd
+                                                    class="text-sm leading-5 font-medium text-blue-600"
+                                                >
+                                                    $50
+                                                </dd>
+                                            </dl>
+                                            <dl class="sm:ml-4">
+                                                <dt
+                                                    class="text-sm text-gray-700"
+                                                >
+                                                    Donation Goals
+                                                </dt>
+                                                <dd
+                                                    class="text-sm leading-5 font-medium text-green-600"
+                                                >
+                                                    $100
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    class="bg-gray-100 rounded-br-md rounded-bl-md px-4 py-4 sm:px-6"
+                                >
+                                    <div class="text-sm leading-5">
+                                        <a
+                                            href="#"
+                                            class="font-medium text-indigo-600 hover:text-indigo-500 transition duration-150 ease-in-out"
+                                        >
+                                            View More
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="py-8">
+                            <div class="border-t border-gray-200" />
+                        </div>
+
+                        <!-- Recent donator -->
+                        <div>
+                            <h3
+                                class="text-lg text-gray-800 font-semibold"
+                            >
+                                Recent Donator
+                            </h3>
+                            <p class="text-gray-800">
+                                <span class="text-indigo-500 font-semibold">Kamal Adli</span> donated you $50
+                            </p>
                         </div>
                     </template>
                 </div>
