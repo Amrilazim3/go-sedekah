@@ -400,7 +400,7 @@ const isOpenPaymentAlert = ref(true);
                                     class="px-4 py-5 bg-indigo-100 rounded-tr-md rounded-tl-md sm:p-6"
                                 >
                                     <div
-                                        class="sm:flex sm:justify-between text-md leading-5 font-medium text-gray-900"
+                                        class="flex justify-between text-md leading-5 font-medium text-gray-900"
                                     >
                                         <h3>For my personal medecine</h3>
                                         <h3 class="text-gray-600 text-sm">
