@@ -68,6 +68,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Bank::class);
     }
 
+    public function donationRequests()
+    {
+        return $this->hasMany(DonationRequest::class);
+    }
+
     public function scopeFilter($query, $name)
     {
         $query->when($name ?? false, function ($query, $name) {
