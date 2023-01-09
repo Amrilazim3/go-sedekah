@@ -11,7 +11,7 @@ class BankDetail extends Model
 
     protected $guarded = [];
 
-    public function bank()
+    public function banks()
     {
         return $this->hasMany(Bank::class);
     }
