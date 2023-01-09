@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('banks', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('bank_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('bank_detail_id')->constrained()->cascadeOnDelete();
             $table->string('name_on_card');
             $table->unsignedBigInteger('ic_number');
             $table->unsignedBigInteger('account_number');
