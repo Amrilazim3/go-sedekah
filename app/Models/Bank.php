@@ -20,4 +20,9 @@ class Bank extends Model
     {
         return $this->belongsTo(BankDetail::class, 'bank_detail_id', 'id');
     }
+
+    public function donationRequests()
+    {
+        return $this->hasMany(DonationRequest::class);
+    }
 }
