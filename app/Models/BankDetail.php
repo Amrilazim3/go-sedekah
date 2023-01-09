@@ -10,4 +10,9 @@ class BankDetail extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function bank()
+    {
+        return $this->belongsTo(Bank::class, 'bank_detail_id', 'id');
+    }
 }
