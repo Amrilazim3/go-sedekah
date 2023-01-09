@@ -13,6 +13,6 @@ class BankDetail extends Model
 
     public function bank()
     {
-        return $this->belongsTo(Bank::class, 'bank_detail_id', 'id');
+        return $this->hasMany(Bank::class);
     }
 }
