@@ -16,7 +16,7 @@ class Bank extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function BankDetail()
+    public function bankDetail()
     {
         return $this->belongsTo(BankDetail::class, 'bank_detail_id', 'id');
     }
