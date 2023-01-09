@@ -11,6 +11,11 @@ class Bank extends Model
 
     protected $guarded = [];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
     public function BankDetail()
     {
         return $this->belongsTo(BankDetail::class, 'bank_detail_id', 'id');
