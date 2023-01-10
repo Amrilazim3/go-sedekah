@@ -167,7 +167,7 @@ const logout = () => {
                                         </DropdownLink>
 
                                         <template v-if="$page.props.inertia.user.roles.includes('needy')">
-                                            <DropdownLink :href="route('needy.banks')" :linkActive="route().current('profile.show')">
+                                            <DropdownLink :href="route('needy.banks')" :linkActive="route().current('needy.banks')">
                                                 Banks
                                             </DropdownLink>
                                         </template>
@@ -254,7 +254,7 @@ const logout = () => {
                             </ResponsiveNavLink>
 
                             <template v-if="$page.props.inertia.user.roles.includes('needy')">
-                                <ResponsiveNavLink :href="route('needy.banks')" :active="route().current('profile.show')">
+                                <ResponsiveNavLink :href="route('needy.banks')" :active="route().current('needy.banks')">
                                     Banks
                                 </ResponsiveNavLink>
                             </template>
