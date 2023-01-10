@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Needy\BankController as NeedyBankController;
 use App\Http\Controllers\WelcomeController;
 use Billplz\Laravel\Billplz;
 use GuzzleHttp\Client;
@@ -81,4 +82,12 @@ Route::middleware([
                 [UserController::class, 'removeNeedyRole']
             )->name('users.assignNeedyRole');
         });
+
+    Route::middleware('role:needy')
+        ->prefix('needy')
+        ->name('needy.')
+        ->group(function () {
+            Route::get('/banks', [NeedyBankController::class, 'index'])->name('banks');
+        });
+
 });
