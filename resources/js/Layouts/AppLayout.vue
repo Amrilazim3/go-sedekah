@@ -166,6 +166,12 @@ const logout = () => {
                                             Profile
                                         </DropdownLink>
 
+                                        <template v-if="$page.props.inertia.user.roles.includes('needy')">
+                                            <DropdownLink :href="route('needy.banks')" :linkActive="route().current('profile.show')">
+                                                Banks
+                                            </DropdownLink>
+                                        </template>
+
                                         <DropdownLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')">
                                             API Tokens
                                         </DropdownLink>
@@ -246,6 +252,12 @@ const logout = () => {
                             <ResponsiveNavLink :href="route('profile.show')" :active="route().current('profile.show')">
                                 Profile
                             </ResponsiveNavLink>
+
+                            <template v-if="$page.props.inertia.user.roles.includes('needy')">
+                                <ResponsiveNavLink :href="route('needy.banks')" :active="route().current('profile.show')">
+                                    Banks
+                                </ResponsiveNavLink>
+                            </template>
 
                             <ResponsiveNavLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')" :active="route().current('api-tokens.index')">
                                 API Tokens
