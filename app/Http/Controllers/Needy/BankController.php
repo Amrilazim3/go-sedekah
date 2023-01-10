@@ -10,5 +10,21 @@ class BankController extends Controller
 {
     public function index()
     {
+        return Inertia::render('Needy/Banks', [
+            'banksName' => [
+                [
+                    'SLL233',
+                    'Maybank',
+                ],
+                [
+                    'MBS193',
+                    'Bank Islam',
+                ],
+                [
+                    'MU133',
+                    'Muamalat',
+                ],
+            ]
+        ]);
     }
 }
