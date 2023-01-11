@@ -31,7 +31,7 @@ class BankController extends Controller
             'name_on_card',
             'account_number',
             'ic_number',
-            'is_verified'
+            'status'
         ])
             ->where('user_id', auth()->user()->id)
             ->get();
@@ -61,7 +61,7 @@ class BankController extends Controller
             'name_on_card' => $request->name,
             'ic_number' => $request->bankAccountIc,
             'account_number' => $request->bankAccountNumber,
-            'is_verified' => false
+            'status' => "pending"
         ]);
 
         Billplz::bank()->create(
