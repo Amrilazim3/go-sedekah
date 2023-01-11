@@ -24,7 +24,7 @@ defineProps({
                     <div v-if="canLogin" class="self-center">
                         <Link
                             v-if="$page.props.user"
-                            :href="route('dashboard')"
+                            :href="route('dashboard.index')"
                             class="text-sm text-indigo-500 rounded-md outline-none bg-white p-2 hover:bg-indigo-500 hover:text-white"
                             >Dashboard</Link
                         >
