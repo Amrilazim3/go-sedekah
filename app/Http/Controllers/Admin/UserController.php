@@ -52,14 +52,14 @@ class UserController extends Controller
             $request->session()->flash('jetstream.flash.banner', 'User already has needy role.');
             $request->session()->flash('jetstream.flash.bannerStyle', 'danger');
 
-            return redirect()->route('admin.users');
+            return redirect()->route('admin.users.index');
         }
 
         if ($adminValidate) {
             $request->session()->flash('jetstream.flash.banner', 'User is an admin, cannot assigned to this role.');
             $request->session()->flash('jetstream.flash.bannerStyle', 'danger');
 
-            return redirect()->route('admin.users');
+            return redirect()->route('admin.users.index');
         }
 
         // assign role
@@ -68,7 +68,7 @@ class UserController extends Controller
         $request->session()->flash('jetstream.flash.banner', 'Needy role successfully assigned!');
         $request->session()->flash('jetstream.flash.bannerStyle', 'success');
 
-        return redirect()->route('admin.users');
+        return redirect()->route('admin.users.index');
     }
 
     public function assignAdminRole(User $user, Request $request)
@@ -83,14 +83,14 @@ class UserController extends Controller
             $request->session()->flash('jetstream.flash.banner', 'User is an needy, cannot assigned to this role.');
             $request->session()->flash('jetstream.flash.bannerStyle', 'danger');
 
-            return redirect()->route('admin.users');
+            return redirect()->route('admin.users.index');
         }
 
         if ($adminValidate) {
             $request->session()->flash('jetstream.flash.banner', 'User is already an admin.');
             $request->session()->flash('jetstream.flash.bannerStyle', 'danger');
 
-            return redirect()->route('admin.users');
+            return redirect()->route('admin.users.index');
         }
 
         // assign role
@@ -99,7 +99,7 @@ class UserController extends Controller
         $request->session()->flash('jetstream.flash.banner', 'Admin role successfully assigned!');
         $request->session()->flash('jetstream.flash.bannerStyle', 'success');
 
-        return redirect()->route('admin.users');
+        return redirect()->route('admin.users.index');
     }
 
     public function removeAdminRole(User $user, Request $request)
@@ -109,7 +109,7 @@ class UserController extends Controller
         $request->session()->flash('jetstream.flash.banner', 'Admin role successfully removed!');
         $request->session()->flash('jetstream.flash.bannerStyle', 'success');
 
-        return redirect()->route('admin.users');
+        return redirect()->route('admin.users.index');
     }
 
     public function removeNeedyRole(User $user, Request $request)
@@ -119,6 +119,6 @@ class UserController extends Controller
         $request->session()->flash('jetstream.flash.banner', 'Needy role successfully removed!');
         $request->session()->flash('jetstream.flash.bannerStyle', 'success');
 
-        return redirect()->route('admin.users');
+        return redirect()->route('admin.users.index');
     }
 }
