@@ -55,7 +55,7 @@ const logout = () => {
                             </div>
                             <template v-if="$page.props.inertia.user.roles[0] == 'admin'">
                                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                    <NavLink :href="route('admin.users')" :active="route().current('admin.users')">
+                                    <NavLink :href="route('admin.users.index')" :active="route().current('admin.users.index')">
                                         Users
                                     </NavLink>
                                 </div>
@@ -167,7 +167,7 @@ const logout = () => {
                                         </DropdownLink>
 
                                         <template v-if="$page.props.inertia.user.roles.includes('needy')">
-                                            <DropdownLink :href="route('needy.banks')" :linkActive="route().current('needy.banks')">
+                                            <DropdownLink :href="route('needy.banks.index')" :linkActive="route().current('needy.banks.index')">
                                                 Banks
                                             </DropdownLink>
                                         </template>
@@ -225,7 +225,7 @@ const logout = () => {
                             Dashboard
                         </ResponsiveNavLink>
                         <template v-if="$page.props.inertia.user.roles[0] == 'admin'">
-                            <ResponsiveNavLink :href="route('admin.users')" :active="route().current('admin.users')">
+                            <ResponsiveNavLink :href="route('admin.users.index')" :active="route().current('admin.users.index')">
                                 Users
                             </ResponsiveNavLink>
                         </template>
@@ -254,7 +254,7 @@ const logout = () => {
                             </ResponsiveNavLink>
 
                             <template v-if="$page.props.inertia.user.roles.includes('needy')">
-                                <ResponsiveNavLink :href="route('needy.banks')" :active="route().current('needy.banks')">
+                                <ResponsiveNavLink :href="route('needy.banks.index')" :active="route().current('needy.banks.index')">
                                     Banks
                                 </ResponsiveNavLink>
                             </template>
