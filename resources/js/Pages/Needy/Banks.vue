@@ -27,16 +27,20 @@ const closeModal = () => {
 const form = useForm({
     name: "",
     bankAccountNumber: "",
-    bankAccountIC: "",
+    bankAccountIc: "",
     bankCode: "",
 });
 
 const submit = () => {
-    console.log(form);
-
-    // form.transform((data) => ({
-    //     ...data,
-    // }));
+    form.transform((data) => ({
+        ...data,
+    })).post(route('needy.banks.store'), {
+        preserveScroll: true,
+        onSuccess: () => {
+            isOpen.value = false;
+            form.reset();
+        }
+    });
 };
 </script>
 
@@ -50,8 +54,8 @@ const submit = () => {
 
         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-                <div class="px-4 space-y-4">
-                    <div>
+                <div class="space-y-4">
+                    <div class="px-4">
                         <h3 class="text-md">Your banks</h3>
                         <p class="text-sm text-gray-700">
                             View and setup your banks used to received a
@@ -224,6 +228,7 @@ const submit = () => {
                                                 class="mt-1 block w-full"
                                                 required
                                                 autofocus
+                                                placeholder="ali bin abu"
                                             />
                                             <InputError
                                                 class="mt-2"
@@ -241,6 +246,7 @@ const submit = () => {
                                                 type="text"
                                                 class="mt-1 block w-full"
                                                 required
+                                                placeholder="15158221292"
                                             />
                                             <InputError
                                                 class="mt-2"
@@ -257,15 +263,16 @@ const submit = () => {
                                             />
                                             <TextInput
                                                 id="bank-acc-ic"
-                                                v-model="form.bankAccountIC"
+                                                v-model="form.bankAccountIc"
                                                 type="text"
                                                 class="mt-1 block w-full"
                                                 required
+                                                placeholder="080908010922"
                                             />
                                             <InputError
                                                 class="mt-2"
                                                 :message="
-                                                    form.errors.bankAccountIC
+                                                    form.errors.bankAccountIc
                                                 "
                                             />
                                         </div>
