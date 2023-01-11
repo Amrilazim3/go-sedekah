@@ -77,4 +77,14 @@ class BankController extends Controller
 
         return redirect()->route('needy.banks.index');
     }
+
+    public function destroy(Bank $bank, Request $request)
+    {
+        $bank->delete();
+
+        $request->session()->flash('jetstream.flash.banner', 'Bank account successfully deleted.');
+        $request->session()->flash('jetstream.flash.bannerStyle', 'success');
+
+        return redirect()->route('needy.banks.index');
+    }
 }
