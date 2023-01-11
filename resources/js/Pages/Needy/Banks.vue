@@ -16,7 +16,8 @@ import { ref } from "vue";
 
 defineProps({
     banksName: Array,
-})
+    banks: Array,
+});
 
 const isOpen = ref(false);
 
@@ -34,12 +35,12 @@ const form = useForm({
 const submit = () => {
     form.transform((data) => ({
         ...data,
-    })).post(route('needy.banks.store'), {
+    })).post(route("needy.banks.store"), {
         preserveScroll: true,
         onSuccess: () => {
             isOpen.value = false;
             form.reset();
-        }
+        },
     });
 };
 </script>
@@ -68,100 +69,99 @@ const submit = () => {
                                 <thead>
                                     <tr class="bg-indigo-500 text-white">
                                         <th
-                                            class="py-4 px-6 font-semibold text-sm"
+                                            class="py-4 px-6 whitespace-nowrap font-semibold text-sm"
                                         >
-                                            Card
+                                            #
                                         </th>
                                         <th
-                                            class="py-4 px-6 font-semibold text-sm"
+                                            class="py-4 px-6 whitespace-nowrap font-semibold text-sm"
                                         >
                                             Name
                                         </th>
                                         <th
-                                            class="py-4 px-6 font-semibold text-sm"
+                                            class="py-4 px-6 whitespace-nowrap font-semibold text-sm"
                                         >
                                             Account Number
                                         </th>
                                         <th
-                                            class="py-4 px-6 font-semibold text-sm"
+                                            class="py-4 px-6 whitespace-nowrap font-semibold text-sm"
+                                        >
+                                            Identity Card Number
+                                        </th>
+                                        <th
+                                            class="py-4 px-6 whitespace-nowrap font-semibold text-sm"
+                                        >
+                                            Status
+                                        </th>
+                                        <th
+                                            class="py-4 px-6 whitespace-nowrap font-semibold text-sm"
                                         >
                                             Actions
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="odd:bg-indigo-100">
-                                        <td class="py-4 px-6">
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                width="24"
-                                                height="24"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"
-                                                />
-                                                <path
-                                                    d="M0 0h24v24H0z"
-                                                    fill="none"
-                                                />
-                                            </svg>
-                                        </td>
-                                        <td class="py-4 px-6 text-sm">
-                                            John Doe
-                                        </td>
-                                        <td class="py-4 px-6 text-sm">
-                                            XXXX-XXXX-XXXX-1234
-                                        </td>
-                                        <td class="py-4 px-6">
-                                            <div
-                                                class="flex space-x-2 text-sm font-semibold"
-                                            >
-                                                <button class="text-indigo-500">
-                                                    edit
-                                                </button>
-                                                <button class="text-red-500">
-                                                    delete
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="odd:bg-indigo-100">
-                                        <td class="py-4 px-6">
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                width="24"
-                                                height="24"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"
-                                                />
-                                                <path
-                                                    d="M0 0h24v24H0z"
-                                                    fill="none"
-                                                />
-                                            </svg>
-                                        </td>
-                                        <td class="py-4 px-6 text-sm">
-                                            Jane Smith
-                                        </td>
-                                        <td class="py-4 px-6 text-sm">
-                                            XXXX-XXXX-XXXX-5678
-                                        </td>
-                                        <td class="py-4 px-6">
-                                            <div
-                                                class="flex space-x-2 text-sm font-semibold"
-                                            >
-                                                <button class="text-indigo-500">
-                                                    edit
-                                                </button>
-                                                <button class="text-red-500">
-                                                    delete
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                    <template v-if="banks.length > 0">
+                                        <template
+                                            v-for="(bank, key) in banks"
+                                            :key="bank.id"
+                                        >
+                                            <tr class="odd:bg-indigo-100">
+                                                <td
+                                                    class="py-4 px-6 whitespace-nowrap text-sm"
+                                                >
+                                                    {{ key + 1 }}
+                                                </td>
+                                                <td
+                                                    class="py-4 px-6 whitespace-nowrap text-sm"
+                                                >
+                                                    {{ bank.name_on_card }}
+                                                </td>
+                                                <td
+                                                    class="py-4 px-6 whitespace-nowrap text-sm"
+                                                >
+                                                    {{ bank.account_number }}
+                                                </td>
+                                                <td
+                                                    class="py-4 px-6 whitespace-nowrap text-sm"
+                                                >
+                                                    {{ bank.ic_number }}
+                                                </td>
+                                                <td
+                                                    class="py-4 px-6 whitespace-nowrap text-sm font-semibold"
+                                                    :class="
+                                                        bank.is_verified
+                                                            ? 'text-green-500'
+                                                            : 'text-orange-500'
+                                                    "
+                                                >
+                                                    {{
+                                                        bank.is_verified
+                                                            ? "verified"
+                                                            : "pending"
+                                                    }}
+                                                </td>
+                                                <td
+                                                    class="py-4 px-6 whitespace-nowrap"
+                                                >
+                                                    <div
+                                                        class="flex space-x-2 text-sm font-semibold"
+                                                    >
+                                                        <button
+                                                            class="px-3 py-1 bg-gray-50 hover:bg-gray-100 rounded-md text-red-500"
+                                                        >
+                                                            delete
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </template>
+                                    </template>
+                                    <template v-else>
+                                        <h3 class="my-2 text-md px-2">
+                                            No data
+                                        </h3>
+                                    </template>
                                 </tbody>
                             </table>
                         </div>
@@ -169,7 +169,7 @@ const submit = () => {
                         <div class="flex justify-end mt-3">
                             <!-- when button click open modal screen using headless u.i -->
                             <button
-                                class="text-sm font-semibold bg-indigo-200 hover:bg-indigo-300 text-gray-600 rounded-md px-3 py-2"
+                                class="text-sm font-semibold bg-indigo-500 hover:bg-indigo-400 text-white rounded-md px-3 py-2"
                                 @click="isOpen = true"
                             >
                                 add new bank
@@ -293,19 +293,33 @@ const submit = () => {
                                                 :message="form.errors.bankCode"
                                             />
                                         </div>
+                                        <div class="mt-4">
+                                            <p class="text-sm text-gray-700">
+                                                Your card will be validated
+                                                within 3 days before can be use to
+                                                receive donation in our
+                                                application.
+                                            </p>
+                                        </div>
                                         <div
                                             class="flex justify-end space-x-1.5 mt-4"
                                         >
                                             <button
                                                 type="button"
-                                                class="inline-flex justify-center rounded-md border border-transparent bg-red-100 px-4 py-2 text-sm font-medium text-gray-800 hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
+                                                class="inline-flex justify-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-sm font-medium text-gray-800 hover:bg-red-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
                                                 @click="isOpen = false"
                                             >
                                                 Cancel
                                             </button>
                                             <button
                                                 type="submit"
-                                                class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                                class="inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                                :class="
+                                                    form.processing
+                                                        ? 'bg-indigo-100 cursor-not-allowed'
+                                                        : 'bg-indigo-500 hover:bg-indigo-400'
+                                                "
+                                                :disabled="form.processing"
                                             >
                                                 Save
                                             </button>
