@@ -25,6 +25,7 @@
         "@heroicons/vue": "^2.0.13",
         "@soketi/soketi": "^1.5.0",
         "laravel-echo": "^1.14.2",
-        "pusher-js": "^8.0.0"
+        "pusher-js": "^8.0.0",
+        "vue-sweetalert2": "^5.0.5"
     }
 }
