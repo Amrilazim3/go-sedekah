@@ -18,8 +18,9 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('bank_detail_id')->constrained()->cascadeOnDelete();
             $table->string('name_on_card');
-            $table->unsignedBigInteger('ic_number');
+            $table->string('ic_number');
             $table->unsignedBigInteger('account_number');
+            $table->string('status')->default('pending')->comment('pending / verified / rejected');
             $table->timestamps();
         });
     }
