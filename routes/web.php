@@ -30,7 +30,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
     Route::post('/billplz', function (Request $request) {
         // $bill = Billplz::bill()->create('bgs0cicq', 'amril@gmail.com', '0172374050', 'amril azim', 23000, 'http://localhost', 'donation for fulan bin fulan', ['redirect_url' => 'http://localhost']);
@@ -60,7 +60,7 @@ Route::middleware([
         ->prefix('admin')
         ->name('admin.')
         ->group(function () {
-            Route::get('/users', [UserController::class, 'index'])->name('users');
+            Route::get('/users', [UserController::class, 'index'])->name('users.index');
 
             Route::post(
                 '/users/{user}/assign-role/admin',
@@ -87,7 +87,9 @@ Route::middleware([
         ->prefix('needy')
         ->name('needy.')
         ->group(function () {
-            Route::get('/banks', [NeedyBankController::class, 'index'])->name('banks');
+            Route::get('/banks', [NeedyBankController::class, 'index'])->name('banks.index');
+
+            Route::post('/banks', [NeedyBankController::class, 'store'])->name('banks.store');
         });
 
 });
