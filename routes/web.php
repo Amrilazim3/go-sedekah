@@ -61,22 +61,18 @@ Route::middleware([
         ->name('admin.')
         ->group(function () {
             Route::get('/users', [UserController::class, 'index'])->name('users.index');
-
             Route::post(
                 '/users/{user}/assign-role/admin',
                 [UserController::class, 'assignAdminRole']
             )->name('users.assignAdminRole');
-
             Route::post(
                 '/users/{user}/assign-role/needy',
                 [UserController::class, 'assignNeedyRole']
             )->name('users.assignNeedyRole');
-
             Route::delete(
                 '/users/{user}/remove-role/admin',
                 [UserController::class, 'removeAdminRole']
             )->name('users.assignNeedyRole');
-
             Route::delete(
                 '/users/{user}/remove-role/needy',
                 [UserController::class, 'removeNeedyRole']
@@ -88,8 +84,8 @@ Route::middleware([
         ->name('needy.')
         ->group(function () {
             Route::get('/banks', [NeedyBankController::class, 'index'])->name('banks.index');
-
             Route::post('/banks', [NeedyBankController::class, 'store'])->name('banks.store');
+            Route::delete('/banks/{bank}', [NeedyBankController::class, 'destroy'])->name('banks.destroy');
         });
 
 });
