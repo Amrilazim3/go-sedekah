@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import SearchInput from "@/Components/SearchInput.vue";
-import UsersDataTable from "@/Components/UsersDataTable.vue";
+import DataTable from "@/Components/DataTable.vue";
 import PaginationBar from "@/Components/PaginationBar.vue";
 import { Inertia } from "@inertiajs/inertia";
 import { onMounted, reactive, ref, computed } from "vue";
@@ -111,7 +111,7 @@ const removeNeedy = (userId) => {
                         @input="searchUserByRole(searchAdminValue, 'admin')"
                         @click="searchUserByRole(searchAdminValue, 'admin')"
                     />
-                    <UsersDataTable
+                    <DataTable
                         :header-data="headerData"
                         :body-data="admins.data"
                         type="admin"
@@ -138,7 +138,7 @@ const removeNeedy = (userId) => {
                         @input="searchUserByRole(searchDonorValue, 'donor')"
                         @click="searchUserByRole(searchDonorValue, 'donor')"
                     />
-                    <UsersDataTable
+                    <DataTable
                         :header-data="headerData"
                         :body-data="donors.data"
                         type="donor"
@@ -166,7 +166,7 @@ const removeNeedy = (userId) => {
                         @input="searchUserByRole(searchNeedyValue, 'needy')"
                         @click="searchUserByRole(searchNeedyValue, 'needy')"
                     />
-                    <UsersDataTable
+                    <DataTable
                         :header-data="headerData"
                         :body-data="needy.data"
                         type="needy"
