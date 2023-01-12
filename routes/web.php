@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DonationController;
 use App\Http\Controllers\Needy\BankController as NeedyBankController;
 use App\Http\Controllers\WelcomeController;
 use Billplz\Laravel\Billplz;
@@ -31,6 +32,8 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+
+    Route::get('/donations', [DonationController::class, 'index'])->name('donations.index');
 
     Route::post('/billplz', function (Request $request) {
         // $bill = Billplz::bill()->create('bgs0cicq', 'amril@gmail.com', '0172374050', 'amril azim', 23000, 'http://localhost', 'donation for fulan bin fulan', ['redirect_url' => 'http://localhost']);
