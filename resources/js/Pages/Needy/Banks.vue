@@ -12,12 +12,15 @@ import {
     DialogPanel,
     DialogTitle,
 } from "@headlessui/vue";
-import { ref } from "vue";
+import { inject, ref } from "vue";
+import { Inertia } from "@inertiajs/inertia";
 
 defineProps({
     banksName: Array,
     banks: Array,
 });
+
+const Swal = inject("$swal");
 
 const isOpen = ref(false);
 
@@ -41,6 +44,24 @@ const submit = () => {
             isOpen.value = false;
             form.reset();
         },
+    });
+};
+
+const showDeleteConfirmation = (id) => {
+    Swal.fire({
+        title: "Delete this bank account?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "color: rgb(99 102 241);",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+        if (result.value) {
+            Inertia.delete(`/needy/banks/${id}`, {
+                preserveScroll: true,
+            });
+        }
     });
 };
 </script>
@@ -113,7 +134,7 @@ const submit = () => {
                                                     {{ key + 1 }}
                                                 </td>
                                                 <td
-                                                    class="py-4 px-6 whitespace-nowrap text-sm"
+                                                    class="py-4 px-6 uppercase whitespace-nowrap text-sm"
                                                 >
                                                     {{ bank.name_on_card }}
                                                 </td>
@@ -130,16 +151,16 @@ const submit = () => {
                                                 <td
                                                     class="py-4 px-6 whitespace-nowrap text-sm font-semibold"
                                                     :class="
-                                                        bank.is_verified
+                                                        bank.status ==
+                                                        'verified'
                                                             ? 'text-green-500'
-                                                            : 'text-orange-500'
+                                                            : bank.status ==
+                                                              'pending'
+                                                            ? 'text-orange-500'
+                                                            : 'text-red-500'
                                                     "
                                                 >
-                                                    {{
-                                                        bank.is_verified
-                                                            ? "verified"
-                                                            : "pending"
-                                                    }}
+                                                    {{ bank.status }}
                                                 </td>
                                                 <td
                                                     class="py-4 px-6 whitespace-nowrap"
@@ -149,6 +170,11 @@ const submit = () => {
                                                     >
                                                         <button
                                                             class="px-3 py-1 bg-gray-50 hover:bg-gray-100 rounded-md text-red-500"
+                                                            @click="
+                                                                showDeleteConfirmation(
+                                                                    bank.id
+                                                                )
+                                                            "
                                                         >
                                                             delete
                                                         </button>
@@ -166,11 +192,23 @@ const submit = () => {
                             </table>
                         </div>
 
-                        <div class="flex justify-end mt-3">
+                        <div class="flex justify-end space-x-3 mt-3">
                             <!-- when button click open modal screen using headless u.i -->
+                            <h3
+                                class="text-sm font-light self-center text-red-500"
+                                :class="banks.length == 3 ? '' : 'hidden'"
+                            >
+                                Can only have 3 bank accounts.
+                            </h3>
                             <button
-                                class="text-sm font-semibold bg-indigo-500 hover:bg-indigo-400 text-white rounded-md px-3 py-2"
+                                class="text-sm font-semibold rounded-md px-3 py-2"
+                                :class="
+                                    banks.length == 3
+                                        ? 'bg-gray-200 cursor-not-allowed'
+                                        : 'bg-indigo-500 hover:bg-indigo-400 text-white'
+                                "
                                 @click="isOpen = true"
+                                :disabled="banks.length == 3"
                             >
                                 add new bank
                             </button>
@@ -296,8 +334,8 @@ const submit = () => {
                                         <div class="mt-4">
                                             <p class="text-sm text-gray-700">
                                                 Your card will be validated
-                                                within 3 days before can be use to
-                                                receive donation in our
+                                                within 3 days before can be use
+                                                to receive donation in our
                                                 application.
                                             </p>
                                         </div>
