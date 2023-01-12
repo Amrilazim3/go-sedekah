@@ -53,6 +53,11 @@ const logout = () => {
                                     Dashboard
                                 </NavLink>
                             </div>
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('donations.index')" :active="route().current('donations.index')">
+                                    Donations
+                                </NavLink>
+                            </div>
                             <template v-if="$page.props.inertia.user.roles[0] == 'admin'">
                                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                     <NavLink :href="route('admin.users.index')" :active="route().current('admin.users.index')">
@@ -223,6 +228,9 @@ const logout = () => {
                     <div class="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink :href="route('dashboard.index')" :active="route().current('dashboard.index')">
                             Dashboard
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('donations.index')" :active="route().current('donations.index')">
+                            Donations
                         </ResponsiveNavLink>
                         <template v-if="$page.props.inertia.user.roles[0] == 'admin'">
                             <ResponsiveNavLink :href="route('admin.users.index')" :active="route().current('admin.users.index')">
