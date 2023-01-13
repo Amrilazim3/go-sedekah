@@ -3,14 +3,44 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import DataTable from "@/Components/DataTable.vue";
 import SearchInput from "@/Components/SearchInput.vue";
 import { Inertia } from "@inertiajs/inertia";
+import InputError from "@/Components/InputError.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import TextInput from "@/Components/TextInput.vue";
+import TextAreaInput from "@/Components/TextAreaInput.vue";
+import SelectInput from "@/Components/SelectInput.vue";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
+import {
+    TransitionRoot,
+    TransitionChild,
+    Dialog,
+    DialogPanel,
+    DialogTitle,
+} from "@headlessui/vue";
 import {
     ChevronUpIcon,
     XMarkIcon,
     ChevronDownIcon,
 } from "@heroicons/vue/20/solid";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/vue/24/outline";
+import { reactive, ref } from "vue";
+import { useForm } from "@inertiajs/inertia-vue3";
+
+defineProps({
+    bankAccounts: Array,
+    histories: Object,
+    requests: Object || Array,
+    users: Object || Array,
+});
+
+const isOpenDonationRequestModal = ref(false);
+
+const donationRequestForm = useForm({
+    title: "",
+    detail: "",
+    targetAmount: null,
+    bankAccountId: null,
+});
 </script>
 
 <template>
@@ -483,6 +513,7 @@ import { CheckCircleIcon, XCircleIcon } from "@heroicons/vue/24/outline";
                             Your donation requests
                             <button
                                 class="w-full sm:w-fit text-sm font-semibold px-3 py-1.5 mt-2 mb-2 sm:mt-0 text-white bg-indigo-500 hover:bg-opacity-50 rounded-md"
+                                @click="isOpenDonationRequestModal = true"
                             >
                                 make new request
                             </button>
@@ -493,7 +524,7 @@ import { CheckCircleIcon, XCircleIcon } from "@heroicons/vue/24/outline";
                                 'Title',
                                 'Status',
                                 'Progress',
-                                'Requested Date'
+                                'Requested Date',
                             ]"
                             :body-data="[]"
                             type="admin"
@@ -502,5 +533,181 @@ import { CheckCircleIcon, XCircleIcon } from "@heroicons/vue/24/outline";
                 </div>
             </template>
         </div>
+
+        <!-- new donation request form -->
+        <TransitionRoot appear :show="isOpenDonationRequestModal" as="template">
+            <Dialog
+                as="div"
+                @close="isOpenDonationRequestModal = true"
+                class="relative z-10"
+            >
+                <TransitionChild
+                    as="template"
+                    enter="duration-300 ease-out"
+                    enter-from="opacity-0"
+                    enter-to="opacity-100"
+                    leave="duration-200 ease-in"
+                    leave-from="opacity-100"
+                    leave-to="opacity-0"
+                >
+                    <div class="fixed inset-0 bg-black bg-opacity-25" />
+                </TransitionChild>
+
+                <div class="fixed inset-0 overflow-y-auto">
+                    <div
+                        class="flex min-h-full items-center justify-center p-4 text-center"
+                    >
+                        <TransitionChild
+                            as="template"
+                            enter="duration-300 ease-out"
+                            enter-from="opacity-0 scale-95"
+                            enter-to="opacity-100 scale-100"
+                            leave="duration-200 ease-in"
+                            leave-from="opacity-100 scale-100"
+                            leave-to="opacity-0 scale-95"
+                        >
+                            <DialogPanel
+                                class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+                            >
+                                <form @submit.prevent="submit">
+                                    <DialogTitle
+                                        as="h3"
+                                        class="text-lg font-medium leading-6 text-gray-900"
+                                    >
+                                        Make Donation Request
+                                    </DialogTitle>
+                                    <div class="mt-4">
+                                        <InputLabel for="title" value="Title" />
+                                        <TextInput
+                                            id="title"
+                                            v-model="donationRequestForm.title"
+                                            type="text"
+                                            class="mt-1 block w-full"
+                                            required
+                                            autofocus
+                                            placeholder="Donation title"
+                                        />
+                                        <InputError
+                                            class="mt-2"
+                                            :message="
+                                                donationRequestForm.errors.title
+                                            "
+                                        />
+                                    </div>
+                                    <div class="mt-4">
+                                        <InputLabel
+                                            for="detail"
+                                            value="Detail"
+                                        />
+                                        <TextAreaInput
+                                            id="detail"
+                                            v-model="donationRequestForm.detail"
+                                            class="mt-1 block w-full"
+                                            required
+                                            placeholder="Describe your reason to support title"
+                                        />
+                                        <InputError
+                                            class="mt-2"
+                                            :message="
+                                                donationRequestForm.errors
+                                                    .detail
+                                            "
+                                        />
+                                    </div>
+                                    <div class="mt-4">
+                                        <InputLabel
+                                            for="target-amount"
+                                            value="Target donation amount"
+                                        />
+                                        <TextInput
+                                            id="target-amount"
+                                            v-model="
+                                                donationRequestForm.targetAmount
+                                            "
+                                            type="number"
+                                            class="mt-1 block w-full"
+                                            required
+                                            placeholder="500"
+                                        />
+                                        <InputError
+                                            class="mt-2"
+                                            :message="
+                                                donationRequestForm.errors
+                                                    .targetAmount
+                                            "
+                                        />
+                                    </div>
+                                    <div class="mt-4">
+                                        <InputLabel
+                                            for="bank-acc"
+                                            value="Bank account"
+                                        />
+                                        <SelectInput
+                                            id="bank-acc"
+                                            v-model="
+                                                donationRequestForm.bankAccountId
+                                            "
+                                            :data="[
+                                                [
+                                                    '1111',
+                                                    '151584282718',
+                                                ],
+                                                [
+                                                    '2222',
+                                                    '992288811222',
+                                                ],
+                                            ]"
+                                            class="mt-1 block w-full"
+                                            required
+                                        />
+                                        <InputError
+                                            class="mt-2"
+                                            :message="
+                                                donationRequestForm.errors
+                                                    .bankAccountId
+                                            "
+                                        />
+                                    </div>
+                                    <div class="mt-4">
+                                        <p class="text-sm text-gray-700">
+                                            You must wait for an admin to
+                                            approve your request after making
+                                            this request.
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="flex justify-end space-x-1.5 mt-4"
+                                    >
+                                        <button
+                                            type="button"
+                                            class="inline-flex justify-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-sm font-medium text-gray-800 hover:bg-red-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
+                                            @click="
+                                                isOpenDonationRequestModal = false
+                                            "
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            class="inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                            :class="
+                                                donationRequestForm.processing
+                                                    ? 'bg-indigo-100 cursor-not-allowed'
+                                                    : 'bg-indigo-500 hover:bg-indigo-400'
+                                            "
+                                            :disabled="
+                                                donationRequestForm.processing
+                                            "
+                                        >
+                                            Submit
+                                        </button>
+                                    </div>
+                                </form>
+                            </DialogPanel>
+                        </TransitionChild>
+                    </div>
+                </div>
+            </Dialog>
+        </TransitionRoot>
     </AppLayout>
 </template>
