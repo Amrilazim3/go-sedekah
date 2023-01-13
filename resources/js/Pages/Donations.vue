@@ -510,13 +510,92 @@ const donationRequestForm = useForm({
                         <div
                             class="text-lg sm:flex sm:justify-between font-semibold"
                         >
-                            Your donation requests
+                            <h2 class="text-lg font-semibold">
+                                Your donation requests
+                            </h2>
                             <button
                                 class="w-full sm:w-fit text-sm font-semibold px-3 py-1.5 mt-2 mb-2 sm:mt-0 text-white bg-indigo-500 hover:bg-opacity-50 rounded-md"
                                 @click="isOpenDonationRequestModal = true"
                             >
                                 make new request
                             </button>
+                        </div>
+                        <div class="sm:flex sm:space-x-1.5">
+                            <SearchInput
+                                :focus-input="false"
+                                placeholder="search donation title"
+                                class="sm:w-full"
+                                v-model="searchAdminValue"
+                            />
+                            <!-- dropdwon option -->
+                            <Menu
+                                as="div"
+                                class="relative text-left mb-4 sm:self-center sm:-mb-0"
+                            >
+                                <div>
+                                    <MenuButton
+                                        class="inline-flex w-full justify-center rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+                                    >
+                                        Options
+                                        <ChevronDownIcon
+                                            class="ml-2 -mr-1 h-5 w-5 text-violet-200 hover:text-violet-100"
+                                            aria-hidden="true"
+                                        />
+                                    </MenuButton>
+                                </div>
+
+                                <transition
+                                    enter-active-class="transition duration-100 ease-out"
+                                    enter-from-class="transform scale-95 opacity-0"
+                                    enter-to-class="transform scale-100 opacity-100"
+                                    leave-active-class="transition duration-75 ease-in"
+                                    leave-from-class="transform scale-100 opacity-100"
+                                    leave-to-class="transform scale-95 opacity-0"
+                                >
+                                    <MenuItems
+                                        class="absolute mt-2 z-20 w-full sm:w-26 divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                    >
+                                        <div class="px-1 py-1">
+                                            <MenuItem v-slot="{ active }">
+                                                <button
+                                                    :class="[
+                                                        active
+                                                            ? 'bg-gray-200'
+                                                            : '',
+                                                        'group text-indigo-500 flex w-full items-center rounded-md px-2 py-2 text-sm',
+                                                    ]"
+                                                >
+                                                    Approved
+                                                </button>
+                                            </MenuItem>
+                                            <MenuItem v-slot="{ active }">
+                                                <button
+                                                    :class="[
+                                                        active
+                                                            ? 'bg-gray-200'
+                                                            : '',
+                                                        'group text-orange-500 flex w-full items-center rounded-md px-2 py-2 text-sm',
+                                                    ]"
+                                                >
+                                                    Pending
+                                                </button>
+                                            </MenuItem>
+                                            <MenuItem v-slot="{ active }">
+                                                <button
+                                                    :class="[
+                                                        active
+                                                            ? 'bg-gray-200'
+                                                            : '',
+                                                        'group text-red-500 flex w-full items-center rounded-md px-2 py-2 text-sm',
+                                                    ]"
+                                                >
+                                                    Rejected
+                                                </button>
+                                            </MenuItem>
+                                        </div>
+                                    </MenuItems>
+                                </transition>
+                            </Menu>
                         </div>
                         <DataTable
                             :header-data="[
@@ -648,14 +727,8 @@ const donationRequestForm = useForm({
                                                 donationRequestForm.bankAccountId
                                             "
                                             :data="[
-                                                [
-                                                    '1111',
-                                                    '151584282718',
-                                                ],
-                                                [
-                                                    '2222',
-                                                    '992288811222',
-                                                ],
+                                                ['1111', '151584282718'],
+                                                ['2222', '992288811222'],
                                             ]"
                                             class="mt-1 block w-full"
                                             required
