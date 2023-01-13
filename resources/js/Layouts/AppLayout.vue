@@ -8,6 +8,7 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+import { CurrencyDollarIcon } from "@heroicons/vue/24/outline";
 
 defineProps({
     title: String,
@@ -337,6 +338,12 @@ const logout = () => {
             <!-- Page Content -->
             <main>
                 <slot />
+                
+                <button class="fixed bg-indigo-200 hover:bg-indigo-100 bottom-2 right-3 p-2 rounded-full">
+                    <Link href="/">
+                        <CurrencyDollarIcon class="h-7 w-7 text-gray-600" />
+                    </Link>
+                </button>
             </main>
         </div>
     </div>
