@@ -23,7 +23,7 @@ return new class extends Migration
             $table->float('target_amount');
             $table->string('status')->comment('pending / approved / rejected')->default('pending');
             $table->boolean('is_verified')->default(false);
-            $table->timestamp('verification_expirty_at')->nullable()->default(null);
+            $table->timestamp('verification_expiry_at')->nullable()->default(null);
             $table->timestamps();
         });
     }
