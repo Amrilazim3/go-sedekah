@@ -8,11 +8,17 @@ defineProps({
     type: String,
 });
 
-defineEmits(["removeAdmin", "approveAdmin", "approveNeedy", "removeNeedy"]);
+defineEmits([
+    "removeAdmin",
+    "approveAdmin",
+    "approveNeedy",
+    "removeNeedy",
+    "deleteBank",
+]);
 </script>
 
 <template>
-    <div class="flex flex-col">
+    <div class="flex flex-col overflow-hidden">
         <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="inline-block min-w-full sm:px-6 lg:px-8">
                 <div class="overflow-hidden">
@@ -25,7 +31,7 @@ defineEmits(["removeAdmin", "approveAdmin", "approveNeedy", "removeNeedy"]);
                                 >
                                     <th
                                         scope="col"
-                                        class="text-sm font-semibold text-gray-700 bg-gray-100 px-6 py-4 text-left"
+                                        class="text-sm font-semibold whitespace-nowrap text-gray-700 bg-gray-100 px-6 py-4 text-left"
                                     >
                                         {{ hData }}
                                     </th>
@@ -35,10 +41,14 @@ defineEmits(["removeAdmin", "approveAdmin", "approveNeedy", "removeNeedy"]);
                         <template v-if="bodyData.length > 0">
                             <tbody>
                                 <template
-                                    v-for="bData in bodyData"
+                                    v-for="(bData, key) in bodyData"
                                     :key="bData.id"
                                 >
-                                    <template v-if="route().current('admin.users.index')">
+                                    <template
+                                        v-if="
+                                            route().current('admin.users.index')
+                                        "
+                                    >
                                         <tr class="bg-white border-b">
                                             <td
                                                 class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
@@ -57,7 +67,8 @@ defineEmits(["removeAdmin", "approveAdmin", "approveNeedy", "removeNeedy"]);
                                                 <template
                                                     v-if="
                                                         type == 'admin' &&
-                                                        $page.props.user.email ==
+                                                        $page.props.user
+                                                            .email ==
                                                             'go.sedekah0711@gmail.com' &&
                                                         bData.email !=
                                                             'go.sedekah0711@gmail.com'
@@ -113,7 +124,9 @@ defineEmits(["removeAdmin", "approveAdmin", "approveNeedy", "removeNeedy"]);
                                                     </Menu>
                                                 </template>
                                                 <!-- donor actions -->
-                                                <template v-if="type == 'donor'">
+                                                <template
+                                                    v-if="type == 'donor'"
+                                                >
                                                     <Menu>
                                                         <MenuButton>
                                                             <EllipsisVerticalIcon
@@ -188,7 +201,8 @@ defineEmits(["removeAdmin", "approveAdmin", "approveNeedy", "removeNeedy"]);
                                                                             "
                                                                         >
                                                                             Approve
-                                                                            to needy
+                                                                            to
+                                                                            needy
                                                                         </button>
                                                                     </MenuItem>
                                                                 </div>
@@ -197,7 +211,9 @@ defineEmits(["removeAdmin", "approveAdmin", "approveNeedy", "removeNeedy"]);
                                                     </Menu>
                                                 </template>
                                                 <!-- needy actions -->
-                                                <template v-if="type == 'needy'">
+                                                <template
+                                                    v-if="type == 'needy'"
+                                                >
                                                     <Menu>
                                                         <MenuButton>
                                                             <EllipsisVerticalIcon
@@ -247,6 +263,66 @@ defineEmits(["removeAdmin", "approveAdmin", "approveNeedy", "removeNeedy"]);
                                                         </transition>
                                                     </Menu>
                                                 </template>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                    <template
+                                        v-if="
+                                            route().current('needy.banks.index')
+                                        "
+                                    >
+                                        <tr class="bg-white border-b">
+                                            <td
+                                                class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                            >
+                                                {{ key + 1 }}
+                                            </td>
+                                            <td
+                                                class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                            >
+                                                {{ bData.name_on_card }}
+                                            </td>
+                                            <td
+                                                class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                            >
+                                                {{ bData.account_number }}
+                                            </td>
+                                            <td
+                                                class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                            >
+                                                {{ bData.ic_number }}
+                                            </td>
+                                            <td
+                                                class="py-4 px-6 whitespace-nowrap text-sm font-semibold"
+                                                :class="
+                                                    bData.status == 'verified'
+                                                        ? 'text-green-500'
+                                                        : bData.status ==
+                                                          'pending'
+                                                        ? 'text-orange-500'
+                                                        : 'text-red-500'
+                                                "
+                                            >
+                                                {{ bData.status }}
+                                            </td>
+                                            <td
+                                                class="py-4 px-6 whitespace-nowrap"
+                                            >
+                                                <div
+                                                    class="flex space-x-2 text-sm font-semibold"
+                                                >
+                                                    <button
+                                                        class="px-3 py-1 bg-gray-50 hover:bg-gray-100 rounded-md text-red-500"
+                                                        @click="
+                                                            $emit(
+                                                                'deleteBank',
+                                                                bData.id
+                                                            )
+                                                        "
+                                                    >
+                                                        delete
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     </template>
