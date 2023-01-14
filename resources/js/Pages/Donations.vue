@@ -23,14 +23,22 @@ import {
     ChevronDownIcon,
 } from "@heroicons/vue/20/solid";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/vue/24/outline";
-import { reactive, ref } from "vue";
+import { computed, ref } from "vue";
 import { useForm } from "@inertiajs/inertia-vue3";
 
-defineProps({
+const props = defineProps({
     bankAccounts: Array,
     histories: Object,
     requests: Object || Array,
     users: Object || Array,
+});
+
+const hasBankAccounts = computed(() => {
+    if (props.bankAccounts.length > 0) {
+        return true;
+    }
+
+    return false;
 });
 
 const isOpenDonationRequestModal = ref(false);
@@ -41,6 +49,20 @@ const donationRequestForm = useForm({
     targetAmount: null,
     bankAccountId: null,
 });
+
+const submit = () => {
+    donationRequestForm
+        .transform((data) => ({
+            ...data,
+        }))
+        .post(route("donations.store"), {
+            preserveScroll: true,
+            onSuccess: () => {
+                isOpenDonationRequestModal.value = false;
+                donationRequestForm.reset();
+            },
+        });
+};
 </script>
 
 <template>
@@ -218,7 +240,7 @@ const donationRequestForm = useForm({
                                                         <h4
                                                             class="text-gray-700"
                                                         >
-                                                            Details
+                                                            Detail
                                                         </h4>
                                                         <p>
                                                             My teeth last week
@@ -334,7 +356,7 @@ const donationRequestForm = useForm({
                                                         <h4
                                                             class="text-gray-700"
                                                         >
-                                                            Details
+                                                            Detail
                                                         </h4>
                                                         <p>
                                                             Lorem, ipsum dolor
@@ -448,7 +470,7 @@ const donationRequestForm = useForm({
                                                         <h4
                                                             class="text-gray-700"
                                                         >
-                                                            Details
+                                                            Detail
                                                         </h4>
                                                         <p>
                                                             Lorem, ipsum dolor
@@ -513,12 +535,26 @@ const donationRequestForm = useForm({
                             <h2 class="text-lg font-semibold">
                                 Your donation requests
                             </h2>
-                            <button
-                                class="w-full sm:w-fit text-sm font-semibold px-3 py-1.5 mt-2 mb-2 sm:mt-0 text-white bg-indigo-500 hover:bg-opacity-50 rounded-md"
-                                @click="isOpenDonationRequestModal = true"
-                            >
-                                make new request
-                            </button>
+                            <div class="inline-flex">
+                                <p
+                                    class="text-sm text-red-500 self-start mr-2"
+                                    :class="hasBankAccounts ? 'hidden' : ''"
+                                >
+                                    must have at least one bank account setup.
+                                </p>
+                                <button
+                                    class="w-full sm:w-fit text-sm font-semibold px-3 py-1.5 mt-2 mb-2 sm:mt-0 text-white rounded-md"
+                                    :class="
+                                        hasBankAccounts
+                                            ? 'bg-indigo-500 hover:bg-opacity-50'
+                                            : 'bg-indigo-300 cursor-not-allowed'
+                                    "
+                                    @click="isOpenDonationRequestModal = true"
+                                    :disabled="!hasBankAccounts"
+                                >
+                                    make new request
+                                </button>
+                            </div>
                         </div>
                         <div class="sm:flex sm:space-x-1.5">
                             <SearchInput
@@ -726,10 +762,7 @@ const donationRequestForm = useForm({
                                             v-model="
                                                 donationRequestForm.bankAccountId
                                             "
-                                            :data="[
-                                                ['1111', '151584282718'],
-                                                ['2222', '992288811222'],
-                                            ]"
+                                            :data="bankAccounts"
                                             class="mt-1 block w-full"
                                             required
                                         />
