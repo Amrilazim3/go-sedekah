@@ -48,7 +48,7 @@ class BankController extends Controller
     {
         $request->validate([
             'name' => ['required', 'max:50'],
-            'bankAccountNumber' => ['required', 'unique:banks,account_number', 'min:12', 'max:20'], // search how to validate number account
+            'bankAccountNumber' => ['required', 'unique:banks,account_number', 'min:12', 'max:16'], // search how to validate number account
             'bankAccountIc' => ['required', 'min:12', 'max:12'], // search how to validate ic
             'bankCode' => ['required'],
         ]);
