@@ -5,6 +5,7 @@ import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import SelectInput from "@/Components/SelectInput.vue";
+import DataTable from "@/Components/DataTable.vue";
 import {
     TransitionRoot,
     TransitionChild,
@@ -84,116 +85,13 @@ const showDeleteConfirmation = (id) => {
                             donation.
                         </p>
                     </div>
-                    <div class="bg-white shadow-md px-4 py-3">
-                        <div class="bg-indigo-50 rounded-md overflow-x-scroll">
-                            <table class="w-full text-left">
-                                <thead>
-                                    <tr class="bg-indigo-500 text-white">
-                                        <th
-                                            class="py-4 px-6 whitespace-nowrap font-semibold text-sm"
-                                        >
-                                            #
-                                        </th>
-                                        <th
-                                            class="py-4 px-6 whitespace-nowrap font-semibold text-sm"
-                                        >
-                                            Name
-                                        </th>
-                                        <th
-                                            class="py-4 px-6 whitespace-nowrap font-semibold text-sm"
-                                        >
-                                            Account Number
-                                        </th>
-                                        <th
-                                            class="py-4 px-6 whitespace-nowrap font-semibold text-sm"
-                                        >
-                                            Identity Card Number
-                                        </th>
-                                        <th
-                                            class="py-4 px-6 whitespace-nowrap font-semibold text-sm"
-                                        >
-                                            Status
-                                        </th>
-                                        <th
-                                            class="py-4 px-6 whitespace-nowrap font-semibold text-sm"
-                                        >
-                                            Actions
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <template v-if="banks.length > 0">
-                                        <template
-                                            v-for="(bank, key) in banks"
-                                            :key="bank.id"
-                                        >
-                                            <tr class="odd:bg-indigo-100">
-                                                <td
-                                                    class="py-4 px-6 whitespace-nowrap text-sm"
-                                                >
-                                                    {{ key + 1 }}
-                                                </td>
-                                                <td
-                                                    class="py-4 px-6 uppercase whitespace-nowrap text-sm"
-                                                >
-                                                    {{ bank.name_on_card }}
-                                                </td>
-                                                <td
-                                                    class="py-4 px-6 whitespace-nowrap text-sm"
-                                                >
-                                                    {{ bank.account_number }}
-                                                </td>
-                                                <td
-                                                    class="py-4 px-6 whitespace-nowrap text-sm"
-                                                >
-                                                    {{ bank.ic_number }}
-                                                </td>
-                                                <td
-                                                    class="py-4 px-6 whitespace-nowrap text-sm font-semibold"
-                                                    :class="
-                                                        bank.status ==
-                                                        'verified'
-                                                            ? 'text-green-500'
-                                                            : bank.status ==
-                                                              'pending'
-                                                            ? 'text-orange-500'
-                                                            : 'text-red-500'
-                                                    "
-                                                >
-                                                    {{ bank.status }}
-                                                </td>
-                                                <td
-                                                    class="py-4 px-6 whitespace-nowrap"
-                                                >
-                                                    <div
-                                                        class="flex space-x-2 text-sm font-semibold"
-                                                    >
-                                                        <button
-                                                            class="px-3 py-1 bg-gray-50 hover:bg-gray-100 rounded-md text-red-500"
-                                                            @click="
-                                                                showDeleteConfirmation(
-                                                                    bank.id
-                                                                )
-                                                            "
-                                                        >
-                                                            delete
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </template>
-                                    </template>
-                                    <template v-else>
-                                        <h3 class="my-2 text-md px-2">
-                                            No data
-                                        </h3>
-                                    </template>
-                                </tbody>
-                            </table>
-                        </div>
-
+                    <div class="bg-white p-2 sm:p-4 relative overflow-x-hidden shadow-md sm:rounded-lg">
+                        <DataTable 
+                            :header-data="['#', 'Name', 'Account Number', 'Identity Card Number', 'Status', 'Actions']"
+                            :body-data="banks"
+                            @deleteBank="showDeleteConfirmation"
+                        />
                         <div class="flex justify-end space-x-3 mt-3">
-                            <!-- when button click open modal screen using headless u.i -->
                             <h3
                                 class="text-sm font-light self-center text-red-500"
                                 :class="banks.length == 3 ? '' : 'hidden'"
