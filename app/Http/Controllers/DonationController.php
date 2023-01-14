@@ -59,7 +59,7 @@ class DonationController extends Controller
                 'id',
                 'user_id',
                 'title',
-                'details',
+                'detail',
                 'currently_received',
                 'target_amount',
                 'status',
@@ -90,11 +90,15 @@ class DonationController extends Controller
 
         if ($user->hasRole('needy')) {
             // fetch bank account here $bankAccounts here
-            $bankAccounts = Bank::select([
+            $bankAccountsArr = Bank::select([
                 'id',
                 'user_id',
                 'account_number'
             ])->where('user_id', $user->id)->get();
+
+            foreach ($bankAccountsArr as $bank) {
+                $bankAccounts[] = [$bank['id'], $bank['account_number']];
+            }
 
             // user donation histories
             $histories = Donation::select([
@@ -129,6 +133,35 @@ class DonationController extends Controller
             'histories' => $histories,
             'requests' => $requests,
             'users' => $users,
+        ])
+            ->with('jetstream.flash.banner', session()->get('jetstream.flash.banner'))
+            ->with('jetstream.flash.bannerStyle', session()->get('jetstream.flash.bannerStyle'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'title' => ['required', 'max:50'],
+            'detail' => ['required', 'max:200'],
+            'targetAmount' => ['required', 'numeric', 'min:10'],
         ]);
+
+        $bank = Bank::where('id', $request->bankAccountId)->first();
+
+        DonationRequest::create([
+            'user_id' => $request->user()->id,
+            'bank_id' => $bank->id,
+            'title' => $request->title,
+            'detail' => $request->detail,
+            'currently_received' => 0,
+            'target_amount' => $request->targetAmount,
+        ]);
+
+        // send email to an admin (future)
+
+        $request->session()->flash('jetstream.flash.banner', 'Donation request successfully made.');
+        $request->session()->flash('jetstream.flash.bannerStyle', 'success');
+
+        return redirect()->route('donations.index');
     }
 }
