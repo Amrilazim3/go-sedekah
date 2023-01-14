@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('bank_id')->constrained()->cascadeOnDelete();
             $table->string('title');
-            $table->string('details');
+            $table->string('detail');
             $table->float('currently_received')->default(0);
             $table->float('target_amount');
             $table->string('status')->comment('pending / approved / rejected')->default('pending');
