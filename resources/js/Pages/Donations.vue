@@ -56,7 +56,7 @@ const submit = () => {
             ...data,
         }))
         .post(route("donations.store"), {
-            preserveScroll: true,
+            preserveScroll: false,
             onSuccess: () => {
                 isOpenDonationRequestModal.value = false;
                 donationRequestForm.reset();
@@ -535,7 +535,7 @@ const submit = () => {
                             <h2 class="text-lg font-semibold">
                                 Your donation requests
                             </h2>
-                            <div class="inline-flex">
+                            <div class="sm:inline-flex">
                                 <p
                                     class="text-sm text-red-500 self-start mr-2"
                                     :class="hasBankAccounts ? 'hidden' : ''"
