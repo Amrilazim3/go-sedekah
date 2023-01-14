@@ -34,6 +34,7 @@ Route::middleware([
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
     Route::get('/donations', [DonationController::class, 'index'])->name('donations.index');
+    Route::post('/donations', [DonationController::class, 'store'])->name('donations.store');
 
     Route::post('/billplz', function (Request $request) {
         // $bill = Billplz::bill()->create('bgs0cicq', 'amril@gmail.com', '0172374050', 'amril azim', 23000, 'http://localhost', 'donation for fulan bin fulan', ['redirect_url' => 'http://localhost']);
