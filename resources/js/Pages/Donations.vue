@@ -79,22 +79,25 @@ const submit = () => {
                 <div
                     class="bg-white p-2 sm:p-4 relative shadow-md sm:rounded-lg"
                 >
-                    <h2 class="text-lg font-semibold">Your histories</h2>
+                    <h2 class="text-lg font-semibold">
+                        Your donation histories
+                    </h2>
                     <SearchInput
                         :focus-input="false"
-                        placeholder="Search name / title / amount"
+                        placeholder="Search receiver / title / amount"
                         v-model="searchAdminValue"
                     />
                     <DataTable
                         :header-data="[
-                            'Name',
+                            '#',
+                            'Receiver',
                             'Title',
-                            'Date',
                             'Amount',
+                            'Date',
                             'Receipt',
                         ]"
-                        :body-data="[]"
-                        type="admin"
+                        :body-data="histories.data"
+                        type="histories"
                     />
                 </div>
             </div>
@@ -115,7 +118,6 @@ const submit = () => {
                                 class="sm:w-full"
                                 v-model="searchAdminValue"
                             />
-                            <!-- dropdwon option -->
                             <Menu
                                 as="div"
                                 class="relative text-left mb-4 sm:self-center sm:-mb-0"
@@ -186,310 +188,340 @@ const submit = () => {
                             </Menu>
                         </div>
                         <div class="space-y-4 sm:space-y-6">
-                            <!-- request 1 (pending request) -->
-                            <div class="relative rounded-md shadow-sm">
-                                <div
-                                    class="px-4 py-5 bg-green-100 rounded-tr-md rounded-tl-md sm:p-6"
+                            <template v-if="requests.data.length > 0">
+                                <template
+                                    v-for="request in requests.data"
+                                    :key="request.id"
                                 >
-                                    <div
-                                        class="flex items-center justify-between"
+                                    <template
+                                        v-if="request.status == 'approved'"
                                     >
                                         <div
-                                            class="text-md font-semibold leading-5 text-indigo-500"
+                                            class="relative rounded-md shadow-sm"
                                         >
-                                            Abu kamil
-                                            <span class="text-green-500"
-                                                >(Approved)</span
-                                            >
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="mt-2 flex justify-between leading-5"
-                                    >
-                                        <h3
-                                            class="text-md font-medium text-gray-900 underline"
-                                        >
-                                            For new teeth treatment
-                                        </h3>
-                                        <h3 class="text-gray-600 text-sm">
-                                            5 November 2021
-                                        </h3>
-                                    </div>
-                                    <Disclosure v-slot="{ open }">
-                                        <DisclosureButton
-                                            class="flex mt-2 text-left space-x-1.5 text-sm font-medium text-gray-700"
-                                        >
-                                            <span>Expand</span>
-                                            <ChevronUpIcon
-                                                :class="
-                                                    !open
-                                                        ? 'rotate-180 transform'
-                                                        : ''
-                                                "
-                                                class="h-4 w-4 self-center text-gray-700"
-                                            />
-                                        </DisclosureButton>
-                                        <DisclosurePanel>
                                             <div
-                                                class="mt-2 sm:flex sm:justify-between"
+                                                class="px-4 py-5 bg-green-100 rounded-tr-md rounded-tl-md sm:p-6"
                                             >
-                                                <div class="sm:flex">
+                                                <div
+                                                    class="flex items-center justify-between"
+                                                >
                                                     <div
-                                                        class="mr-6 text-sm leading-5 text-gray-500"
+                                                        class="text-md font-semibold leading-5 text-indigo-500"
                                                     >
-                                                        <h4
-                                                            class="text-gray-700"
+                                                        {{ request.user.name }}
+                                                        <span
+                                                            class="text-green-500"
+                                                            >(Approved)</span
                                                         >
-                                                            Detail
-                                                        </h4>
-                                                        <p>
-                                                            My teeth last week
-                                                            broke becauase i eat
-                                                            to much crab without
-                                                            stop for 3 hours,
-                                                            right now my teeh is
-                                                            look old lady that
-                                                            need to be replace
-                                                            and the cost for
-                                                            replacement is so
-                                                            high
-                                                        </p>
                                                     </div>
                                                 </div>
                                                 <div
-                                                    class="mt-4 sm:mt-0 sm:ml-4 sm:flex-shrink-0 sm:flex sm:justify-end"
+                                                    class="mt-2 flex justify-between leading-5"
                                                 >
-                                                    <dl>
-                                                        <dt
-                                                            class="text-sm text-gray-700"
+                                                    <h3
+                                                        class="text-md font-medium text-gray-900 underline"
+                                                    >
+                                                        {{ request.title }}
+                                                    </h3>
+                                                    <h3
+                                                        class="text-gray-600 text-sm"
+                                                    >
+                                                        {{ request.created_at }}
+                                                    </h3>
+                                                </div>
+                                                <Disclosure v-slot="{ open }">
+                                                    <DisclosureButton
+                                                        class="flex mt-2 text-left space-x-1.5 text-sm font-medium text-gray-700"
+                                                    >
+                                                        <span>Expand</span>
+                                                        <ChevronUpIcon
+                                                            :class="
+                                                                !open
+                                                                    ? 'rotate-180 transform'
+                                                                    : ''
+                                                            "
+                                                            class="h-4 w-4 self-center text-gray-700"
+                                                        />
+                                                    </DisclosureButton>
+                                                    <DisclosurePanel>
+                                                        <div
+                                                            class="mt-2 sm:flex sm:justify-between"
                                                         >
-                                                            Current Donation
-                                                            Received
-                                                        </dt>
-                                                        <dd
-                                                            class="text-sm leading-5 font-medium text-blue-600"
-                                                        >
-                                                            $50
-                                                        </dd>
-                                                    </dl>
-                                                    <dl class="sm:ml-4">
-                                                        <dt
-                                                            class="text-sm text-gray-700"
-                                                        >
-                                                            Donation Goals
-                                                        </dt>
-                                                        <dd
-                                                            class="text-sm leading-5 font-medium text-green-600"
-                                                        >
-                                                            $100
-                                                        </dd>
-                                                    </dl>
+                                                            <div
+                                                                class="sm:flex"
+                                                            >
+                                                                <div
+                                                                    class="mr-6 text-sm leading-5 text-gray-500"
+                                                                >
+                                                                    <h4
+                                                                        class="text-gray-700"
+                                                                    >
+                                                                        Detail
+                                                                    </h4>
+                                                                    <p>
+                                                                        {{
+                                                                            request.detail
+                                                                        }}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="mt-4 sm:mt-0 sm:ml-4 sm:flex-shrink-0 sm:flex sm:justify-end"
+                                                            >
+                                                                <dl>
+                                                                    <dt
+                                                                        class="text-sm text-gray-700"
+                                                                    >
+                                                                        Current
+                                                                        Donation
+                                                                        Received
+                                                                    </dt>
+                                                                    <dd
+                                                                        class="text-sm leading-5 font-medium text-blue-600"
+                                                                    >
+                                                                        {{
+                                                                            request.currently_received
+                                                                        }}
+                                                                    </dd>
+                                                                </dl>
+                                                                <dl
+                                                                    class="sm:ml-4"
+                                                                >
+                                                                    <dt
+                                                                        class="text-sm text-gray-700"
+                                                                    >
+                                                                        Donation
+                                                                        Goals
+                                                                    </dt>
+                                                                    <dd
+                                                                        class="text-sm leading-5 font-medium text-green-600"
+                                                                    >
+                                                                        {{
+                                                                            request.target_amount
+                                                                        }}
+                                                                    </dd>
+                                                                </dl>
+                                                            </div>
+                                                        </div>
+                                                    </DisclosurePanel>
+                                                </Disclosure>
+                                            </div>
+                                            <div
+                                                class="bg-gray-100 rounded-br-md rounded-bl-md px-4 py-4 sm:px-6"
+                                            >
+                                                <div class="text-sm leading-5">
+                                                    <a
+                                                        href="#"
+                                                        class="font-medium text-indigo-600 hover:text-indigo-500 transition duration-150 ease-in-out"
+                                                    >
+                                                        View More
+                                                    </a>
                                                 </div>
                                             </div>
-                                        </DisclosurePanel>
-                                    </Disclosure>
-                                </div>
-                                <div
-                                    class="bg-gray-100 rounded-br-md rounded-bl-md px-4 py-4 sm:px-6"
-                                >
-                                    <div class="text-sm leading-5">
-                                        <a
-                                            href="#"
-                                            class="font-medium text-indigo-600 hover:text-indigo-500 transition duration-150 ease-in-out"
-                                        >
-                                            View More
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- request 2 (approved request) -->
-                            <div class="relative rounded-md shadow-sm">
-                                <div
-                                    class="px-4 py-5 bg-orange-100 rounded-tr-md rounded-tl-md sm:p-6"
-                                >
-                                    <div
-                                        class="flex items-center justify-between"
+                                        </div></template
+                                    >
+                                    <template
+                                        v-if="request.status == 'pending'"
                                     >
                                         <div
-                                            class="text-md font-semibold leading-5 text-indigo-500"
+                                            class="relative rounded-md shadow-sm"
                                         >
-                                            Ahmad daud
-                                            <span class="text-orange-500"
-                                                >(Pending)</span
-                                            >
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="mt-2 flex justify-between leading-5"
-                                    >
-                                        <h3
-                                            class="text-md font-medium text-gray-900 underline"
-                                        >
-                                            For my son's eye operation
-                                        </h3>
-                                        <h3 class="text-gray-600 text-sm">
-                                            5 November 2021
-                                        </h3>
-                                    </div>
-                                    <Disclosure v-slot="{ open }">
-                                        <DisclosureButton
-                                            class="flex mt-2 text-left space-x-1.5 text-sm font-medium text-gray-700"
-                                        >
-                                            <span>Expand</span>
-                                            <ChevronUpIcon
-                                                :class="
-                                                    !open
-                                                        ? 'rotate-180 transform'
-                                                        : ''
-                                                "
-                                                class="h-4 w-4 self-center text-gray-700"
-                                            />
-                                        </DisclosureButton>
-                                        <DisclosurePanel>
                                             <div
-                                                class="mt-2 sm:flex sm:justify-between"
+                                                class="px-4 py-5 bg-orange-100 rounded-tr-md rounded-tl-md sm:p-6"
                                             >
-                                                <div class="sm:flex">
+                                                <div
+                                                    class="flex items-center justify-between"
+                                                >
                                                     <div
-                                                        class="mr-6 text-sm leading-5 text-gray-500"
+                                                        class="text-md font-semibold leading-5 text-indigo-500"
                                                     >
-                                                        <h4
-                                                            class="text-gray-700"
+                                                        {{ request.user.name }}
+                                                        <span
+                                                            class="text-orange-500"
+                                                            >(Pending)</span
                                                         >
-                                                            Detail
-                                                        </h4>
-                                                        <p>
-                                                            Lorem, ipsum dolor
-                                                            sit amet consectetur
-                                                            adipisicing elit.
-                                                            Dolores maiores
-                                                            suscipit impedit id
-                                                            in pariatur expedita
-                                                            distinctio
-                                                            exercitationem quas
-                                                            numquam tenetur.
-                                                        </p>
                                                     </div>
                                                 </div>
                                                 <div
-                                                    class="mt-4 sm:mt-0 sm:ml-4 sm:flex-shrink-0 sm:flex sm:justify-end"
+                                                    class="mt-2 flex justify-between leading-5"
                                                 >
-                                                    <dl>
-                                                        <dt
-                                                            class="text-sm text-gray-700"
+                                                    <h3
+                                                        class="text-md font-medium text-gray-900 underline"
+                                                    >
+                                                        {{ request.title }}
+                                                    </h3>
+                                                    <h3
+                                                        class="text-gray-600 text-sm"
+                                                    >
+                                                        {{ request.created_at }}
+                                                    </h3>
+                                                </div>
+                                                <Disclosure v-slot="{ open }">
+                                                    <DisclosureButton
+                                                        class="flex mt-2 text-left space-x-1.5 text-sm font-medium text-gray-700"
+                                                    >
+                                                        <span>Expand</span>
+                                                        <ChevronUpIcon
+                                                            :class="
+                                                                !open
+                                                                    ? 'rotate-180 transform'
+                                                                    : ''
+                                                            "
+                                                            class="h-4 w-4 self-center text-gray-700"
+                                                        />
+                                                    </DisclosureButton>
+                                                    <DisclosurePanel>
+                                                        <div
+                                                            class="mt-2 sm:flex sm:justify-between"
                                                         >
-                                                            Donation Goals
-                                                        </dt>
-                                                        <dd
-                                                            class="text-sm leading-5 font-medium text-green-600"
-                                                        >
-                                                            $100
-                                                        </dd>
-                                                    </dl>
+                                                            <div
+                                                                class="sm:flex"
+                                                            >
+                                                                <div
+                                                                    class="mr-6 text-sm leading-5 text-gray-500"
+                                                                >
+                                                                    <h4
+                                                                        class="text-gray-700"
+                                                                    >
+                                                                        Detail
+                                                                    </h4>
+                                                                    <p>
+                                                                        {{
+                                                                            request.detail
+                                                                        }}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="mt-4 sm:mt-0 sm:ml-4 sm:flex-shrink-0 sm:flex sm:justify-end"
+                                                            >
+                                                                <dl>
+                                                                    <dt
+                                                                        class="text-sm text-gray-700"
+                                                                    >
+                                                                        Donation
+                                                                        Goals
+                                                                    </dt>
+                                                                    <dd
+                                                                        class="text-sm leading-5 font-medium text-green-600"
+                                                                    >
+                                                                        {{
+                                                                            request.target_amount
+                                                                        }}
+                                                                    </dd>
+                                                                </dl>
+                                                            </div>
+                                                        </div>
+                                                    </DisclosurePanel>
+                                                </Disclosure>
+                                            </div>
+                                            <div
+                                                class="bg-gray-100 rounded-br-md rounded-bl-md px-4 py-4 sm:px-6"
+                                            >
+                                                <div
+                                                    class="flex space-x-3 text-sm leading-5"
+                                                >
+                                                    <button
+                                                        class="text-green-500 inline-flex"
+                                                    >
+                                                        Approve
+                                                        <CheckCircleIcon
+                                                            class="h-4 w-4 ml-1.5 self-center"
+                                                        />
+                                                    </button>
+                                                    <button
+                                                        class="text-red-500 inline-flex"
+                                                    >
+                                                        Reject
+                                                        <XCircleIcon
+                                                            class="h-4 w-4 ml-1.5 self-center"
+                                                        />
+                                                    </button>
                                                 </div>
                                             </div>
-                                        </DisclosurePanel>
-                                    </Disclosure>
-                                </div>
-                                <div
-                                    class="bg-gray-100 rounded-br-md rounded-bl-md px-4 py-4 sm:px-6"
-                                >
-                                    <div
-                                        class="flex space-x-3 text-sm leading-5"
-                                    >
-                                        <button
-                                            class="text-green-500 inline-flex"
-                                        >
-                                            Approve
-                                            <CheckCircleIcon
-                                                class="h-4 w-4 ml-1.5 self-center"
-                                            />
-                                        </button>
-                                        <button
-                                            class="text-red-500 inline-flex"
-                                        >
-                                            Reject
-                                            <XCircleIcon
-                                                class="h-4 w-4 ml-1.5 self-center"
-                                            />
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- request 3 (rejected request) -->
-                            <div class="relative rounded-md shadow-sm">
-                                <div
-                                    class="px-4 py-5 bg-red-100 rounded-tr-md rounded-tl-md sm:p-6"
-                                >
-                                    <div
-                                        class="flex items-center justify-between"
-                                    >
-                                        <div
-                                            class="text-md font-semibold leading-5 text-indigo-500"
-                                        >
-                                            Ammar asri wak doyok
-                                            <span class="text-red-500"
-                                                >(Rejected)</span
-                                            >
                                         </div>
-                                    </div>
-                                    <div
-                                        class="mt-2 flex justify-between leading-5"
-                                    >
-                                        <h3
-                                            class="text-md font-medium text-gray-900 underline"
+                                    </template>
+                                    <template v-if="request.status == 'rejected'">
+                                        <div
+                                            class="relative rounded-md shadow-sm"
                                         >
-                                            Buy new game for my laptop
-                                        </h3>
-                                        <h3 class="text-gray-600 text-sm">
-                                            5 january 2021
-                                        </h3>
-                                    </div>
-                                    <Disclosure v-slot="{ open }">
-                                        <DisclosureButton
-                                            class="flex mt-2 text-left space-x-1.5 text-sm font-medium text-gray-700"
-                                        >
-                                            <span>Expand</span>
-                                            <ChevronUpIcon
-                                                :class="
-                                                    !open
-                                                        ? 'rotate-180 transform'
-                                                        : ''
-                                                "
-                                                class="h-4 w-4 self-center text-gray-700"
-                                            />
-                                        </DisclosureButton>
-                                        <DisclosurePanel>
                                             <div
-                                                class="mt-2 sm:flex sm:justify-between"
+                                                class="px-4 py-5 bg-red-100 rounded-tr-md rounded-tl-md sm:p-6"
                                             >
-                                                <div class="sm:flex">
+                                                <div
+                                                    class="flex items-center justify-between"
+                                                >
                                                     <div
-                                                        class="mr-6 text-sm leading-5 text-gray-500"
+                                                        class="text-md font-semibold leading-5 text-indigo-500"
                                                     >
-                                                        <h4
-                                                            class="text-gray-700"
+                                                        {{ request.user.name }}
+                                                        <span
+                                                            class="text-red-500"
+                                                            >(Rejected)</span
                                                         >
-                                                            Detail
-                                                        </h4>
-                                                        <p>
-                                                            Lorem, ipsum dolor
-                                                            sit amet consectetur
-                                                            adipisicing elit.
-                                                            Dolores maiores
-                                                            suscipit impedit id
-                                                            in pariatur expedita
-                                                            distinctio
-                                                            exercitationem quas
-                                                            numquam tenetur.
-                                                        </p>
                                                     </div>
                                                 </div>
+                                                <div
+                                                    class="mt-2 flex justify-between leading-5"
+                                                >
+                                                    <h3
+                                                        class="text-md font-medium text-gray-900 underline"
+                                                    >
+                                                        {{ request.title }}
+                                                    </h3>
+                                                    <h3
+                                                        class="text-gray-600 text-sm"
+                                                    >
+                                                        {{ request.created_at }}
+                                                    </h3>
+                                                </div>
+                                                <Disclosure v-slot="{ open }">
+                                                    <DisclosureButton
+                                                        class="flex mt-2 text-left space-x-1.5 text-sm font-medium text-gray-700"
+                                                    >
+                                                        <span>Expand</span>
+                                                        <ChevronUpIcon
+                                                            :class="
+                                                                !open
+                                                                    ? 'rotate-180 transform'
+                                                                    : ''
+                                                            "
+                                                            class="h-4 w-4 self-center text-gray-700"
+                                                        />
+                                                    </DisclosureButton>
+                                                    <DisclosurePanel>
+                                                        <div
+                                                            class="mt-2 sm:flex sm:justify-between"
+                                                        >
+                                                            <div
+                                                                class="sm:flex"
+                                                            >
+                                                                <div
+                                                                    class="mr-6 text-sm leading-5 text-gray-500"
+                                                                >
+                                                                    <h4
+                                                                        class="text-gray-700"
+                                                                    >
+                                                                        Detail
+                                                                    </h4>
+                                                                    <p>
+                                                                        {{
+                                                                            request.detail
+                                                                        }}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </DisclosurePanel>
+                                                </Disclosure>
                                             </div>
-                                        </DisclosurePanel>
-                                    </Disclosure>
-                                </div>
-                            </div>
+                                        </div>
+                                    </template>
+                                </template>
+                            </template>
+                            <template v-else>
+                                <h3 class="text-md mt-2">No result</h3>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -511,13 +543,15 @@ const submit = () => {
                         />
                         <DataTable
                             :header-data="[
+                                '#',
                                 'Donator',
                                 'Receiver',
                                 'Title',
                                 'Amount',
+                                'Date',
                             ]"
-                            :body-data="[]"
-                            type="admin"
+                            :body-data="users.data"
+                            type="user-histories"
                         />
                     </div>
                 </div>
@@ -563,7 +597,6 @@ const submit = () => {
                                 class="sm:w-full"
                                 v-model="searchAdminValue"
                             />
-                            <!-- dropdwon option -->
                             <Menu
                                 as="div"
                                 class="relative text-left mb-4 sm:self-center sm:-mb-0"
@@ -637,12 +670,15 @@ const submit = () => {
                             :header-data="[
                                 '#',
                                 'Title',
-                                'Status',
                                 'Progress',
+                                'Status',
                                 'Requested Date',
+                                'Verified',
+                                'Verification Expiry Date',
+                                'Actions'
                             ]"
-                            :body-data="[]"
-                            type="admin"
+                            :body-data="requests.data"
+                            type="needy-requests"
                         />
                     </div>
                 </div>
