@@ -25,6 +25,7 @@ class DonationController extends Controller
                 'user_id',
                 'donation_request_id',
                 'amount',
+                'bill_url',
                 'created_at'
             ])->with(['donationRequest' => function ($query) {
                 return $query->select([
@@ -45,7 +46,8 @@ class DonationController extends Controller
                 'id',
                 'user_id',
                 'donation_request_id',
-                'amount'
+                'amount',
+                'created_at'
             ])->with(['donationRequest' => function ($query) {
                 return $query->select([
                     'id',
