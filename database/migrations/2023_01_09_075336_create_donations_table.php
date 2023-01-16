@@ -19,7 +19,8 @@ return new class extends Migration
             $table->foreignId('donation_request_id')->constrained()->cascadeOnDelete();
             $table->float('amount');
             $table->string('message');
-            $table->boolean('is_visible')->default(false);
+            $table->boolean('is_hidden')->default(false);
+            $table->string('bill_url');
             $table->timestamps();
         });
     }
