@@ -13,61 +13,10 @@ class DonationController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-
-        // for needy form
         $bankAccounts = [];
         $histories = [];
         $requests = [];
         $users = [];
-
-        if ($user->hasRole('admin')) {
-            // user donation histories
-            $histories = Donation::select([
-                'id',
-                'user_id',
-                'donation_request_id',
-                'amount',
-                'created_at'
-            ])->with(['donationRequest' => function ($query) {
-                return $query->select([
-                    'id',
-                    'user_id',
-                    'title'
-                ])->with(['user' => function ($query) {
-                    return $query->select(['id', 'name']);
-                }]);
-            }])->where('user_id', $user->id)->paginate(13);
-
-            // all user donation histories
-            $users = Donation::select([
-                'id',
-                'user_id',
-                'donation_request_id',
-                'amount'
-            ])->with(['donationRequest' => function ($query) {
-                return $query->select([
-                    'id',
-                    'user_id',
-                    'title'
-                ])->with(['user' => function ($query) {
-                    return $query->select(['id', 'name']);
-                }]);
-            }])->paginate(13);
-
-            // all user donation requests
-            $requests = DonationRequest::select([
-                'id',
-                'user_id',
-                'title',
-                'detail',
-                'currently_received',
-                'target_amount',
-                'status',
-                'created_at'
-            ])->with(['user' => function ($query) {
-                return $query->select(['id', 'name']);
-            }])->paginate(13);
-        }
 
         if ($user->hasRole('donor')) {
             // user donation histories
@@ -81,11 +30,52 @@ class DonationController extends Controller
                 return $query->select([
                     'id',
                     'user_id',
+                    'currently_received',
+                    'target_amount',
                     'title'
                 ])->with(['user' => function ($query) {
                     return $query->select(['id', 'name']);
                 }]);
             }])->where('user_id', $user->id)->paginate(13);
+        }
+
+        if ($user->hasRole('admin')) {
+            // all user donation histories
+            $users = Donation::select([
+                'id',
+                'user_id',
+                'donation_request_id',
+                'amount'
+            ])->with(['donationRequest' => function ($query) {
+                return $query->select([
+                    'id',
+                    'user_id',
+                    'currently_received',
+                    'target_amount',
+                    'title'
+                ])->with(['user' => function ($query) {
+                    return $query->select(['id', 'name']);
+                }]);
+            }])->with(['user' => function ($query) {
+                return $query->select(['id', 'name']);
+            }])
+                ->paginate(13);
+
+            // all user donation requests
+            $requests = DonationRequest::select([
+                'id',
+                'user_id',
+                'title',
+                'currently_received',
+                'target_amount',
+                'status',
+                'is_verified',
+                'created_at',
+                'verification_expiry_at'
+            ])->with(['user' => function ($query) {
+                return $query->select(['id', 'name']);
+            }])
+            ->paginate(13);
         }
 
         if ($user->hasRole('needy')) {
@@ -100,23 +90,6 @@ class DonationController extends Controller
                 $bankAccounts[] = [$bank['id'], $bank['account_number']];
             }
 
-            // user donation histories
-            $histories = Donation::select([
-                'id',
-                'user_id',
-                'donation_request_id',
-                'amount',
-                'created_at'
-            ])->with(['donationRequest' => function ($query) {
-                return $query->select([
-                    'id',
-                    'user_id',
-                    'title'
-                ])->with(['user' => function ($query) {
-                    return $query->select(['id', 'name']);
-                }]);
-            }])->where('user_id', $user->id)->paginate(13);
-
             // donation requests 
             $requests = DonationRequest::select([
                 'id',
@@ -124,7 +97,9 @@ class DonationController extends Controller
                 'currently_received',
                 'target_amount',
                 'status',
-                'created_at'
+                'is_verified',
+                'created_at',
+                'verification_expiry_at'
             ])->where('user_id', $user->id)->paginate(13);
         }
 
