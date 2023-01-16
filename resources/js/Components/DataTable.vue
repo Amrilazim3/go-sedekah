@@ -14,6 +14,7 @@ defineEmits([
     "approveNeedy",
     "removeNeedy",
     "deleteBank",
+    "removeDonationRequest"
 ]);
 </script>
 
@@ -325,6 +326,195 @@ defineEmits([
                                                 </div>
                                             </td>
                                         </tr>
+                                    </template>
+                                    <template
+                                        v-if="
+                                            route().current('donations.index')
+                                        "
+                                    >
+                                        <template v-if="type == 'histories'">
+                                            <tr class="bg-white border-b">
+                                                <td
+                                                    class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                                >
+                                                    {{ key + 1  }}
+                                                </td>
+                                                <td
+                                                    class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                                >
+                                                    {{ bData.donation_request.user.name  }}
+                                                </td>
+                                                <td
+                                                    class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                                >
+                                                    {{ bData.donation_request.title }}
+                                                </td>
+                                                <td
+                                                    class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                                >
+                                                    {{ bData.amount }} MYR
+                                                </td>
+                                                <td
+                                                    class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                                >
+                                                    {{ bData.created_at }}
+                                                </td>
+                                                <td
+                                                    class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                                >
+                                                    <button class="text-indigo-500 px-3 py-1.5 rounded-md bg-gray-100">
+                                                        view
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </template>
+                                        <template
+                                            v-if="type == 'user-histories'"
+                                        >
+                                            <tr class="bg-white border-b">
+                                                <td
+                                                    class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                                >
+                                                    {{ key + 1 }}
+                                                </td>
+                                                <td
+                                                    class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                                >
+                                                    {{ bData.user.name }}
+                                                </td>
+                                                <td
+                                                    class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                                >
+                                                    {{ bData.donation_request.user.name }}
+                                                </td>
+                                                <td
+                                                    class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                                >
+                                                    {{ bData.donation_request.title }}
+                                                </td>
+                                                <td
+                                                    class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                                >
+                                                    {{ bData.amount }} MYR
+                                                </td>
+                                                <td
+                                                    class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                                >
+                                                    {{ bData.created_at }}
+                                                </td>
+                                            </tr>
+                                        </template>
+                                        <template
+                                            v-if="type == 'needy-requests'"
+                                        >
+                                            <tr class="bg-white border-b">
+                                                <td
+                                                    class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                                >
+                                                    {{ key + 1 }}
+                                                </td>
+                                                <td
+                                                    class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                                >
+                                                    {{ bData.title }}
+                                                </td>
+                                                <td
+                                                    class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                                >
+                                                    {{ bData.progress }} ({{
+                                                        bData.currently_received
+                                                    }} MYR / {{
+                                                        bData.target_amount
+                                                    }} MYR)
+                                                </td>
+                                                <td
+                                                    class="text-sm font-light px-6 py-4 whitespace-nowrap"
+                                                    :class="
+                                                        bData.status ==
+                                                        'pending'
+                                                            ? 'text-orange-500'
+                                                            : bData.status ==
+                                                              'approved'
+                                                            ? 'text-indigo-500'
+                                                            : 'text-red-500'
+                                                    "
+                                                >
+                                                    {{ bData.status }}
+                                                </td>
+                                                <td
+                                                    class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                                >
+                                                    {{ bData.created_at }}
+                                                </td>
+                                                <td
+                                                    class="text-sm font-light px-6 py-4 whitespace-nowrap"
+                                                    :class="bData.is_verified ? 'text-green-500' : 'text-red-500'"
+                                                >
+                                                    {{
+                                                        bData.is_verified
+                                                            ? "Yes"
+                                                            : "No"
+                                                    }}
+                                                </td>
+                                                <td
+                                                    class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                                >
+                                                    {{
+                                                        bData.verification_expiry_at
+                                                            ? bData.verification_expiry_at
+                                                            : "No expiry date yet"
+                                                    }}
+                                                </td>
+                                                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                                    <Menu>
+                                                        <MenuButton>
+                                                            <EllipsisVerticalIcon
+                                                                class="h-5 w-5 cursor-pointer"
+                                                            />
+                                                        </MenuButton>
+                                                        <transition
+                                                            enter-active-class="transition duration-100 ease-out"
+                                                            enter-from-class="transform scale-95 opacity-0"
+                                                            enter-to-class="transform scale-100 opacity-100"
+                                                            leave-active-class="transition duration-75 ease-in"
+                                                            leave-from-class="transform scale-100 opacity-100"
+                                                            leave-to-class="transform scale-95 opacity-0"
+                                                        >
+                                                            <MenuItems
+                                                                class="xl:absolute z-40 mt-1 origin-top-left divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                                            >
+                                                                <div
+                                                                    class="px-1 py-1"
+                                                                >
+                                                                    <MenuItem
+                                                                        v-slot="{
+                                                                            active,
+                                                                        }"
+                                                                    >
+                                                                        <button
+                                                                            :class="[
+                                                                                active
+                                                                                    ? 'bg-red-500 text-gray-900'
+                                                                                    : 'text-gray-900',
+                                                                                'group flex w-full items-center rounded-md px-2 py-2 text-sm',
+                                                                            ]"
+                                                                            @click="
+                                                                                $emit(
+                                                                                    'removeDonationRequest',
+                                                                                    bData.id
+                                                                                )
+                                                                            "
+                                                                        >
+                                                                            Delete
+                                                                        </button>
+                                                                    </MenuItem>
+                                                                </div>
+                                                            </MenuItems>
+                                                        </transition>
+                                                    </Menu>
+                                                </td>
+                                            </tr>
+                                        </template>
                                     </template>
                                 </template>
                             </tbody>
