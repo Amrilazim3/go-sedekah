@@ -37,7 +37,7 @@ class DonationController extends Controller
                 ])->with(['user' => function ($query) {
                     return $query->select(['id', 'name']);
                 }]);
-            }])->where('user_id', $user->id)->paginate(13);
+            }])->where('user_id', $user->id)->paginate(13, ['*'], 'histories');
         }
 
         if ($user->hasRole('admin')) {
@@ -61,13 +61,14 @@ class DonationController extends Controller
             }])->with(['user' => function ($query) {
                 return $query->select(['id', 'name']);
             }])
-                ->paginate(13);
+                ->paginate(13, ['*'], 'users');
 
             // all user donation requests
             $requests = DonationRequest::select([
                 'id',
                 'user_id',
                 'title',
+                'detail',
                 'currently_received',
                 'target_amount',
                 'status',
@@ -77,7 +78,7 @@ class DonationController extends Controller
             ])->with(['user' => function ($query) {
                 return $query->select(['id', 'name']);
             }])
-            ->paginate(13);
+            ->paginate(13, ['*'], 'requests');
         }
 
         if ($user->hasRole('needy')) {
@@ -102,7 +103,7 @@ class DonationController extends Controller
                 'is_verified',
                 'created_at',
                 'verification_expiry_at'
-            ])->where('user_id', $user->id)->paginate(13);
+            ])->where('user_id', $user->id)->paginate(13, ['*'], 'requests');
         }
 
         return Inertia::render('Donations', [
