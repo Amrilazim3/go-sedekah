@@ -599,7 +599,7 @@ defineEmits([
                             </tbody>
                         </template>
                         <template v-else>
-                            <h3 class="mt-2 text-md px-2">No result</h3>
+                            <h3 class="mt-2 text-md px-2 whitespace-nowrap">No result</h3>
                         </template>
                     </table>
                 </div>
