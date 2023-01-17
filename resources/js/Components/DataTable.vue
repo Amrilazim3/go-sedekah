@@ -14,7 +14,9 @@ defineEmits([
     "approveNeedy",
     "removeNeedy",
     "deleteBank",
-    "removeDonationRequest"
+    "viewDonationRequest",
+    "deleteDonationRequest",
+    "clearRejectedRequest",
 ]);
 </script>
 
@@ -337,17 +339,23 @@ defineEmits([
                                                 <td
                                                     class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
                                                 >
-                                                    {{ key + 1  }}
+                                                    {{ key + 1 }}
                                                 </td>
                                                 <td
                                                     class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
                                                 >
-                                                    {{ bData.donation_request.user.name  }}
+                                                    {{
+                                                        bData.donation_request
+                                                            .user.name
+                                                    }}
                                                 </td>
                                                 <td
                                                     class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
                                                 >
-                                                    {{ bData.donation_request.title }}
+                                                    {{
+                                                        bData.donation_request
+                                                            .title
+                                                    }}
                                                 </td>
                                                 <td
                                                     class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
@@ -362,7 +370,9 @@ defineEmits([
                                                 <td
                                                     class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
                                                 >
-                                                    <button class="text-indigo-500 px-3 py-1.5 rounded-md bg-gray-100">
+                                                    <button
+                                                        class="text-indigo-500 px-3 py-1.5 rounded-md bg-gray-100"
+                                                    >
                                                         view
                                                     </button>
                                                 </td>
@@ -385,12 +395,18 @@ defineEmits([
                                                 <td
                                                     class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
                                                 >
-                                                    {{ bData.donation_request.user.name }}
+                                                    {{
+                                                        bData.donation_request
+                                                            .user.name
+                                                    }}
                                                 </td>
                                                 <td
                                                     class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
                                                 >
-                                                    {{ bData.donation_request.title }}
+                                                    {{
+                                                        bData.donation_request
+                                                            .title
+                                                    }}
                                                 </td>
                                                 <td
                                                     class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
@@ -423,9 +439,10 @@ defineEmits([
                                                 >
                                                     {{ bData.progress }} ({{
                                                         bData.currently_received
-                                                    }} MYR / {{
-                                                        bData.target_amount
-                                                    }} MYR)
+                                                    }}
+                                                    MYR /
+                                                    {{ bData.target_amount }}
+                                                    MYR)
                                                 </td>
                                                 <td
                                                     class="text-sm font-light px-6 py-4 whitespace-nowrap"
@@ -448,7 +465,11 @@ defineEmits([
                                                 </td>
                                                 <td
                                                     class="text-sm font-light px-6 py-4 whitespace-nowrap"
-                                                    :class="bData.is_verified ? 'text-green-500' : 'text-red-500'"
+                                                    :class="
+                                                        bData.is_verified
+                                                            ? 'text-green-500'
+                                                            : 'text-red-500'
+                                                    "
                                                 >
                                                     {{
                                                         bData.is_verified
@@ -465,7 +486,9 @@ defineEmits([
                                                             : "No expiry date yet"
                                                     }}
                                                 </td>
-                                                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                                <td
+                                                    class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                                >
                                                     <Menu>
                                                         <MenuButton>
                                                             <EllipsisVerticalIcon
@@ -491,22 +514,78 @@ defineEmits([
                                                                             active,
                                                                         }"
                                                                     >
-                                                                        <button
-                                                                            :class="[
-                                                                                active
-                                                                                    ? 'bg-red-500 text-gray-900'
-                                                                                    : 'text-gray-900',
-                                                                                'group flex w-full items-center rounded-md px-2 py-2 text-sm',
-                                                                            ]"
-                                                                            @click="
-                                                                                $emit(
-                                                                                    'removeDonationRequest',
-                                                                                    bData.id
-                                                                                )
-                                                                            "
-                                                                        >
-                                                                            Delete
-                                                                        </button>
+                                                                        <div>
+                                                                            <template
+                                                                                v-if="
+                                                                                    bData.status ==
+                                                                                    'approved'
+                                                                                "
+                                                                            >
+                                                                                <button
+                                                                                    :class="[
+                                                                                        active
+                                                                                            ? 'bg-indigo-500 text-white'
+                                                                                            : 'text-gray-900',
+                                                                                        'group flex w-full items-center rounded-md px-2 py-2 text-sm',
+                                                                                    ]"
+                                                                                    @click="
+                                                                                        $emit(
+                                                                                            'viewDonationRequest',
+                                                                                            bData.id
+                                                                                        )
+                                                                                    "
+                                                                                >
+                                                                                    View
+                                                                                    More
+                                                                                </button>
+                                                                            </template>
+                                                                            <template
+                                                                                v-if="
+                                                                                    bData.status ==
+                                                                                    'pending'
+                                                                                "
+                                                                            >
+                                                                                <button
+                                                                                    :class="[
+                                                                                        active
+                                                                                            ? 'bg-red-500 text-gray-900'
+                                                                                            : 'text-gray-900',
+                                                                                        'group flex w-full items-center rounded-md px-2 py-2 text-sm',
+                                                                                    ]"
+                                                                                    @click="
+                                                                                        $emit(
+                                                                                            'deleteDonationRequest',
+                                                                                            bData.id
+                                                                                        )
+                                                                                    "
+                                                                                >
+                                                                                    Delete
+                                                                                </button>
+                                                                            </template>
+                                                                            <template
+                                                                                v-if="
+                                                                                    bData.status ==
+                                                                                    'rejected'
+                                                                                "
+                                                                            >
+                                                                                <button
+                                                                                    :class="[
+                                                                                        active
+                                                                                            ? 'bg-red-500 text-gray-900'
+                                                                                            : 'text-gray-900',
+                                                                                        'group flex w-full items-center rounded-md px-2 py-2 text-sm',
+                                                                                    ]"
+                                                                                    @click="
+                                                                                        $emit(
+                                                                                            'clearRejectedRequest',
+                                                                                            bData.id
+                                                                                        )
+                                                                                    "
+                                                                                >
+                                                                                    Remove
+                                                                                </button>
+                                                                            </template>
+                                                                        </div>
                                                                     </MenuItem>
                                                                 </div>
                                                             </MenuItems>
