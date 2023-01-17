@@ -8,6 +8,7 @@ import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import TextAreaInput from "@/Components/TextAreaInput.vue";
 import SelectInput from "@/Components/SelectInput.vue";
+import PaginationBar from "@/Components/PaginationBar.vue";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 import {
@@ -23,7 +24,7 @@ import {
     ChevronDownIcon,
 } from "@heroicons/vue/20/solid";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/vue/24/outline";
-import { computed, ref } from "vue";
+import { computed, ref, inject } from "vue";
 import { useForm } from "@inertiajs/inertia-vue3";
 
 const props = defineProps({
@@ -33,6 +34,8 @@ const props = defineProps({
     users: Object || Array,
 });
 
+const Swal = inject("$swal");
+
 const hasBankAccounts = computed(() => {
     if (props.bankAccounts.length > 0) {
         return true;
@@ -40,6 +43,12 @@ const hasBankAccounts = computed(() => {
 
     return false;
 });
+
+const searchDonationHistory = ref("");
+
+const searchDonationRequest = ref("");
+
+const searchUserDonationHistory = ref("");
 
 const isOpenDonationRequestModal = ref(false);
 
@@ -63,6 +72,69 @@ const submit = () => {
             },
         });
 };
+
+const approveRequest = (id) => {
+    Swal.fire({
+        title: "Approve this donation request?",
+        text: "Everyone can donate after this.",
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonColor: "color: rgb(99 102 241);",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Approve",
+    }).then((result) => {
+        if (result.value) {
+            Inertia.patch(
+                `/donations/${id}/approve`,
+                {},
+                {
+                    preserveScroll: true,
+                }
+            );
+        }
+    });
+};
+
+const rejectRequest = (id) => {
+    Swal.fire({
+        title: "Reject this request?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "color: rgb(99 102 241);",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Reject",
+    }).then((result) => {
+        if (result.value) {
+            Inertia.patch(
+                `/donations/${id}/reject`,
+                {},
+                {
+                    preserveScroll: true,
+                }
+            );
+        }
+    });
+};
+
+const deleteDonationRequest = (id) => {
+    Swal.fire({
+        title: "Delete this request?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "color: rgb(99 102 241);",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Delete",
+    }).then((result) => {
+        if (result.value) {
+            Inertia.delete(
+                `/donations/${id}`,
+                {
+                    preserveScroll: true,
+                }
+            );
+        }
+    });
+};
 </script>
 
 <template>
@@ -85,7 +157,7 @@ const submit = () => {
                     <SearchInput
                         :focus-input="false"
                         placeholder="Search receiver / title / amount"
-                        v-model="searchAdminValue"
+                        v-model="searchDonationHistory"
                     />
                     <DataTable
                         :header-data="[
@@ -116,7 +188,7 @@ const submit = () => {
                                 :focus-input="false"
                                 placeholder="Search needy's name / title"
                                 class="sm:w-full"
-                                v-model="searchAdminValue"
+                                v-model="searchDonationRequest"
                             />
                             <Menu
                                 as="div"
@@ -133,7 +205,6 @@ const submit = () => {
                                         />
                                     </MenuButton>
                                 </div>
-
                                 <transition
                                     enter-active-class="transition duration-100 ease-out"
                                     enter-from-class="transform scale-95 opacity-0"
@@ -423,6 +494,11 @@ const submit = () => {
                                                 >
                                                     <button
                                                         class="text-green-500 inline-flex"
+                                                        @click="
+                                                            approveRequest(
+                                                                request.id
+                                                            )
+                                                        "
                                                     >
                                                         Approve
                                                         <CheckCircleIcon
@@ -431,6 +507,11 @@ const submit = () => {
                                                     </button>
                                                     <button
                                                         class="text-red-500 inline-flex"
+                                                        @click="
+                                                            rejectRequest(
+                                                                request.id
+                                                            )
+                                                        "
                                                     >
                                                         Reject
                                                         <XCircleIcon
@@ -441,7 +522,9 @@ const submit = () => {
                                             </div>
                                         </div>
                                     </template>
-                                    <template v-if="request.status == 'rejected'">
+                                    <template
+                                        v-if="request.status == 'rejected'"
+                                    >
                                         <div
                                             class="relative rounded-md shadow-sm"
                                         >
@@ -523,6 +606,7 @@ const submit = () => {
                                 <h3 class="text-md mt-2">No result</h3>
                             </template>
                         </div>
+                        <PaginationBar :links="requests.links" />
                     </div>
                 </div>
             </template>
@@ -539,7 +623,7 @@ const submit = () => {
                         <SearchInput
                             :focus-input="false"
                             placeholder="Search donator / receiver / title"
-                            v-model="searchAdminValue"
+                            v-model="searchUserDonationHistory"
                         />
                         <DataTable
                             :header-data="[
@@ -553,6 +637,7 @@ const submit = () => {
                             :body-data="users.data"
                             type="user-histories"
                         />
+                        <PaginationBar :links="users.links" />
                     </div>
                 </div>
             </template>
@@ -595,7 +680,7 @@ const submit = () => {
                                 :focus-input="false"
                                 placeholder="search donation title"
                                 class="sm:w-full"
-                                v-model="searchAdminValue"
+                                v-model="searchDonationRequest"
                             />
                             <Menu
                                 as="div"
@@ -675,11 +760,13 @@ const submit = () => {
                                 'Requested Date',
                                 'Verified',
                                 'Verification Expiry Date',
-                                'Actions'
+                                'Actions',
                             ]"
                             :body-data="requests.data"
                             type="needy-requests"
+                            @deleteDonationRequest="deleteDonationRequest"
                         />
+                        <PaginationBar :links="requests.links" />
                     </div>
                 </div>
             </template>
@@ -811,10 +898,16 @@ const submit = () => {
                                         />
                                     </div>
                                     <div class="mt-4">
-                                        <p class="text-sm text-gray-700">
+                                        <p class="text-sm text-gray-600">
                                             You must wait for an admin to
                                             approve your request after making
                                             this request.
+                                        </p>
+                                        <p class="text-sm mt-2 text-gray-600">
+                                            You can delete your donation request
+                                            while it is in pending state, after
+                                            the request is approved, it can't be
+                                            deleted.
                                         </p>
                                     </div>
                                     <div
