@@ -142,4 +142,43 @@ class DonationController extends Controller
 
         return redirect()->route('donations.index');
     }
+
+    public function destroy(DonationRequest $donationRequest, Request $request)
+    {
+        $donationRequest->delete();
+
+        // send email to an admin to inform that the request has been deleted.
+
+        $request->session()->flash('jetstream.flash.banner', 'Donation request successfully deleted.');
+        $request->session()->flash('jetstream.flash.bannerStyle', 'success');
+
+        return redirect()->route('donations.index');
+    }
+
+    public function approveRequest(DonationRequest $donationRequest, Request $request)
+    {
+        // send email to needy
+        $donationRequest->update([
+            'status' => 'approved'
+        ]);
+
+        $request->session()->flash('jetstream.flash.banner', 'Donation request successfully approved.');
+        $request->session()->flash('jetstream.flash.bannerStyle', 'success');
+
+        return redirect()->route('donations.index');
+    }
+
+    public function rejectRequest(DonationRequest $donationRequest, Request $request)
+    {
+        $donationRequest->update([
+            'status' => 'rejected'
+        ]);
+
+        // send email to needy
+
+        $request->session()->flash('jetstream.flash.banner', 'Donation request successfully rejected.');
+        $request->session()->flash('jetstream.flash.bannerStyle', 'success');
+
+        return redirect()->route('donations.index');
+    }
 }
