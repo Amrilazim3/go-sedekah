@@ -14,13 +14,18 @@ class DonationController extends Controller
     {
         $user = $request->user();
         $bankAccounts = [];
-        $histories = [];
-        $requests = [];
-        $users = [];
+        $historiesData = [];
+        $requestsData = [];
+        $usersData = [];
+
+        $querySearchResult = $this->queryFilter(
+            request(['search', 'type', 'status']),
+            $request->user()
+        );
 
         if ($user->hasRole('donor')) {
             // user donation histories
-            $histories = Donation::select([
+            $historiesData = Donation::select([
                 'id',
                 'user_id',
                 'donation_request_id',
@@ -42,7 +47,7 @@ class DonationController extends Controller
 
         if ($user->hasRole('admin')) {
             // all user donation histories
-            $users = Donation::select([
+            $usersData = Donation::select([
                 'id',
                 'user_id',
                 'donation_request_id',
@@ -64,7 +69,7 @@ class DonationController extends Controller
                 ->paginate(13, ['*'], 'users');
 
             // all user donation requests
-            $requests = DonationRequest::select([
+            $requestsData = DonationRequest::select([
                 'id',
                 'user_id',
                 'title',
@@ -78,7 +83,7 @@ class DonationController extends Controller
             ])->with(['user' => function ($query) {
                 return $query->select(['id', 'name']);
             }])
-            ->paginate(13, ['*'], 'requests');
+                ->paginate(13, ['*'], 'requests');
         }
 
         if ($user->hasRole('needy')) {
@@ -94,7 +99,7 @@ class DonationController extends Controller
             }
 
             // donation requests 
-            $requests = DonationRequest::select([
+            $requestsData = DonationRequest::select([
                 'id',
                 'title',
                 'currently_received',
@@ -108,9 +113,11 @@ class DonationController extends Controller
 
         return Inertia::render('Donations', [
             'bankAccounts' => $bankAccounts,
-            'histories' => $histories,
-            'requests' => $requests,
-            'users' => $users,
+            'historiesData' => $historiesData,
+            'requestsData' => $requestsData,
+            'usersData' => $usersData,
+            'querySearchResult' => $querySearchResult,
+            'queryParams' => request(['search', 'type', 'status'])
         ])
             ->with('jetstream.flash.banner', session()->get('jetstream.flash.banner'))
             ->with('jetstream.flash.bannerStyle', session()->get('jetstream.flash.bannerStyle'));
@@ -180,5 +187,164 @@ class DonationController extends Controller
         $request->session()->flash('jetstream.flash.bannerStyle', 'success');
 
         return redirect()->route('donations.index');
+    }
+
+    protected function queryFilter($params, $user)
+    {
+        if (count($params) == 0) {
+            return [];
+        }
+
+        if (array_key_exists('status', $params)) {
+            if ($params['type'] == 'admin-request') {
+                return DonationRequest::select([
+                    'id',
+                    'user_id',
+                    'title',
+                    'detail',
+                    'currently_received',
+                    'target_amount',
+                    'status',
+                    'is_verified',
+                    'created_at',
+                    'verification_expiry_at'
+                ])->with(['user' => function ($query) {
+                    return $query->select(['id', 'name']);
+                }])
+                    ->where('status', $params['status'])
+                    ->paginate(13, ['*'], 'requests');
+            }
+
+            if ($params['type'] == 'needy-requests') {
+                return DonationRequest::select([
+                    'id',
+                    'title',
+                    'currently_received',
+                    'target_amount',
+                    'status',
+                    'is_verified',
+                    'created_at',
+                    'verification_expiry_at'
+                ])
+                    ->where('user_id', $user->id)
+                    ->where('status', $params['status'])
+                    ->paginate(13, ['*'], 'requests');
+            }
+        }
+
+        if (array_key_exists('search', $params)) {
+            $searchParam = $params['search'];
+
+            if ($params['type'] == 'histories') {
+                return Donation::select([
+                    'id',
+                    'user_id',
+                    'donation_request_id',
+                    'amount',
+                    'bill_url',
+                    'created_at'
+                ])
+                    ->with(['donationRequest' => function ($query) {
+                        return $query->select([
+                            'id',
+                            'user_id',
+                            'title',
+                            'currently_received',
+                            'target_amount'
+                        ])->with(['user' => function ($query) {
+                            return $query->select(['id', 'name']);
+                        }]);
+                    }])
+                    ->where(function ($query) use ($searchParam) {
+                        $query->whereHas('donationRequest', function ($query) use ($searchParam) {
+                            $query->where('title', 'like', '%' . $searchParam . '%');
+                        })
+                            ->orWhereHas('donationRequest.user', function ($query) use ($searchParam) {
+                                $query->where('name', 'like', '%' . $searchParam . '%');
+                            });
+                    })
+                    ->where('user_id', $user->id)
+                    ->limit(10)
+                    ->get();
+            }
+
+            if ($params['type'] == 'admin-requests') {
+                return DonationRequest::select([
+                    'id',
+                    'user_id',
+                    'title',
+                    'detail',
+                    'currently_received',
+                    'target_amount',
+                    'status',
+                    'is_verified',
+                    'created_at',
+                    'verification_expiry_at'
+                ])->with(['user' => function ($query) {
+                    return $query->select(['id', 'name']);
+                }])
+                    ->where(function ($query) use ($searchParam) {
+                        $query->where('title', 'like', '%' . $searchParam . '%')
+                            ->orWhereHas('user', function ($query) use ($searchParam) {
+                                $query->where('name', 'like', '%' . $searchParam . '%');
+                            });
+                    })
+                    ->limit(10)
+                    ->get();
+            }
+
+            if ($params['type'] == 'users') {
+                return Donation::select([
+                    'id',
+                    'user_id',
+                    'donation_request_id',
+                    'amount',
+                    'bill_url',
+                    'created_at'
+                ])->with(['donationRequest' => function ($query) {
+                    return $query->select([
+                        'id',
+                        'user_id',
+                        'currently_received',
+                        'target_amount',
+                        'title'
+                    ])->with(['user' => function ($query) {
+                        return $query->select(['id', 'name']);
+                    }]);
+                }])
+                    ->with(['user' => function ($query) {
+                        return $query->select(['id', 'name']);
+                    }])
+                    ->whereHas('user', function ($query) use ($searchParam) {
+                        $query->where('name', 'like', '%' . $searchParam . '%');
+                    })
+                    ->orWhere(function ($query) use ($searchParam) {
+                        $query->whereHas('donationRequest', function ($query) use ($searchParam) {
+                            $query->where('title', 'like', '%' . $searchParam . '%');
+                        })
+                        ->orWhereHas('donationRequest.user', function ($query) use ($searchParam) {
+                            $query->where('name', 'like', '%' . $searchParam . '%');
+                        });
+                    })
+                    ->limit(10)
+                    ->get();
+            }
+
+            if ($params['type'] == 'needy-requests') {
+                return DonationRequest::select([
+                    'id',
+                    'title',
+                    'currently_received',
+                    'target_amount',
+                    'status',
+                    'is_verified',
+                    'created_at',
+                    'verification_expiry_at'
+                ])
+                    ->where('title', 'like', '%' . $searchParam . '%')
+                    ->limit(10)
+                    ->get();
+            }
+        }
     }
 }
