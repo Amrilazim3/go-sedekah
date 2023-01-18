@@ -47,10 +47,20 @@ const histories = computed(() => {
 
 const requests = computed(() => {
     if (
-        (props.queryParams.type == "admin-requests" || props.queryParams.type == "needy-requests") &&
-        (props.queryParams.search || props.queryParams.status)
+        props.queryParams.search &&
+        (props.queryParams.type == "admin-requests" ||
+            props.queryParams.type == "needy-requests")
     ) {
         props.requestsData.data = props.querySearchResult;
+    }
+
+    if (
+        props.queryParams.status &&
+        (props.queryParams.type == "admin-requests" ||
+            props.queryParams.type == "needy-requests")
+    ) {
+        props.requestsData.data = props.querySearchResult.data;
+        props.requestsData.links = props.querySearchResult.links;
     }
 
     return props.requestsData;
