@@ -24,17 +24,45 @@ import {
     ChevronDownIcon,
 } from "@heroicons/vue/20/solid";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/vue/24/outline";
-import { computed, ref, inject } from "vue";
+import { computed, ref, inject, reactive, onMounted } from "vue";
 import { useForm } from "@inertiajs/inertia-vue3";
+import { debounce } from "lodash";
 
 const props = defineProps({
     bankAccounts: Array,
-    histories: Object,
-    requests: Object || Array,
-    users: Object || Array,
+    historiesData: Object,
+    requestsData: Object || Array,
+    usersData: Object || Array,
+    querySearchResult: Object || Array,
+    queryParams: Object,
 });
 
-const Swal = inject("$swal");
+const histories = computed(() => {
+    if (props.queryParams.type == "histories" && props.queryParams.search) {
+        props.historiesData.data = props.querySearchResult;
+    }
+
+    return props.historiesData;
+});
+
+const requests = computed(() => {
+    if (
+        (props.queryParams.type == "admin-requests" || props.queryParams.type == "needy-requests") &&
+        (props.queryParams.search || props.queryParams.status)
+    ) {
+        props.requestsData.data = props.querySearchResult;
+    }
+
+    return props.requestsData;
+});
+
+const users = computed(() => {
+    if (props.queryParams.type == "users" && props.queryParams.search) {
+        props.usersData.data = props.querySearchResult;
+    }
+
+    return props.usersData;
+});
 
 const hasBankAccounts = computed(() => {
     if (props.bankAccounts.length > 0) {
@@ -44,6 +72,8 @@ const hasBankAccounts = computed(() => {
     return false;
 });
 
+const Swal = inject("$swal");
+
 const searchDonationHistory = ref("");
 
 const searchDonationRequest = ref("");
@@ -52,11 +82,38 @@ const searchUserDonationHistory = ref("");
 
 const isOpenDonationRequestModal = ref(false);
 
+const statusParams = reactive({
+    status: props.queryParams.status,
+    type: props.queryParams.type,
+});
+
+const searchParams = reactive({
+    search: props.queryParams.search,
+    type: props.queryParams.type,
+});
+
 const donationRequestForm = useForm({
     title: "",
     detail: "",
     targetAmount: null,
     bankAccountId: null,
+});
+
+onMounted(() => {
+    if (props.queryParams.type == "histories") {
+        searchDonationHistory.value = props.queryParams.search;
+    }
+
+    if (
+        props.queryParams.type == "admin-requests" ||
+        props.queryParams.type == "needy-requests"
+    ) {
+        searchDonationRequest.value = props.queryParams.search;
+    }
+
+    if (props.queryParams.type == "users") {
+        searchUserDonationHistory.value = props.queryParams.search;
+    }
 });
 
 const submit = () => {
@@ -126,15 +183,39 @@ const deleteDonationRequest = (id) => {
         confirmButtonText: "Delete",
     }).then((result) => {
         if (result.value) {
-            Inertia.delete(
-                `/donations/${id}`,
-                {
-                    preserveScroll: true,
-                }
-            );
+            Inertia.delete(`/donations/${id}`, {
+                preserveScroll: true,
+            });
         }
     });
 };
+
+const search = debounce((search, type) => {
+    if (!searchParams.search && !search) {
+        return;
+    }
+
+    searchParams.search = search;
+    searchParams.type = type;
+
+    Inertia.get("/donations", searchParams, {
+        preserveScroll: true,
+    });
+}, 500);
+
+const sortDonationRequestStatus = debounce((status, type) => {
+    if (status == "none") {
+        console.log("none selected");
+        return;
+    }
+
+    statusParams.status = status;
+    statusParams.type = type;
+
+    Inertia.get("/donations", statusParams, {
+        preserveScroll: true,
+    });
+}, 500);
 </script>
 
 <template>
@@ -155,9 +236,13 @@ const deleteDonationRequest = (id) => {
                         Your donation histories
                     </h2>
                     <SearchInput
-                        :focus-input="false"
-                        placeholder="Search receiver / title / amount"
+                        :focus-input="
+                            props.queryParams.type == 'histories' ? true : false
+                        "
+                        placeholder="Search receiver / title"
                         v-model="searchDonationHistory"
+                        @input="search(searchDonationHistory, 'histories')"
+                        @click="search(searchDonationHistory, 'histories')"
                     />
                     <DataTable
                         :header-data="[
@@ -185,10 +270,26 @@ const deleteDonationRequest = (id) => {
                         </h2>
                         <div class="sm:flex sm:space-x-1.5">
                             <SearchInput
-                                :focus-input="false"
+                                :focus-input="
+                                    props.queryParams.type == 'admin-requests'
+                                        ? true
+                                        : false
+                                "
                                 placeholder="Search needy's name / title"
                                 class="sm:w-full"
                                 v-model="searchDonationRequest"
+                                @input="
+                                    search(
+                                        searchDonationRequest,
+                                        'admin-requests'
+                                    )
+                                "
+                                @click="
+                                    search(
+                                        searchDonationRequest,
+                                        'admin-requests'
+                                    )
+                                "
                             />
                             <Menu
                                 as="div"
@@ -223,8 +324,32 @@ const deleteDonationRequest = (id) => {
                                                         active
                                                             ? 'bg-gray-200'
                                                             : '',
+                                                        'group text-gray-900 flex w-full items-center rounded-md px-2 py-2 text-sm',
+                                                    ]"
+                                                    @click="
+                                                        sortDonationRequestStatus(
+                                                            'none',
+                                                            'admin-requests'
+                                                        )
+                                                    "
+                                                >
+                                                    None
+                                                </button>
+                                            </MenuItem>
+                                            <MenuItem v-slot="{ active }">
+                                                <button
+                                                    :class="[
+                                                        active
+                                                            ? 'bg-gray-200'
+                                                            : '',
                                                         'group text-indigo-500 flex w-full items-center rounded-md px-2 py-2 text-sm',
                                                     ]"
+                                                    @click="
+                                                        sortDonationRequestStatus(
+                                                            'approved',
+                                                            'admin-requests'
+                                                        )
+                                                    "
                                                 >
                                                     Approved
                                                 </button>
@@ -237,6 +362,12 @@ const deleteDonationRequest = (id) => {
                                                             : '',
                                                         'group text-orange-500 flex w-full items-center rounded-md px-2 py-2 text-sm',
                                                     ]"
+                                                    @click="
+                                                        sortDonationRequestStatus(
+                                                            'pending',
+                                                            'admin-requests'
+                                                        )
+                                                    "
                                                 >
                                                     Pending
                                                 </button>
@@ -249,6 +380,12 @@ const deleteDonationRequest = (id) => {
                                                             : '',
                                                         'group text-red-500 flex w-full items-center rounded-md px-2 py-2 text-sm',
                                                     ]"
+                                                    @click="
+                                                        sortDonationRequestStatus(
+                                                            'rejected',
+                                                            'admin-requests'
+                                                        )
+                                                    "
                                                 >
                                                     Rejected
                                                 </button>
@@ -621,9 +758,13 @@ const deleteDonationRequest = (id) => {
                             User donation histories
                         </h2>
                         <SearchInput
-                            :focus-input="false"
+                            :focus-input="
+                                props.queryParams.type == 'users' ? true : false
+                            "
                             placeholder="Search donator / receiver / title"
                             v-model="searchUserDonationHistory"
+                            @input="search(searchUserDonationHistory, 'users')"
+                            @click="search(searchUserDonationHistory, 'users')"
                         />
                         <DataTable
                             :header-data="[
@@ -677,10 +818,26 @@ const deleteDonationRequest = (id) => {
                         </div>
                         <div class="sm:flex sm:space-x-1.5">
                             <SearchInput
-                                :focus-input="false"
+                                :focus-input="
+                                    props.queryParams.type == 'needy-requests'
+                                        ? true
+                                        : false
+                                "
                                 placeholder="search donation title"
                                 class="sm:w-full"
                                 v-model="searchDonationRequest"
+                                @input="
+                                    search(
+                                        searchDonationRequest,
+                                        'needy-requests'
+                                    )
+                                "
+                                @click="
+                                    search(
+                                        searchDonationRequest,
+                                        'needy-requests'
+                                    )
+                                "
                             />
                             <Menu
                                 as="div"
@@ -716,8 +873,32 @@ const deleteDonationRequest = (id) => {
                                                         active
                                                             ? 'bg-gray-200'
                                                             : '',
+                                                        'group text-gray-900 flex w-full items-center rounded-md px-2 py-2 text-sm',
+                                                    ]"
+                                                    @click="
+                                                        sortDonationRequestStatus(
+                                                            'none',
+                                                            'needy-requests'
+                                                        )
+                                                    "
+                                                >
+                                                    None
+                                                </button>
+                                            </MenuItem>
+                                            <MenuItem v-slot="{ active }">
+                                                <button
+                                                    :class="[
+                                                        active
+                                                            ? 'bg-gray-200'
+                                                            : '',
                                                         'group text-indigo-500 flex w-full items-center rounded-md px-2 py-2 text-sm',
                                                     ]"
+                                                    @click="
+                                                        sortDonationRequestStatus(
+                                                            'approved',
+                                                            'needy-requests'
+                                                        )
+                                                    "
                                                 >
                                                     Approved
                                                 </button>
@@ -730,6 +911,12 @@ const deleteDonationRequest = (id) => {
                                                             : '',
                                                         'group text-orange-500 flex w-full items-center rounded-md px-2 py-2 text-sm',
                                                     ]"
+                                                    @click="
+                                                        sortDonationRequestStatus(
+                                                            'pending',
+                                                            'needy-requests'
+                                                        )
+                                                    "
                                                 >
                                                     Pending
                                                 </button>
@@ -742,6 +929,12 @@ const deleteDonationRequest = (id) => {
                                                             : '',
                                                         'group text-red-500 flex w-full items-center rounded-md px-2 py-2 text-sm',
                                                     ]"
+                                                    @click="
+                                                        sortDonationRequestStatus(
+                                                            'rejected',
+                                                            'needy-requests'
+                                                        )
+                                                    "
                                                 >
                                                     Rejected
                                                 </button>
