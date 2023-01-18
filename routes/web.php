@@ -39,7 +39,6 @@ Route::middleware([
     Route::patch('/donations/{donationRequest}/approve', [DonationController::class, 'approveRequest'])->name('donations.approveRequest');
     Route::patch('/donations/{donationRequest}/reject', [DonationController::class, 'rejectRequest'])->name('donations.rejectRequest');
 
-
     Route::post('/billplz', function (Request $request) {
         // $bill = Billplz::bill()->create('bgs0cicq', 'amril@gmail.com', '0172374050', 'amril azim', 23000, 'http://localhost', 'donation for fulan bin fulan', ['redirect_url' => 'http://localhost']);
 
