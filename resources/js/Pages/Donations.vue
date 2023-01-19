@@ -215,7 +215,9 @@ const search = debounce((search, type) => {
 
 const sortDonationRequestStatus = debounce((status, type) => {
     if (status == "none") {
-        console.log("none selected");
+        Inertia.get("/donations", {
+            preserveScroll: true,
+        });
         return;
     }
 
@@ -309,7 +311,11 @@ const sortDonationRequestStatus = debounce((status, type) => {
                                     <MenuButton
                                         class="inline-flex w-full justify-center rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
                                     >
-                                        Options
+                                        {{
+                                            props.queryParams.status
+                                                ? props.queryParams.status
+                                                : "options"
+                                        }}
                                         <ChevronDownIcon
                                             class="ml-2 -mr-1 h-5 w-5 text-violet-200 hover:text-violet-100"
                                             aria-hidden="true"
@@ -352,6 +358,11 @@ const sortDonationRequestStatus = debounce((status, type) => {
                                                         active
                                                             ? 'bg-gray-200'
                                                             : '',
+                                                        props.queryParams
+                                                            .status ==
+                                                        'approved'
+                                                            ? 'bg-gray-200'
+                                                            : '',
                                                         'group text-indigo-500 flex w-full items-center rounded-md px-2 py-2 text-sm',
                                                     ]"
                                                     @click="
@@ -370,6 +381,10 @@ const sortDonationRequestStatus = debounce((status, type) => {
                                                         active
                                                             ? 'bg-gray-200'
                                                             : '',
+                                                        props.queryParams
+                                                            .status == 'pending'
+                                                            ? 'bg-gray-200'
+                                                            : '',
                                                         'group text-orange-500 flex w-full items-center rounded-md px-2 py-2 text-sm',
                                                     ]"
                                                     @click="
@@ -386,6 +401,11 @@ const sortDonationRequestStatus = debounce((status, type) => {
                                                 <button
                                                     :class="[
                                                         active
+                                                            ? 'bg-gray-200'
+                                                            : '',
+                                                        props.queryParams
+                                                            .status ==
+                                                        'rejected'
                                                             ? 'bg-gray-200'
                                                             : '',
                                                         'group text-red-500 flex w-full items-center rounded-md px-2 py-2 text-sm',
@@ -857,7 +877,11 @@ const sortDonationRequestStatus = debounce((status, type) => {
                                     <MenuButton
                                         class="inline-flex w-full justify-center rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
                                     >
-                                        Options
+                                        {{
+                                            props.queryParams.status
+                                                ? props.queryParams.status
+                                                : "options"
+                                        }}
                                         <ChevronDownIcon
                                             class="ml-2 -mr-1 h-5 w-5 text-violet-200 hover:text-violet-100"
                                             aria-hidden="true"
@@ -901,6 +925,11 @@ const sortDonationRequestStatus = debounce((status, type) => {
                                                         active
                                                             ? 'bg-gray-200'
                                                             : '',
+                                                        props.queryParams
+                                                            .status ==
+                                                        'approved'
+                                                            ? 'bg-gray-200'
+                                                            : '',
                                                         'group text-indigo-500 flex w-full items-center rounded-md px-2 py-2 text-sm',
                                                     ]"
                                                     @click="
@@ -919,6 +948,10 @@ const sortDonationRequestStatus = debounce((status, type) => {
                                                         active
                                                             ? 'bg-gray-200'
                                                             : '',
+                                                        props.queryParams
+                                                            .status == 'pending'
+                                                            ? 'bg-gray-200'
+                                                            : '',
                                                         'group text-orange-500 flex w-full items-center rounded-md px-2 py-2 text-sm',
                                                     ]"
                                                     @click="
@@ -935,6 +968,11 @@ const sortDonationRequestStatus = debounce((status, type) => {
                                                 <button
                                                     :class="[
                                                         active
+                                                            ? 'bg-gray-200'
+                                                            : '',
+                                                        props.queryParams
+                                                            .status ==
+                                                        'rejected'
                                                             ? 'bg-gray-200'
                                                             : '',
                                                         'group text-red-500 flex w-full items-center rounded-md px-2 py-2 text-sm',
