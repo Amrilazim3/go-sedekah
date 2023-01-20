@@ -23,6 +23,13 @@ class DonationController extends Controller
             $request->user()
         );
 
+        // get user roles 
+        // $roles = $user->roles->transform(function ($item, $key) {
+        //     return $item->name;
+        // })->toArray();
+
+        // dd(ucfirst($roles[0]));
+
         if ($user->hasRole('donor')) {
             // user donation histories
             $historiesData = Donation::select([
@@ -196,7 +203,7 @@ class DonationController extends Controller
         }
 
         if (array_key_exists('status', $params)) {
-            if ($params['type'] == 'admin-request') {
+            if ($params['type'] == 'admin-requests') {
                 return DonationRequest::select([
                     'id',
                     'user_id',
@@ -322,9 +329,9 @@ class DonationController extends Controller
                         $query->whereHas('donationRequest', function ($query) use ($searchParam) {
                             $query->where('title', 'like', '%' . $searchParam . '%');
                         })
-                        ->orWhereHas('donationRequest.user', function ($query) use ($searchParam) {
-                            $query->where('name', 'like', '%' . $searchParam . '%');
-                        });
+                            ->orWhereHas('donationRequest.user', function ($query) use ($searchParam) {
+                                $query->where('name', 'like', '%' . $searchParam . '%');
+                            });
                     })
                     ->limit(10)
                     ->get();
