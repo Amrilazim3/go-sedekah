@@ -9,15 +9,11 @@ use Illuminate\Http\Request;
 
 class DonationController extends Controller
 {
-    public function index(Request $request, $user)
+    public function index(Request $request)
     {
-        // fetch bank account
-        $bankController = new BankController;
-        $bankAccounts = $bankController->getIdAndAccountNumber($user);
+        $bankAccounts = (new BankController)->getIdAndAccountNumber();
 
-        // donation requests
-        $donationRequestController = new DonationRequestController;
-        $requestsData = $donationRequestController->index($user);
+        $requestsData = (new DonationRequestController)->index();
 
         return compact("bankAccounts", "requestsData");
     }
