@@ -8,22 +8,27 @@ use Illuminate\Http\Request;
 
 class DonationRequestController extends Controller
 {
+    const DONATION_REQUEST_COLUMN = [
+        'id',
+        'user_id',
+        'title',
+        'detail',
+        'currently_received',
+        'target_amount',
+        'status',
+        'is_verified',
+        'created_at',
+        'verification_expiry_at'
+    ];
+
+    const USER_COLUMN = ['id', 'name'];
+
     public function index()
     {
-        return DonationRequest::select([
-            'id',
-            'user_id',
-            'title',
-            'detail',
-            'currently_received',
-            'target_amount',
-            'status',
-            'is_verified',
-            'created_at',
-            'verification_expiry_at'
-        ])->with(['user' => function ($query) {
-            return $query->select(['id', 'name']);
-        }])
+        return DonationRequest::select(self::DONATION_REQUEST_COLUMN)
+            ->with(['user' => function ($query) {
+                return $query->select(self::USER_COLUMN);
+            }])
             ->paginate(13, ['*'], 'requests');
     }
 
@@ -52,5 +57,31 @@ class DonationRequestController extends Controller
         $request->session()->flash('jetstream.flash.bannerStyle', 'success');
 
         return redirect()->route('donations.index');
+    }
+
+    public function querySearchFilter(string $search)
+    {
+        return DonationRequest::select(self::DONATION_REQUEST_COLUMN)
+            ->with(['user' => function ($query) {
+                return $query->select(self::USER_COLUMN);
+            }])
+            ->where(function ($query) use ($search) {
+                $query->where('title', 'like', '%' . $search . '%')
+                    ->orWhereHas('user', function ($query) use ($search) {
+                        $query->where('name', 'like', '%' . $search . '%');
+                    });
+            })
+            ->limit(10)
+            ->get();
+    }
+
+    public function queryStatusFilter(string $status)
+    {
+        return DonationRequest::select(self::DONATION_REQUEST_COLUMN)
+            ->with(['user' => function ($query) {
+                return $query->select(self::USER_COLUMN);
+            }])
+            ->where('status', $status)
+            ->paginate(13, ['*'], 'requests');
     }
 }
