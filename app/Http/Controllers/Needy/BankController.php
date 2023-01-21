@@ -44,7 +44,7 @@ class BankController extends Controller
             ->with('jetstream.flash.bannerStyle', session()->get('jetstream.flash.bannerStyle'));
     }
 
-    public function getIdAndAccountNumber($user)
+    public function getIdAndAccountNumber()
     {
         $bankAccounts = [];
 
@@ -52,7 +52,7 @@ class BankController extends Controller
             'id',
             'user_id',
             'account_number'
-        ])->where('user_id', $user->id)->get();
+        ])->where('user_id', auth()->user()->id)->get();
 
         foreach ($bankAccountsArr as $bank) {
             $bankAccounts[] = [$bank['id'], $bank['account_number']];
