@@ -126,18 +126,35 @@ onMounted(() => {
     }
 });
 
-const submit = () => {
+const submitDonationRequest = () => {
     donationRequestForm
         .transform((data) => ({
             ...data,
         }))
-        .post(route("donations.store"), {
+        .post(route("donationRequest.store"), {
             preserveScroll: false,
             onSuccess: () => {
                 isOpenDonationRequestModal.value = false;
                 donationRequestForm.reset();
             },
         });
+};
+
+const deleteDonationRequest = (id) => {
+    Swal.fire({
+        title: "Delete this request?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "color: rgb(99 102 241);",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Delete",
+    }).then((result) => {
+        if (result.value) {
+            Inertia.delete(`/donation-request/${id}`, {
+                preserveScroll: false,
+            });
+        }
+    });
 };
 
 const approveRequest = (id) => {
@@ -152,10 +169,10 @@ const approveRequest = (id) => {
     }).then((result) => {
         if (result.value) {
             Inertia.patch(
-                `/donations/${id}/approve`,
+                `/donation-request/${id}/approve`,
                 {},
                 {
-                    preserveScroll: true,
+                    preserveScroll: false,
                 }
             );
         }
@@ -173,29 +190,12 @@ const rejectRequest = (id) => {
     }).then((result) => {
         if (result.value) {
             Inertia.patch(
-                `/donations/${id}/reject`,
+                `/donation-request/${id}/reject`,
                 {},
                 {
-                    preserveScroll: true,
+                    preserveScroll: false,
                 }
             );
-        }
-    });
-};
-
-const deleteDonationRequest = (id) => {
-    Swal.fire({
-        title: "Delete this request?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "color: rgb(99 102 241);",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Delete",
-    }).then((result) => {
-        if (result.value) {
-            Inertia.delete(`/donations/${id}`, {
-                preserveScroll: true,
-            });
         }
     });
 };
@@ -1048,7 +1048,7 @@ const sortDonationRequestStatus = debounce((status, type) => {
                             <DialogPanel
                                 class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
                             >
-                                <form @submit.prevent="submit">
+                                <form @submit.prevent="submitDonationRequest">
                                     <DialogTitle
                                         as="h3"
                                         class="text-lg font-medium leading-6 text-gray-900"
