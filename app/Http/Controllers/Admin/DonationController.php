@@ -34,21 +34,8 @@ class DonationController extends Controller
             ->paginate(13, ['*'], 'users');
 
         // all user donation requests
-        $requestsData = DonationRequest::select([
-            'id',
-            'user_id',
-            'title',
-            'detail',
-            'currently_received',
-            'target_amount',
-            'status',
-            'is_verified',
-            'created_at',
-            'verification_expiry_at'
-        ])->with(['user' => function ($query) {
-            return $query->select(['id', 'name']);
-        }])
-            ->paginate(13, ['*'], 'requests');
+        $donationRequestController = new DonationRequestController; 
+        $requestsData = $donationRequestController->index();
 
         return compact("usersData", "requestsData");
     }
