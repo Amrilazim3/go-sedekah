@@ -44,6 +44,23 @@ class BankController extends Controller
             ->with('jetstream.flash.bannerStyle', session()->get('jetstream.flash.bannerStyle'));
     }
 
+    public function getIdAndAccountNumber($user)
+    {
+        $bankAccounts = [];
+
+        $bankAccountsArr = Bank::select([
+            'id',
+            'user_id',
+            'account_number'
+        ])->where('user_id', $user->id)->get();
+
+        foreach ($bankAccountsArr as $bank) {
+            $bankAccounts[] = [$bank['id'], $bank['account_number']];
+        }
+
+        return $bankAccounts;
+    }
+
     public function store(Request $request)
     {
         $request->validate([
