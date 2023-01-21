@@ -5,24 +5,28 @@ namespace App\Http\Controllers\Needy;
 use App\Http\Controllers\Controller;
 use App\Models\Bank;
 use App\Models\DonationRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class DonationRequestController extends Controller
 {
-    public function index($user)
+    const DONATION_REQUEST_COLUMN = [
+        'id',
+        'title',
+        'currently_received',
+        'target_amount',
+        'status',
+        'is_verified',
+        'created_at',
+        'verification_expiry_at'
+    ];
+
+    public function index()
     {
-        return DonationRequest::select([
-            'id',
-            'title',
-            'currently_received',
-            'target_amount',
-            'status',
-            'is_verified',
-            'created_at',
-            'verification_expiry_at'
-        ])->where('user_id', $user->id)->paginate(13, ['*'], 'requests');
+        return DonationRequest::select(self::DONATION_REQUEST_COLUMN)
+            ->where('user_id', auth()->user()->id)->paginate(13, ['*'], 'requests');
     }
-    
+
     public function store(Request $request)
     {
         $request->validate([
@@ -60,5 +64,22 @@ class DonationRequestController extends Controller
         $request->session()->flash('jetstream.flash.bannerStyle', 'success');
 
         return redirect()->route('donations.index');
+    }
+
+    public function querySearchFilter(string $search)
+    {
+        return DonationRequest::select(self::DONATION_REQUEST_COLUMN)
+            ->where('user_id', auth()->user()->id)
+            ->where('title', 'like', '%' . $search . '%')
+            ->limit(10)
+            ->get();
+    }
+
+    public function queryStatusFilter(string $status)
+    {
+        return DonationRequest::select(self::DONATION_REQUEST_COLUMN)
+            ->where('user_id', auth()->user()->id)
+            ->where('status', $status)
+            ->paginate(13, ['*'], 'requests');
     }
 }
