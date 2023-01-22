@@ -370,11 +370,13 @@ defineEmits([
                                                 <td
                                                     class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
                                                 >
-                                                    <button
+                                                    <a
+                                                        :href="bData.bill_url"
+                                                        target="_blank"
                                                         class="text-indigo-500 px-3 py-1.5 rounded-md bg-gray-100"
                                                     >
                                                         view
-                                                    </button>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         </template>
@@ -489,108 +491,92 @@ defineEmits([
                                                 <td
                                                     class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
                                                 >
-                                                    <Menu>
-                                                        <MenuButton>
-                                                            <EllipsisVerticalIcon
-                                                                class="h-5 w-5 cursor-pointer"
-                                                            />
-                                                        </MenuButton>
-                                                        <transition
-                                                            enter-active-class="transition duration-100 ease-out"
-                                                            enter-from-class="transform scale-95 opacity-0"
-                                                            enter-to-class="transform scale-100 opacity-100"
-                                                            leave-active-class="transition duration-75 ease-in"
-                                                            leave-from-class="transform scale-100 opacity-100"
-                                                            leave-to-class="transform scale-95 opacity-0"
-                                                        >
-                                                            <MenuItems
-                                                                class="xl:absolute z-40 mt-1 origin-top-left divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                                    <template
+                                                        v-if="
+                                                            bData.status !=
+                                                            'rejected'
+                                                        "
+                                                    >
+                                                        <Menu>
+                                                            <MenuButton>
+                                                                <EllipsisVerticalIcon
+                                                                    class="h-5 w-5 cursor-pointer"
+                                                                />
+                                                            </MenuButton>
+                                                            <transition
+                                                                enter-active-class="transition duration-100 ease-out"
+                                                                enter-from-class="transform scale-95 opacity-0"
+                                                                enter-to-class="transform scale-100 opacity-100"
+                                                                leave-active-class="transition duration-75 ease-in"
+                                                                leave-from-class="transform scale-100 opacity-100"
+                                                                leave-to-class="transform scale-95 opacity-0"
                                                             >
-                                                                <div
-                                                                    class="px-1 py-1"
+                                                                <MenuItems
+                                                                    class="xl:absolute z-40 mt-1 origin-top-left divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                                                                 >
-                                                                    <MenuItem
-                                                                        v-slot="{
-                                                                            active,
-                                                                        }"
+                                                                    <div
+                                                                        class="px-1 py-1"
                                                                     >
-                                                                        <div>
-                                                                            <template
-                                                                                v-if="
-                                                                                    bData.status ==
-                                                                                    'approved'
-                                                                                "
-                                                                            >
-                                                                                <button
-                                                                                    :class="[
-                                                                                        active
-                                                                                            ? 'bg-indigo-500 text-white'
-                                                                                            : 'text-gray-900',
-                                                                                        'group flex w-full items-center rounded-md px-2 py-2 text-sm',
-                                                                                    ]"
-                                                                                    @click="
-                                                                                        $emit(
-                                                                                            'viewDonationRequest',
-                                                                                            bData.id
-                                                                                        )
+                                                                        <MenuItem
+                                                                            v-slot="{
+                                                                                active,
+                                                                            }"
+                                                                        >
+                                                                            <div>
+                                                                                <template
+                                                                                    v-if="
+                                                                                        bData.status ==
+                                                                                        'approved'
                                                                                     "
                                                                                 >
-                                                                                    View
-                                                                                    More
-                                                                                </button>
-                                                                            </template>
-                                                                            <template
-                                                                                v-if="
-                                                                                    bData.status ==
-                                                                                    'pending'
-                                                                                "
-                                                                            >
-                                                                                <button
-                                                                                    :class="[
-                                                                                        active
-                                                                                            ? 'bg-red-500 text-gray-900'
-                                                                                            : 'text-gray-900',
-                                                                                        'group flex w-full items-center rounded-md px-2 py-2 text-sm',
-                                                                                    ]"
-                                                                                    @click="
-                                                                                        $emit(
-                                                                                            'deleteDonationRequest',
-                                                                                            bData.id
-                                                                                        )
+                                                                                    <button
+                                                                                        :class="[
+                                                                                            active
+                                                                                                ? 'bg-indigo-500 text-white'
+                                                                                                : 'text-gray-900',
+                                                                                            'group flex w-full items-center rounded-md px-2 py-2 text-sm',
+                                                                                        ]"
+                                                                                        @click="
+                                                                                            $emit(
+                                                                                                'viewDonationRequest',
+                                                                                                bData.id
+                                                                                            )
+                                                                                        "
+                                                                                    >
+                                                                                        View
+                                                                                        More
+                                                                                    </button>
+                                                                                </template>
+                                                                                <template
+                                                                                    v-if="
+                                                                                        bData.status ==
+                                                                                        'pending'
                                                                                     "
                                                                                 >
-                                                                                    Delete
-                                                                                </button>
-                                                                            </template>
-                                                                            <template
-                                                                                v-if="
-                                                                                    bData.status ==
-                                                                                    'rejected'
-                                                                                "
-                                                                            >
-                                                                                <button
-                                                                                    :class="[
-                                                                                        active
-                                                                                            ? 'bg-red-500 text-gray-900'
-                                                                                            : 'text-gray-900',
-                                                                                        'group flex w-full items-center rounded-md px-2 py-2 text-sm',
-                                                                                    ]"
-                                                                                    @click="
-                                                                                        $emit(
-                                                                                            'clearRejectedRequest',
-                                                                                            bData.id
-                                                                                        )
-                                                                                    "
-                                                                                >
-                                                                                    Remove
-                                                                                </button>
-                                                                            </template>
-                                                                        </div>
-                                                                    </MenuItem>
-                                                                </div>
-                                                            </MenuItems>
-                                                        </transition>
-                                                    </Menu>
+                                                                                    <button
+                                                                                        :class="[
+                                                                                            active
+                                                                                                ? 'bg-red-500 text-gray-900'
+                                                                                                : 'text-gray-900',
+                                                                                            'group flex w-full items-center rounded-md px-2 py-2 text-sm',
+                                                                                        ]"
+                                                                                        @click="
+                                                                                            $emit(
+                                                                                                'deleteDonationRequest',
+                                                                                                bData.id
+                                                                                            )
+                                                                                        "
+                                                                                    >
+                                                                                        Delete
+                                                                                    </button>
+                                                                                </template>
+                                                                            </div>
+                                                                        </MenuItem>
+                                                                    </div>
+                                                                </MenuItems>
+                                                            </transition>
+                                                        </Menu>
+                                                    </template>
                                                 </td>
                                             </tr>
                                         </template>
@@ -599,7 +585,9 @@ defineEmits([
                             </tbody>
                         </template>
                         <template v-else>
-                            <h3 class="mt-2 text-md px-2 whitespace-nowrap">No result</h3>
+                            <h3 class="mt-2 text-md px-2 whitespace-nowrap">
+                                No result
+                            </h3>
                         </template>
                     </table>
                 </div>
