@@ -64,7 +64,7 @@ const approveRequest = (id) => {
     }).then((result) => {
         if (result.value) {
             Inertia.patch(
-                `/donation-request/${id}/approve`,
+                `/admin/donation-request/${id}/approve`,
                 {},
                 {
                     preserveScroll: false,
@@ -85,7 +85,7 @@ const rejectRequest = (id) => {
     }).then((result) => {
         if (result.value) {
             Inertia.patch(
-                `/donation-request/${id}/reject`,
+                `/admin/donation-request/${id}/reject`,
                 {},
                 {
                     preserveScroll: false,
