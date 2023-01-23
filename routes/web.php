@@ -38,21 +38,6 @@ Route::middleware([
         'index'
     ])->name('donations.index');
 
-    Route::post('/donation-request', [
-        App\Http\Controllers\Needy\DonationRequestController::class,
-        'store'
-    ])->name('donationRequest.store');
-    Route::delete('/donation-request/{donationRequest}', [
-        App\Http\Controllers\Needy\DonationRequestController::class,
-        'destroy'
-    ])->name('donationRequest.destroy');
-    Route::patch('/donation-request/{donationRequest}/approve', [
-        App\Http\Controllers\Admin\DonationRequestController::class, 'approve'
-    ])->name('donationRequest.approve');
-    Route::patch('/donation-request/{donationRequest}/reject', [
-        App\Http\Controllers\Admin\DonationRequestController::class, 'reject'
-    ])->name('donationRequest.reject');
-
     Route::post('/billplz', function (Request $request) {
         // $bill = Billplz::bill()->create('bgs0cicq', 'amril@gmail.com', '0172374050', 'amril azim', 23000, 'http://localhost', 'donation for fulan bin fulan', ['redirect_url' => 'http://localhost']);
 
@@ -98,6 +83,13 @@ Route::middleware([
                 '/users/{user}/remove-role/needy',
                 [UserController::class, 'removeNeedyRole']
             )->name('users.assignNeedyRole');
+
+            Route::patch('/donation-request/{donationRequest}/approve', [
+                App\Http\Controllers\Admin\DonationRequestController::class, 'approve'
+            ])->name('donationRequest.approve');
+            Route::patch('/donation-request/{donationRequest}/reject', [
+                App\Http\Controllers\Admin\DonationRequestController::class, 'reject'
+            ])->name('donationRequest.reject');
         });
 
     Route::middleware('role:needy')
@@ -107,5 +99,14 @@ Route::middleware([
             Route::get('/banks', [BankController::class, 'index'])->name('banks.index');
             Route::post('/banks', [BankController::class, 'store'])->name('banks.store');
             Route::delete('/banks/{bank}', [BankController::class, 'destroy'])->name('banks.destroy');
+        
+            Route::post('/donation-request', [
+                App\Http\Controllers\Needy\DonationRequestController::class,
+                'store'
+            ])->name('donationRequest.store');
+            Route::delete('/donation-request/{donationRequest}', [
+                App\Http\Controllers\Needy\DonationRequestController::class,
+                'destroy'
+            ])->name('donationRequest.destroy');
         });
 });
