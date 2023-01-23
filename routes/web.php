@@ -99,7 +99,7 @@ Route::middleware([
             Route::get('/banks', [BankController::class, 'index'])->name('banks.index');
             Route::post('/banks', [BankController::class, 'store'])->name('banks.store');
             Route::delete('/banks/{bank}', [BankController::class, 'destroy'])->name('banks.destroy');
-        
+
             Route::post('/donation-request', [
                 App\Http\Controllers\Needy\DonationRequestController::class,
                 'store'
