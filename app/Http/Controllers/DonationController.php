@@ -43,7 +43,7 @@ class DonationController extends Controller
         return Inertia::render('Donations', [
             'dataRoles' => $dataRoles,
             'queryResult' => $queryResult,
-            'queryParams' => request(['search', 'role', 'model'])
+            'queryParams' => request(['search', 'status', 'role', 'model'])
         ])
             ->with('jetstream.flash.banner', session()->get('jetstream.flash.banner'))
             ->with('jetstream.flash.bannerStyle', session()->get('jetstream.flash.bannerStyle'));
