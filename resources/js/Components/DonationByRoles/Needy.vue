@@ -68,7 +68,7 @@ const submitDonationRequest = () => {
         .transform((data) => ({
             ...data,
         }))
-        .post(route("donationRequest.store"), {
+        .post(route("needy.donationRequest.store"), {
             preserveScroll: false,
             onSuccess: () => {
                 isOpenDonationRequestModal.value = false;
@@ -87,7 +87,7 @@ const deleteDonationRequest = (id) => {
         confirmButtonText: "Delete",
     }).then((result) => {
         if (result.value) {
-            Inertia.delete(`/donation-request/${id}`, {
+            Inertia.delete(`/needy/donation-request/${id}`, {
                 preserveScroll: false,
             });
         }
