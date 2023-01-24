@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Bank;
 use App\Models\DonationRequest;
 use App\Models\User;
+use App\Notifications\Needy\Donation\RequestDeleted;
 use App\Notifications\Needy\Donation\RequestSent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
@@ -49,8 +50,11 @@ class DonationRequestController extends Controller
             'target_amount' => $request->targetAmount,
         ]);
 
-        $admins = User::role('admin')->get();
-        Notification::send($admins, new RequestSent(auth()->user()));
+        // $admins = User::role('admin')->get();
+        Notification::send(
+            User::role('admin')->get(), 
+            new RequestSent(auth()->user())
+        );
 
         $request->session()->flash('jetstream.flash.banner', 'Donation request successfully made.');
         $request->session()->flash('jetstream.flash.bannerStyle', 'success');
@@ -62,7 +66,10 @@ class DonationRequestController extends Controller
     {
         $donationRequest->delete();
 
-        // send email to an admin to inform that the request has been deleted.
+        Notification::send(
+            User::role('admin')->get(), 
+            new RequestDeleted(auth()->user())
+        );
 
         $request->session()->flash('jetstream.flash.banner', 'Donation request successfully deleted.');
         $request->session()->flash('jetstream.flash.bannerStyle', 'success');
