@@ -13,7 +13,7 @@ use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\Notification;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -23,13 +23,16 @@ class DonationRequestTest extends TestCase
 
     public function test_needy_user_can_make_donation_request()
     {
-        Bus::fake();
-        // Queue::fake();
+        Notification::fake();
 
         $this->seed([
             BankDetailSeeder::class,
             RoleSeeder::class
         ]);
+
+        $admins = User::factory(2)->create()->each(function ($user) {
+            $user->assignRole('admin');
+        });
 
         $this->actingAs($user = User::factory()->create());
 
@@ -52,22 +55,25 @@ class DonationRequestTest extends TestCase
             'targetAmount' => rand(10, 100)
         ]);
 
-        // Queue::assertPushed(RequestSent::class);
-
-        // Bus::dispatch(new RequestDeleted);
-        // Bus::assertDispatched(RequestSent::class);
+        Notification::assertSentTo(
+            $admins, RequestSent::class
+        );
 
         $response->assertRedirectToRoute('donations.index');
     }
 
     public function test_needy_user_can_delete_donation_request()
     {
-        Bus::fake();
-
+        Notification::fake();
+        
         $this->seed([
             BankDetailSeeder::class,
             RoleSeeder::class
         ]);
+
+        $admins = User::factory(2)->create()->each(function ($user) {
+            $user->assignRole('admin');
+        });
 
         $this->actingAs($user = User::factory()->create());
 
@@ -96,7 +102,9 @@ class DonationRequestTest extends TestCase
 
         $this->assertModelMissing($donationRequest);
 
-        Bus::dispatch(new RequestSent($user));
+        Notification::assertSentTo(
+            $admins, RequestDeleted::class
+        );
 
         $response->assertRedirectToRoute('donations.index');
     }
