@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use App\Notifications\Admin\Role\NeedyRoleAdded;
+use App\Notifications\Admin\Role\NeedyRoleRemoved;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -55,7 +56,37 @@ class UserRoleTest extends TestCase
             $userToBecomeNeedy, NeedyRoleAdded::class
         );
 
-        $response->assertSessionHas('jetstream.flash.banner');
+        $response->assertSessionHas('jetstream.flash.banner', 'Needy role successfully assigned!');
+
+        $response->assertRedirectToRoute('admin.users.index');
+    }
+
+    public function test_remove_needy_role()
+    {
+        Notification::fake();
+        
+        $this->seed(RoleSeeder::class);
+
+        $needyUser = User::factory()->afterCreating(function (User $user) {
+            $user->assignRole('needy');
+        })->create();
+
+        $this->actingAs($admin = User::factory()->afterCreating(function (User $user) {
+            $user->assignRole('admin');
+        })->create());
+
+        $response = $this->delete('/admin/users/' . $needyUser->id . '/remove-role/needy');
+
+        $this->assertDatabaseMissing('model_has_roles', [
+            'role_id' => Role::where('name', 'needy')->first()->id,
+            'model_id' => $needyUser->id
+        ]);
+        
+        Notification::assertSentTo(
+            $needyUser, NeedyRoleRemoved::class
+        );
+
+        $response->assertSessionHas('jetstream.flash.banner', 'Needy role successfully removed!');
 
         $response->assertRedirectToRoute('admin.users.index');
     }
