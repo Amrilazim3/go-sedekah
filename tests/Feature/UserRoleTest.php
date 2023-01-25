@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use App\Notifications\Admin\Role\AdminRoleAdded;
+use App\Notifications\Admin\Role\AdminRoleRemoved;
 use App\Notifications\Admin\Role\NeedyRoleAdded;
 use App\Notifications\Admin\Role\NeedyRoleRemoved;
 use Database\Seeders\RoleSeeder;
@@ -116,6 +117,36 @@ class UserRoleTest extends TestCase
         );
 
         $response->assertSessionHas('jetstream.flash.banner', 'Admin role successfully assigned!');
+
+        $response->assertRedirectToRoute('admin.users.index');
+    }
+
+    public function test_remove_admin_role()
+    {
+        Notification::fake();
+        
+        $this->seed(RoleSeeder::class);
+
+        $adminUser = User::factory()->afterCreating(function (User $user) {
+            $user->assignRole('admin');
+        })->create();
+
+        $this->actingAs($admin = User::factory()->afterCreating(function (User $user) {
+            $user->assignRole('admin');
+        })->create());
+
+        $response = $this->delete('/admin/users/' . $adminUser->id . '/remove-role/admin');
+
+        $this->assertDatabaseMissing('model_has_roles', [
+            'role_id' => Role::where('name', 'admin')->first()->id,
+            'model_id' => $adminUser->id
+        ]);
+        
+        Notification::assertSentTo(
+            $adminUser, AdminRoleRemoved::class
+        );
+
+        $response->assertSessionHas('jetstream.flash.banner', 'Admin role successfully removed!');
 
         $response->assertRedirectToRoute('admin.users.index');
     }
