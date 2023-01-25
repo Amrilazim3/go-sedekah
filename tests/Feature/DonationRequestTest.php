@@ -7,6 +7,7 @@ use App\Models\BankDetail;
 use App\Models\DonationRequest;
 use App\Models\User;
 use App\Notifications\Admin\Donation\RequestApproved;
+use App\Notifications\Admin\Donation\RequestRejected;
 use App\Notifications\Needy\Donation\RequestDeleted;
 use App\Notifications\Needy\Donation\RequestSent;
 use Database\Seeders\BankDetailSeeder;
@@ -145,6 +146,44 @@ class DonationRequestTest extends TestCase
         $needyUser = User::where('id', $donationRequest->user_id)->first();
         Notification::assertSentTo(
             $needyUser, RequestApproved::class
+        );
+
+        $response->assertRedirectToRoute('donations.index');
+    }
+
+    public function test_admin_user_can_reject_donation_request()
+    {
+        Notification::fake();
+
+        $this->seed(RoleSeeder::class);
+
+        Bank::factory()
+            ->has(DonationRequest::factory()
+                ->count(3)
+                ->state(function (array $attributes, Bank $bank) {
+                    return [
+                        'user_id' => $bank->user_id,
+                        'bank_id' => $bank->id
+                    ];
+                }))
+            ->create();
+
+        $this->actingAs($user = User::factory()->create());
+
+        $user->assignRole('admin');
+
+        $donationRequest = DonationRequest::first();
+
+        $response = $this->patch('/admin/donation-request/' . $donationRequest->id . '/reject');
+
+        $this->assertDatabaseHas('donation_requests', [
+            'user_id' => $donationRequest->user_id,
+            'status' => 'rejected'
+        ]);
+
+        $needyUser = User::where('id', $donationRequest->user_id)->first();
+        Notification::assertSentTo(
+            $needyUser, RequestRejected::class
         );
 
         $response->assertRedirectToRoute('donations.index');
