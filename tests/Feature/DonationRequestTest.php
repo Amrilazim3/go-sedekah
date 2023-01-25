@@ -6,6 +6,7 @@ use App\Models\Bank;
 use App\Models\BankDetail;
 use App\Models\DonationRequest;
 use App\Models\User;
+use App\Notifications\Admin\Donation\RequestApproved;
 use App\Notifications\Needy\Donation\RequestDeleted;
 use App\Notifications\Needy\Donation\RequestSent;
 use Database\Seeders\BankDetailSeeder;
@@ -44,7 +45,7 @@ class DonationRequestTest extends TestCase
             'user_id' => $user->id,
             'bank_detail_id' => $bankDetail->id,
             'name_on_card' => fake()->name(),
-            'ic_number' => fake()->numberBetween(pow(10, 11), pow(10,12) - 1),
+            'ic_number' => fake()->numberBetween(pow(10, 11), pow(10, 12) - 1),
             'account_number' => fake()->creditCardNumber(null, false, ''),
         ]);
 
@@ -56,7 +57,8 @@ class DonationRequestTest extends TestCase
         ]);
 
         Notification::assertSentTo(
-            $admins, RequestSent::class
+            $admins,
+            RequestSent::class
         );
 
         $response->assertRedirectToRoute('donations.index');
@@ -65,7 +67,7 @@ class DonationRequestTest extends TestCase
     public function test_needy_user_can_delete_donation_request()
     {
         Notification::fake();
-        
+
         $this->seed([
             BankDetailSeeder::class,
             RoleSeeder::class
@@ -85,7 +87,7 @@ class DonationRequestTest extends TestCase
             'user_id' => $user->id,
             'bank_detail_id' => $bankDetail->id,
             'name_on_card' => fake()->name(),
-            'ic_number' => fake()->numberBetween(pow(10, 11), pow(10,12) - 1),
+            'ic_number' => fake()->numberBetween(pow(10, 11), pow(10, 12) - 1),
             'account_number' => fake()->creditCardNumber(null, false, ''),
         ]);
 
@@ -103,7 +105,46 @@ class DonationRequestTest extends TestCase
         $this->assertModelMissing($donationRequest);
 
         Notification::assertSentTo(
-            $admins, RequestDeleted::class
+            $admins,
+            RequestDeleted::class
+        );
+
+        $response->assertRedirectToRoute('donations.index');
+    }
+
+    public function test_admin_user_can_approve_donation_request()
+    {
+        Notification::fake();
+
+        $this->seed(RoleSeeder::class);
+
+        Bank::factory()
+            ->has(DonationRequest::factory()
+                ->count(3)
+                ->state(function (array $attributes, Bank $bank) {
+                    return [
+                        'user_id' => $bank->user_id,
+                        'bank_id' => $bank->id
+                    ];
+                }))
+            ->create();
+
+        $this->actingAs($user = User::factory()->create());
+
+        $user->assignRole('admin');
+
+        $donationRequest = DonationRequest::first();
+
+        $response = $this->patch('/admin/donation-request/' . $donationRequest->id . '/approve');
+
+        $this->assertDatabaseHas('donation_requests', [
+            'user_id' => $donationRequest->user_id,
+            'status' => 'approved'
+        ]);
+
+        $needyUser = User::where('id', $donationRequest->user_id)->first();
+        Notification::assertSentTo(
+            $needyUser, RequestApproved::class
         );
 
         $response->assertRedirectToRoute('donations.index');
