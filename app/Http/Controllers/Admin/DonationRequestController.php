@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\DonationRequest;
+use App\Models\User;
+use App\Notifications\Admin\Donation\RequestApproved;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class DonationRequestController extends Controller
 {
@@ -34,10 +37,14 @@ class DonationRequestController extends Controller
 
     public function approve(DonationRequest $donationRequest, Request $request)
     {
-        // send email to needy
         $donationRequest->update([
             'status' => 'approved'
         ]);
+
+        Notification::send(
+            User::find($donationRequest->user_id),
+            new RequestApproved()
+        );
 
         $request->session()->flash('jetstream.flash.banner', 'Donation request successfully approved.');
         $request->session()->flash('jetstream.flash.bannerStyle', 'success');
