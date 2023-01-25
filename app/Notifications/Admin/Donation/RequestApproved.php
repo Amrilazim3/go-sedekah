@@ -45,7 +45,7 @@ class RequestApproved extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->greeting('Hye ' . $notifiable->name)
-            ->line('Your donation request that you made at ' . $this->donationRequest->created_at . ' has been approved by our admin')
+            ->line('Your donation request that you made at ' . $this->donationRequest->created_at . ' has been approved by our admin.')
             ->line('You donation request now can accept a donation from others.')
             ->action('You can view it here', url('/donations'))
             ->line('Thank you for using our application!');
