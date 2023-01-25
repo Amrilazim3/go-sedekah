@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DonationRequest;
 use App\Models\User;
 use App\Notifications\Admin\Donation\RequestApproved;
+use App\Notifications\Admin\Donation\RequestRejected;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
 
@@ -58,7 +59,10 @@ class DonationRequestController extends Controller
             'status' => 'rejected'
         ]);
 
-        // send email to needy
+        Notification::send(
+            User::find($donationRequest->user_id),
+            new RequestRejected($donationRequest)
+        );
 
         $request->session()->flash('jetstream.flash.banner', 'Donation request successfully rejected.');
         $request->session()->flash('jetstream.flash.bannerStyle', 'success');
