@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class DonationTest extends TestCase
 {
-    public function test_donations_page_can_be_rendered()
+    public function test_donations_screen_can_be_rendered()
     {
         $this->actingAs($user = User::factory()->create());
 

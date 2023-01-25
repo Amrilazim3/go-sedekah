@@ -14,7 +14,7 @@ class DashboardTest extends TestCase
      *
      * @return void
      */
-    public function test_dashboard_page_can_be_rendered()
+    public function test_dashboard_screen_can_be_rendered()
     {
         $this->actingAs($user = User::factory()->create());
         

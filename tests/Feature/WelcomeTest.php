@@ -13,7 +13,7 @@ class WelcomeTest extends TestCase
      *
      * @return void
      */
-    public function test_welcome_page_can_be_rendered()
+    public function test_welcome_screen_can_be_rendered()
     {
         $response = $this->get('/');
 
