@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Notifications\Admin\Role\NeedyRoleAdded;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use Inertia\Inertia;
 
 class UserController extends Controller
@@ -62,8 +64,9 @@ class UserController extends Controller
             return redirect()->route('admin.users.index');
         }
 
-        // assign role
         $user->assignRole('needy');
+
+        Notification::send($user, new NeedyRoleAdded);
 
         $request->session()->flash('jetstream.flash.banner', 'Needy role successfully assigned!');
         $request->session()->flash('jetstream.flash.bannerStyle', 'success');
