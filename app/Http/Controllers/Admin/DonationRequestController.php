@@ -43,7 +43,7 @@ class DonationRequestController extends Controller
 
         Notification::send(
             User::find($donationRequest->user_id),
-            new RequestApproved()
+            new RequestApproved($donationRequest)
         );
 
         $request->session()->flash('jetstream.flash.banner', 'Donation request successfully approved.');
