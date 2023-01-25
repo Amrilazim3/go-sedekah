@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Notifications\Admin\Role\AdminRoleAdded;
 use App\Notifications\Admin\Role\NeedyRoleAdded;
 use App\Notifications\Admin\Role\NeedyRoleRemoved;
 use Database\Seeders\RoleSeeder;
@@ -87,6 +88,34 @@ class UserRoleTest extends TestCase
         );
 
         $response->assertSessionHas('jetstream.flash.banner', 'Needy role successfully removed!');
+
+        $response->assertRedirectToRoute('admin.users.index');
+    }
+
+    public function test_assign_admin_role()
+    {
+        Notification::fake();
+        
+        $this->seed(RoleSeeder::class);
+
+        $userToBecomeAdmin = User::factory()->create();
+
+        $this->actingAs($admin = User::factory()->afterCreating(function (User $user) {
+            $user->assignRole('admin');
+        })->create());
+
+        $response = $this->post('/admin/users/' . $userToBecomeAdmin->id . '/assign-role/admin');
+
+        $this->assertDatabaseHas('model_has_roles', [
+            'role_id' => Role::where('name', 'admin')->first()->id,
+            'model_id' => $userToBecomeAdmin->id
+        ]);
+
+        Notification::assertSentTo(
+            $userToBecomeAdmin, AdminRoleAdded::class 
+        );
+
+        $response->assertSessionHas('jetstream.flash.banner', 'Admin role successfully assigned!');
 
         $response->assertRedirectToRoute('admin.users.index');
     }
