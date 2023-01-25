@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Notifications\Admin\Role\AdminRoleAdded;
+use App\Notifications\Admin\Role\AdminRoleRemoved;
 use App\Notifications\Admin\Role\NeedyRoleAdded;
 use App\Notifications\Admin\Role\NeedyRoleRemoved;
 use Illuminate\Http\Request;
@@ -121,6 +122,10 @@ class UserController extends Controller
     public function removeAdminRole(User $user, Request $request)
     {
         $user->removeRole('admin');
+
+        Notification::send(
+            $user, new AdminRoleRemoved
+        );
 
         $request->session()->flash('jetstream.flash.banner', 'Admin role successfully removed!');
         $request->session()->flash('jetstream.flash.bannerStyle', 'success');
