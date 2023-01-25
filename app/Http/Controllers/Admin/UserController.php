@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Notifications\Admin\Role\AdminRoleAdded;
 use App\Notifications\Admin\Role\NeedyRoleAdded;
+use App\Notifications\Admin\Role\NeedyRoleRemoved;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
 use Inertia\Inertia;
@@ -44,10 +46,8 @@ class UserController extends Controller
 
     public function assignNeedyRole(User $user, Request $request)
     {
-        // check if user has needy role
         $needyValidate = User::role('needy')->where('id', $user->id)->exists();
 
-        // check if user has admin role
         $adminValidate = User::role('admin')->where('id', $user->id)->exists();
 
         if ($needyValidate) {
@@ -74,12 +74,22 @@ class UserController extends Controller
         return redirect()->route('admin.users.index');
     }
 
+    public function removeNeedyRole(User $user, Request $request)
+    {
+        $user->removeRole('needy');
+
+        Notification::send($user, new NeedyRoleRemoved);
+
+        $request->session()->flash('jetstream.flash.banner', 'Needy role successfully removed!');
+        $request->session()->flash('jetstream.flash.bannerStyle', 'success');
+
+        return redirect()->route('admin.users.index');
+    }
+
     public function assignAdminRole(User $user, Request $request)
     {
-        // check if user has needy role
         $needyValidate = User::role('needy')->where('id', $user->id)->exists();
 
-        // check if user has admin role
         $adminValidate = User::role('admin')->where('id', $user->id)->exists();
 
         if ($needyValidate) {
@@ -96,8 +106,11 @@ class UserController extends Controller
             return redirect()->route('admin.users.index');
         }
 
-        // assign role
         $user->assignRole('admin');
+
+        Notification::send(
+            $user, new AdminRoleAdded
+        );
 
         $request->session()->flash('jetstream.flash.banner', 'Admin role successfully assigned!');
         $request->session()->flash('jetstream.flash.bannerStyle', 'success');
@@ -110,16 +123,6 @@ class UserController extends Controller
         $user->removeRole('admin');
 
         $request->session()->flash('jetstream.flash.banner', 'Admin role successfully removed!');
-        $request->session()->flash('jetstream.flash.bannerStyle', 'success');
-
-        return redirect()->route('admin.users.index');
-    }
-
-    public function removeNeedyRole(User $user, Request $request)
-    {
-        $user->removeRole('needy');
-
-        $request->session()->flash('jetstream.flash.banner', 'Needy role successfully removed!');
         $request->session()->flash('jetstream.flash.bannerStyle', 'success');
 
         return redirect()->route('admin.users.index');
