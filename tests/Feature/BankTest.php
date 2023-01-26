@@ -51,9 +51,14 @@ class BankTest extends TestCase
 
         $response = $this->post('/needy/banks', [
             'name' => fake()->name(),
-            'bankAccountNumber' => "1515" . strval(fake()->randomNumber(8, true)), // maybank account number
-            'bankAccountIc' => fake()->numberBetween(pow(10, 11), pow(10, 12) - 1),
+            'bankAccountNumber' => $bankAccountNumber = "1515" . strval(fake()->randomNumber(8, true)), // maybank account number
+            'bankAccountIc' => $bankAccountIc = fake()->numberBetween(pow(10, 11), pow(10, 12) - 1),
             'bankCode' => BankDetail::where('name', 'Maybank')->first()->code
+        ]);
+
+        $this->assertDatabaseHas('banks', [
+            'ic_number' => $bankAccountIc,
+            'account_number' => $bankAccountNumber
         ]);
 
         $response->assertSessionHas('jetstream.flash.banner', 'Bank account successfully added.');
