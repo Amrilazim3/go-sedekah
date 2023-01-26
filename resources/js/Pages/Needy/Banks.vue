@@ -184,6 +184,14 @@ const showDeleteConfirmation = (id) => {
                                                 required
                                                 placeholder="15158221292"
                                             />
+                                            <template v-if="$page.props.errors.billplzError">
+                                                <InputError 
+                                                    class="mt-2"
+                                                    :message="
+                                                        $page.props.errors.billplzError[0]
+                                                    "
+                                                />
+                                            </template>
                                             <InputError
                                                 class="mt-2"
                                                 :message="
