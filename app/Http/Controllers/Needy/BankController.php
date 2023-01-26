@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Bank;
 use App\Models\BankDetail;
 use Billplz\Laravel\Billplz;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -65,12 +66,27 @@ class BankController extends Controller
     {
         $request->validate([
             'name' => ['required', 'max:50'],
-            'bankAccountNumber' => ['required', 'unique:banks,account_number', 'min:12', 'max:16'], // search how to validate number account
+            'bankAccountNumber' => ['required', 'unique:banks,account_number', 'min:12', 'max:17'], // search how to validate number account
             'bankAccountIc' => ['required', 'min:12', 'max:12'], // search how to validate ic
             'bankCode' => ['required'],
         ]);
 
         $bankDetail = BankDetail::where('code', $request->bankCode)->first();
+
+        try {
+            Billplz::bank()->create(
+                $request->name,
+                $request->bankAccountIc,
+                $request->bankAccountNumber,
+                $request->bankCode,
+                false
+            );
+        } catch (Exception $e) {
+            return redirect()->back()->withErrors(
+                'Bank account number cannot be process with our third party api, maybe the number has been used or it does not matching the rule of the chosen bank name, please recheck your number.',
+                'billplzError'
+            );
+        }
 
         Bank::create([
             'user_id' => $request->user()->id,
@@ -80,14 +96,6 @@ class BankController extends Controller
             'account_number' => $request->bankAccountNumber,
             'status' => "pending"
         ]);
-
-        Billplz::bank()->create(
-            $request->name,
-            $request->bankAccountIc,
-            $request->bankAccountNumber,
-            $request->bankCode,
-            false
-        );
 
         $request->session()->flash('jetstream.flash.banner', 'Bank account successfully added.');
         $request->session()->flash('jetstream.flash.bannerStyle', 'success');
