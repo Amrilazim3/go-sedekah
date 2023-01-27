@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Bank;
 use App\Models\BankDetail;
 use App\Models\User;
 use Database\Seeders\BankDetailSeeder;
@@ -18,11 +19,12 @@ class BankTest extends TestCase
     {
         $this->seed(RoleSeeder::class);
 
-        $this->actingAs($user = User::factory()
-            ->afterCreating(function (User $user) {
-                $user->assignRole('needy');
-            })
-            ->create()
+        $this->actingAs(
+            $user = User::factory()
+                ->afterCreating(function (User $user) {
+                    $user->assignRole('needy');
+                })
+                ->create()
         );
 
         $response = $this->get('needy/banks');
@@ -31,7 +33,7 @@ class BankTest extends TestCase
             'banksName',
             'banks'
         ]);
-    
+
         $response->assertOk();
     }
 
@@ -42,11 +44,12 @@ class BankTest extends TestCase
             RoleSeeder::class,
         ]);
 
-        $this->actingAs($user = User::factory()
-            ->afterCreating(function (User $user) {
-                $user->assignRole('needy');
-            })
-            ->create()
+        $this->actingAs(
+            $user = User::factory()
+                ->afterCreating(function (User $user) {
+                    $user->assignRole('needy');
+                })
+                ->create()
         );
 
         $response = $this->post('/needy/banks', [
@@ -73,11 +76,24 @@ class BankTest extends TestCase
             RoleSeeder::class,
         ]);
 
-        $this->actingAs($user = User::factory()
-            ->afterCreating(function (User $user) {
-                $user->assignRole('needy');
-            })
-            ->create()
+        $this->actingAs(
+            $user = User::factory()
+                ->afterCreating(function (User $user) {
+                    $user->assignRole('needy');
+                })
+                ->create()
         );
+
+        $bank = Bank::factory()->create();
+
+        $response = $this->delete('/needy/banks/' . $bank->id);
+
+        $this->assertDatabaseMissing('banks', [
+            'id' => $bank->id
+        ]);
+
+        $response->assertSessionHas('jetstream.flash.banner', 'Bank account successfully deleted.');
+
+        $response->assertRedirectToRoute('needy.banks.index');
     }
 }
