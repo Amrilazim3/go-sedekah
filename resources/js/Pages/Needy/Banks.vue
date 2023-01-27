@@ -87,7 +87,7 @@ const showDeleteConfirmation = (id) => {
                     </div>
                     <div class="bg-white p-2 sm:p-4 relative overflow-x-hidden shadow-md sm:rounded-lg">
                         <DataTable 
-                            :header-data="['#', 'Name', 'Account Number', 'Identity Card Number', 'Status', 'Actions']"
+                            :header-data="['#', 'Name', 'Account Number', 'Identity Card Number', 'Actions']"
                             :body-data="banks"
                             @deleteBank="showDeleteConfirmation"
                         />
