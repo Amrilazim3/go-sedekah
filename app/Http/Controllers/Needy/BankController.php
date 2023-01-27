@@ -32,7 +32,6 @@ class BankController extends Controller
             'name_on_card',
             'account_number',
             'ic_number',
-            'status'
         ])
             ->where('user_id', auth()->user()->id)
             ->get();
