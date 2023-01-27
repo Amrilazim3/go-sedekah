@@ -296,19 +296,6 @@ defineEmits([
                                                 {{ bData.ic_number }}
                                             </td>
                                             <td
-                                                class="py-4 px-6 whitespace-nowrap text-sm font-semibold"
-                                                :class="
-                                                    bData.status == 'verified'
-                                                        ? 'text-green-500'
-                                                        : bData.status ==
-                                                          'pending'
-                                                        ? 'text-orange-500'
-                                                        : 'text-red-500'
-                                                "
-                                            >
-                                                {{ bData.status }}
-                                            </td>
-                                            <td
                                                 class="py-4 px-6 whitespace-nowrap"
                                             >
                                                 <div
