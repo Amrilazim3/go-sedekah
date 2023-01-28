@@ -93,7 +93,6 @@ class BankController extends Controller
             'name_on_card' => $request->name,
             'ic_number' => $request->bankAccountIc,
             'account_number' => $request->bankAccountNumber,
-            'status' => "pending"
         ]);
 
         $request->session()->flash('jetstream.flash.banner', 'Bank account successfully added.');
