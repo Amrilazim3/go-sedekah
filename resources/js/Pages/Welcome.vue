@@ -3,10 +3,17 @@ import { Head, Link } from "@inertiajs/inertia-vue3";
 import Footer from "@/Components/Footer.vue";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
+import { computed } from "vue";
+import PaginationBar from "@/Components/PaginationBar.vue";
 
-defineProps({
+const props = defineProps({
     canLogin: Boolean,
     canRegister: Boolean,
+    donationRequestsData: Object,
+});
+
+const donationRequests = computed(() => {
+    return props.donationRequestsData.data;
 });
 </script>
 
@@ -156,106 +163,37 @@ defineProps({
                         <div
                             class="bg-gray-200 rounded-lg shadow-md p-4 md:grid md:grid-cols-3"
                         >
-                            <div class="mb-4 md:col-span-1 md:pr-3 lg:pr-5">
-                                <h3 class="text-xl font-medium">
-                                    Help buy new shoes
-                                    <span
-                                        class="text-sm font-light text-indigo-500"
-                                        >(ammar asri)</span
-                                    >
-                                </h3>
-                                <p class="text-gray-600 mt-1">
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipiscing elit. Sed id semper velit.
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipiscing elit. Sed id semper velit.
-                                </p>
-                                <div class="mt-3 flex justify-end space-x-3">
-                                    <div class="self-end text-xs text-gray-600">
-                                        <span class="text-indigo-500">10%</span> (20 MYR / 100 MYR)
+                            <template v-if="donationRequests.length > 0">
+                                <template v-for="request in donationRequests" :key="request.id">
+                                    <div class="mb-4 md:col-span-1 md:pr-3 lg:pr-5">
+                                        <h3 class="text-lg font-medium">
+                                            {{ request.title }}
+                                            <span
+                                                class="text-sm font-light text-indigo-500"
+                                                >{{ request.user.name }}</span
+                                            >
+                                        </h3>
+                                        <p class="text-gray-600 mt-1">
+                                            {{ request.detail }}
+                                        </p>
+                                        <div class="mt-3 flex justify-end space-x-3">
+                                            <div class="self-end text-xs text-gray-600">
+                                                <span class="text-indigo-500">{{ request.progress }}</span>
+                                                ({{ request.currently_received }} MYR / {{ request.target_amount }} MYR)
+                                            </div>
+                                            <button
+                                                class="bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600"
+                                            >
+                                                Donate
+                                            </button>
+                                        </div>
                                     </div>
-                                    <button
-                                        class="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600"
-                                    >
-                                        Donate
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="mb-4 md:col-span-1 md:pr-3 lg:pr-5">
-                                <h3 class="text-xl font-medium">Request 1</h3>
-                                <p class="text-gray-600">
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipiscing elit. Sed id semper velit.
-                                </p>
-                                <div class="text-right">
-                                    <button
-                                        class="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600"
-                                    >
-                                        Donate
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="mb-4 md:col-span-1 md:pr-3 lg:pr-5">
-                                <h3 class="text-xl font-medium">Request 1</h3>
-                                <p class="text-gray-600">
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipiscing elit. Sed id semper velit.
-                                </p>
-                                <div class="text-right">
-                                    <button
-                                        class="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600"
-                                    >
-                                        Donate
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="mb-4 md:col-span-1 md:pr-3 lg:pr-5">
-                                <h3 class="text-xl font-medium">Request 1</h3>
-                                <p class="text-gray-600">
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipiscing elit. Sed id semper velit.
-                                </p>
-                                <div class="text-right">
-                                    <button
-                                        class="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600"
-                                    >
-                                        Donate
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="mb-4 md:col-span-1 md:pr-3 lg:pr-5">
-                                <h3 class="text-xl font-medium">Request 1</h3>
-                                <p class="text-gray-600">
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipiscing elit. Sed id semper velit.
-                                </p>
-                                <div class="text-right">
-                                    <button
-                                        class="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600"
-                                    >
-                                        Donate
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="mb-4 md:col-span-1 md:pr-3 lg:pr-5">
-                                <h3 class="text-xl font-medium">Request 1</h3>
-                                <p class="text-gray-600">
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipiscing elit. Sed id semper velit.
-                                </p>
-                                <div class="text-right">
-                                    <button
-                                        class="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600"
-                                    >
-                                        Donate
-                                    </button>
-                                </div>
-                            </div>
+                                </template>
+                            </template>
+                            <template v-else>
+                                <p class="text-lg font-semibold">No donation requests yet...</p>
+                            </template>
+                            <PaginationBar :links="donationRequests.links" />
                         </div>
                     </div>
                 </div>
