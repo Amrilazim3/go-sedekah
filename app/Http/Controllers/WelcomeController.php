@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DonationRequest;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -11,9 +12,29 @@ class WelcomeController extends Controller
 {
     public function index()
     {
+        $donationRequestsData = DonationRequest::select([
+            'id',
+            'user_id',
+            'title',
+            'detail',
+            'currently_received',
+            'target_amount',
+            'created_at'
+        ])
+            ->with(['user' => function ($query) {
+                $query->select([
+                    'id',
+                    'name'
+                ]);
+            }])
+            ->where('status', 'approved')
+            ->whereColumn('currently_received', '!=', 'target_amount')
+            ->paginate(6);
+
         return Inertia::render('Welcome', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
+            'donationRequestsData' => $donationRequestsData
         ]);
     }
 }
