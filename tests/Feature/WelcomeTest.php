@@ -17,6 +17,10 @@ class WelcomeTest extends TestCase
     {
         $response = $this->get('/');
 
+        $response->assertSeeInOrder([
+            'donationRequestsData'
+        ]);
+
         $response->assertStatus(200);
     }
 }
