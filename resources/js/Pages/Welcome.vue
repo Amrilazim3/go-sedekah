@@ -101,110 +101,160 @@ defineProps({
                 </div>
             </div>
 
-            <main class="mt-16 p-4 w-full flex justify-center">
-                <div>
-                    <div class="sm:text-center">
-                        <h3 class="text-xl font-semibold">
-                            Bring lights to someone who in the dark!
-                        </h3>
-                        <p class="text-gray-600">
-                            Donate now and help the community!
-                        </p>
+            <main class="mt-14 w-full">
+                <div
+                    style="
+                        background-image: url(http://localhost/resources/d8f80683-6d12-49cc-a24f-f44853eaaed4.jpeg);
+                        background-repeat: no-repeat;
+                        background-position: center center;
+                        background-size: cover;
+                    "
+                    class="p-3 sm:py-8 sm:flex sm:justify-around"
+                >
+                    <div
+                        class="sm:text-center sm:flex sm:items-center sm:justify-center"
+                    >
+                        <div>
+                            <h3 class="text-xl font-semibold">
+                                Bring lights to someone who in the dark!
+                            </h3>
+                            <p class="text-white font-semibold">
+                                Donate now and help the community!
+                            </p>
+                        </div>
                     </div>
-
-                    <div class="mt-8 bg-blue-200 p-3 rounded-md">
-                        <h3 class="text-lg text-center pb-3 text-indigo-600">
-                            Donate available
-                        </h3>
-                        <div class="divide-y divide-gray-100 space-y-4">
-                            <div>
-                                <div class="flex w-full">
-                                    <button
-                                        class="bg-white p-1.5 flex-1 outline-none rounded-tl-md text-md"
-                                    >
-                                        Siti kaliz
-                                    </button>
-                                    <button
-                                        class="bg-gray-900 p-1.5 flex-1 outline-none rounded-tr-md text-white text-md"
-                                    >
-                                        <span class="text-red-500">MYR500</span>
-                                        /
-                                        <span class="text-green-500"
-                                            >MYR20000</span
-                                        >
-                                    </button>
+                    <div class="mt-4 sm:-mt-0 lg:w-full lg:max-w-sm">
+                        <div class="bg-gray-400 p-3 rounded-md">
+                            <h3
+                                class="text-lg font-semibold text-center pb-3 text-gray-800"
+                            >
+                                Recent Donator
+                            </h3>
+                            <div class="divide-y divide-gray-100 space-y-2">
+                                <div class="p-1 bg-white rounded-md">
+                                    <p>Amirul adli just donated MYR 5.00</p>
                                 </div>
-                                <button
-                                    class="w-full p-1.5 font-semibold bg-indigo-500 hover:bg-indigo-400 rounded-br-md rounded-bl-md text-white"
-                                >
-                                    Donate
-                                </button>
-                            </div>
-                            <div>
-                                <div class="flex w-full">
-                                    <button
-                                        class="bg-white p-1.5 flex-1 outline-none rounded-tl-md text-md"
-                                    >
-                                        Emsan hanief
-                                    </button>
-                                    <button
-                                        class="bg-gray-900 p-1.5 flex-1 outline-none rounded-tr-md text-white text-md"
-                                    >
-                                        <span class="text-red-500">MYR500</span>
-                                        /
-                                        <span class="text-green-500"
-                                            >MYR20000</span
-                                        >
-                                    </button>
+                                <div class="p-1 bg-white rounded-md">
+                                    <p>Amirul adli just donated MYR 5.00</p>
                                 </div>
-                                <button
-                                    class="w-full p-1.5 font-semibold bg-indigo-500 hover:bg-indigo-400 rounded-br-md rounded-bl-md text-white"
-                                >
-                                    Donate
-                                </button>
-                            </div>
-                            <div>
-                                <div class="flex w-full">
-                                    <button
-                                        class="bg-white p-1.5 flex-1 outline-none rounded-tl-md text-md"
-                                    >
-                                        Ammar asri
-                                    </button>
-                                    <button
-                                        class="bg-gray-900 p-1.5 flex-1 outline-none rounded-tr-md text-white text-md"
-                                    >
-                                        <span class="text-red-500">MYR500</span>
-                                        /
-                                        <span class="text-green-500"
-                                            >MYR20000</span
-                                        >
-                                    </button>
+                                <div class="p-1 bg-white rounded-md">
+                                    <p>Amirul adli just donated MYR 5.00</p>
                                 </div>
-                                <button
-                                    class="w-full p-1.5 font-semibold bg-indigo-500 hover:bg-indigo-400 rounded-br-md rounded-bl-md text-white"
-                                >
-                                    Donate
-                                </button>
+                                <div class="p-1 bg-white rounded-md">
+                                    <p>Amirul adli just donated MYR 5.00</p>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="mt-8 bg-indigo-200 p-3 rounded-md">
-                        <h3 class="text-lg text-center pb-3 text-blue-500">
-                            Recent Donator
-                        </h3>
-                        <div class="divide-y divide-gray-100 space-y-2">
-                            <div class="p-1 bg-white">
-                                <p>Amirul adli just donated MYR 5.00</p>
+                <div class="p-4 w-full flex justify-center md:p-6 lg:p-10">
+                    <div class="mx-auto py-8">
+                        <h2 class="text-lg font-medium mb-4">
+                            Available Donation Requests
+                        </h2>
+                        <div
+                            class="bg-gray-200 rounded-lg shadow-md p-4 md:grid md:grid-cols-3"
+                        >
+                            <div class="mb-4 md:col-span-1 md:pr-3 lg:pr-5">
+                                <h3 class="text-xl font-medium">
+                                    Help buy new shoes
+                                    <span
+                                        class="text-sm font-light text-indigo-500"
+                                        >(ammar asri)</span
+                                    >
+                                </h3>
+                                <p class="text-gray-600 mt-1">
+                                    Lorem ipsum dolor sit amet, consectetur
+                                    adipiscing elit. Sed id semper velit.
+                                    Lorem ipsum dolor sit amet, consectetur
+                                    adipiscing elit. Sed id semper velit.
+                                </p>
+                                <div class="mt-3 flex justify-end space-x-3">
+                                    <div class="self-end text-xs text-gray-600">
+                                        <span class="text-indigo-500">10%</span> (20 MYR / 100 MYR)
+                                    </div>
+                                    <button
+                                        class="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600"
+                                    >
+                                        Donate
+                                    </button>
+                                </div>
                             </div>
-                            <div class="p-1 bg-white">
-                                <p>Mira filzah just donated MYR 5.00</p>
+
+                            <div class="mb-4 md:col-span-1 md:pr-3 lg:pr-5">
+                                <h3 class="text-xl font-medium">Request 1</h3>
+                                <p class="text-gray-600">
+                                    Lorem ipsum dolor sit amet, consectetur
+                                    adipiscing elit. Sed id semper velit.
+                                </p>
+                                <div class="text-right">
+                                    <button
+                                        class="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600"
+                                    >
+                                        Donate
+                                    </button>
+                                </div>
                             </div>
-                            <div class="p-1 bg-white">
-                                <p>abu zaki just donated MYR 5.00</p>
+
+                            <div class="mb-4 md:col-span-1 md:pr-3 lg:pr-5">
+                                <h3 class="text-xl font-medium">Request 1</h3>
+                                <p class="text-gray-600">
+                                    Lorem ipsum dolor sit amet, consectetur
+                                    adipiscing elit. Sed id semper velit.
+                                </p>
+                                <div class="text-right">
+                                    <button
+                                        class="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600"
+                                    >
+                                        Donate
+                                    </button>
+                                </div>
                             </div>
-                            <div class="p-1 bg-white">
-                                <p>Kamal adli just donated MYR 5.00</p>
+
+                            <div class="mb-4 md:col-span-1 md:pr-3 lg:pr-5">
+                                <h3 class="text-xl font-medium">Request 1</h3>
+                                <p class="text-gray-600">
+                                    Lorem ipsum dolor sit amet, consectetur
+                                    adipiscing elit. Sed id semper velit.
+                                </p>
+                                <div class="text-right">
+                                    <button
+                                        class="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600"
+                                    >
+                                        Donate
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="mb-4 md:col-span-1 md:pr-3 lg:pr-5">
+                                <h3 class="text-xl font-medium">Request 1</h3>
+                                <p class="text-gray-600">
+                                    Lorem ipsum dolor sit amet, consectetur
+                                    adipiscing elit. Sed id semper velit.
+                                </p>
+                                <div class="text-right">
+                                    <button
+                                        class="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600"
+                                    >
+                                        Donate
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="mb-4 md:col-span-1 md:pr-3 lg:pr-5">
+                                <h3 class="text-xl font-medium">Request 1</h3>
+                                <p class="text-gray-600">
+                                    Lorem ipsum dolor sit amet, consectetur
+                                    adipiscing elit. Sed id semper velit.
+                                </p>
+                                <div class="text-right">
+                                    <button
+                                        class="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600"
+                                    >
+                                        Donate
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
