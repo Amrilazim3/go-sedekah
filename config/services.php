@@ -36,5 +36,6 @@ return [
         'version' => env('BILLPLZ_VERSION', 'v3'),
         'x-signature' => env('BILLPLZ_X_SIGNATURE'),
         'sandbox' => env('BILLPLZ_SANDBOX', false),
+        'collection_id' => env('BILLPLZ_COLLECTION_ID')
     ],
 ];
