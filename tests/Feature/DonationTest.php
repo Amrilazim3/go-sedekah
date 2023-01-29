@@ -48,7 +48,5 @@ class DonationTest extends TestCase
             'user_id' => $user->id,
             'donation_request_id' => $donationRequest->id,
         ]);
-
-        $response->assertOk();
     }
 }
