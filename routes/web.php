@@ -13,18 +13,33 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+Route::post('/billplz', function (Request $request) {
+    // $bill = Billplz::bill()->create('bgs0cicq', 'amril@gmail.com', '0172374050', 'amril azim', 23000, 'http://localhost', 'donation for fulan bin fulan', ['redirect_url' => 'http://localhost']);
+
+    // to create open collection
+    // Billplz::openCollection()->create();
+
+    // to create bank account
+    // $newBankAcc = Billplz::bank()->create('ESMAN HANIF BIN KHAIRUL ANWAR', '030307090212', '151587221231', 'MBBEMYKL', false);
+    // $newBankAcc = Billplz::bank()->get('151587221231');
+    // dd($newBankAcc);
+
+    // $client = new Client();
+    // $client->request('GET', 'https://www.billplz-sandbox.com/api/v3/bank_verification_services/151587221231');
+
+    // get bank account
+    // dd(Http::withBasicAuth('fe3b1a4d-889f-404e-9fcf-59f2314e83a1:', '')->get('https://www.billplz-sandbox.com/api/v3/bank_verification_services/151587221231')->json());
+
+    // get open collection 
+    // dd(Http::withBasicAuth('fe3b1a4d-889f-404e-9fcf-59f2314e83a1:', '')->get('https://www.billplz-sandbox.com/api/v3/open_collections/b_xg5irk')->json());
+
+    // get bill
+    // dd(Http::withBasicAuth('fe3b1a4d-889f-404e-9fcf-59f2314e83a1:', '')->get('https://www.billplz-sandbox.com/api/v3/bills/o3ieijra')->json());
+});
 
 Route::get('/', [WelcomeController::class, 'index']);
+
+Route::post('donations/{donationRequest}', [DonationController::class, 'store'])->name('donations.donate.store');
 
 Route::middleware([
     'auth:sanctum',
@@ -37,30 +52,6 @@ Route::middleware([
         App\Http\Controllers\DonationController::class,
         'index'
     ])->name('donations.index');
-
-    Route::post('/billplz', function (Request $request) {
-        // $bill = Billplz::bill()->create('bgs0cicq', 'amril@gmail.com', '0172374050', 'amril azim', 23000, 'http://localhost', 'donation for fulan bin fulan', ['redirect_url' => 'http://localhost']);
-
-        // to create open collection
-        // Billplz::openCollection()->create();
-
-        // to create bank account
-        // $newBankAcc = Billplz::bank()->create('ESMAN HANIF BIN KHAIRUL ANWAR', '030307090212', '151587221231', 'MBBEMYKL', false);
-        // $newBankAcc = Billplz::bank()->get('151587221231');
-        // dd($newBankAcc);
-
-        // $client = new Client();
-        // $client->request('GET', 'https://www.billplz-sandbox.com/api/v3/bank_verification_services/151587221231');
-
-        // get bank account
-        // dd(Http::withBasicAuth('fe3b1a4d-889f-404e-9fcf-59f2314e83a1:', '')->get('https://www.billplz-sandbox.com/api/v3/bank_verification_services/151587221231')->json());
-
-        // get open collection 
-        // dd(Http::withBasicAuth('fe3b1a4d-889f-404e-9fcf-59f2314e83a1:', '')->get('https://www.billplz-sandbox.com/api/v3/open_collections/b_xg5irk')->json());
-
-        // get bill
-        // dd(Http::withBasicAuth('fe3b1a4d-889f-404e-9fcf-59f2314e83a1:', '')->get('https://www.billplz-sandbox.com/api/v3/bills/o3ieijra')->json());
-    });
 
     Route::middleware('role:admin')
         ->prefix('admin')
