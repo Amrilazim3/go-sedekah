@@ -443,6 +443,16 @@ onMounted(() => {
                                         Submit
                                     </button>
                                 </div>
+                                <template
+                                    v-if="$page.props.errors.billplzError"
+                                >
+                                    <InputError
+                                        class="mt-2"
+                                        :message="
+                                            $page.props.errors.billplzError[0]
+                                        "
+                                    />
+                                </template>
                             </form>
                         </DialogPanel>
                     </TransitionChild>
