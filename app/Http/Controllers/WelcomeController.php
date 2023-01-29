@@ -35,6 +35,7 @@ class WelcomeController extends Controller
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
             'donationRequestsData' => $donationRequestsData
-        ]);
+        ])
+            ->with('jetstream.flash.billplzID', session()->get('jetstream.flash.billplzID'));
     }
 }
