@@ -20,7 +20,7 @@ return new class extends Migration
             $table->float('amount');
             $table->string('message');
             $table->boolean('is_hidden')->default(false);
-            $table->string('bill_url');
+            $table->string('bill_url')->nullable();
             $table->timestamps();
         });
     }
