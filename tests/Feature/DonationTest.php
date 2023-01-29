@@ -39,14 +39,14 @@ class DonationTest extends TestCase
         $response = $this->post('/donations/' . $donationRequest->id, [
             'name' => $user->name,
             'email' => $user->email,
-            'amount' => rand(10, 50),
+            'amount' => rand(50, 100),
             'message' => fake()->paragraph(1),
             'isHidden' => false,
         ]);
 
         $this->assertDatabaseHas('donations', [
             'user_id' => $user->id,
-            'donation_request_id' => $donationRequest->id
+            'donation_request_id' => $donationRequest->id,
         ]);
 
         $response->assertOk();
