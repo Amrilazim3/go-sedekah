@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('banks', function (Blueprint $table) {
-            $table->dropColumn('status');
+            // $table->dropColumn('status');
         });
     }
 
