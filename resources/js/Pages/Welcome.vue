@@ -3,7 +3,7 @@ import { Head, Link, useForm } from "@inertiajs/inertia-vue3";
 import Footer from "@/Components/Footer.vue";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import PaginationBar from "@/Components/PaginationBar.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
@@ -19,7 +19,7 @@ import {
     DialogTitle,
 } from "@headlessui/vue";
 import { inject } from "vue";
-import { usePage } from '@inertiajs/inertia-vue3';
+import { usePage } from "@inertiajs/inertia-vue3";
 
 const props = defineProps({
     canLogin: Boolean,
@@ -71,12 +71,24 @@ const donate = () => {
                     allowEnterKey: false,
                 });
 
-                const billUrl = usePage().props.value.jetstream.flash?.billplzID;
+                const billUrl =
+                    usePage().props.value.jetstream.flash?.billplzID;
 
                 window.location.href = billUrl;
             },
         });
 };
+
+onMounted(() => {
+    usePage().props.value.jetstream.flash?.successPayment
+        ? Swal.fire({
+              icon: "success",
+              title: "Success",
+              text: "Payment successful, thank you for your support.",
+              showCancelButton: false,
+          })
+        : false;
+});
 </script>
 
 <template>
