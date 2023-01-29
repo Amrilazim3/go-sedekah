@@ -87,7 +87,16 @@ onMounted(() => {
               text: "Payment successful, thank you for your support.",
               showCancelButton: false,
           })
-        : false;
+        : "";
+
+    usePage().props.value.jetstream.flash?.successPayment == false
+        ? Swal.fire({
+              icon: "error",
+              title: "Failed",
+              text: "Your payment cannot be process.",
+              showCancelButton: false,
+          })
+        : "";
 });
 </script>
 
