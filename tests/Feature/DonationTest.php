@@ -48,5 +48,33 @@ class DonationTest extends TestCase
             'user_id' => $user->id,
             'donation_request_id' => $donationRequest->id,
         ]);
+
+        $response->assertStatus(302);
+    }
+
+    public function test_user_can_donate_without_authenticated()
+    {
+        $donationRequest = DonationRequest::factory()->create();
+
+        $response = $this->post('/donations/' . $donationRequest->id, [
+            'name' => $name = fake()->name(),
+            'email' => $email = fake()->email(),
+            'amount' => $amount = rand(5, 10),
+            'message' => $message = fake()->paragraph(1),
+            'isHidden' => $isHidden = false,
+        ]);
+
+        $this->assertDatabaseHas('users', [
+            'name' => $name,
+            'email' => $email
+        ]);
+
+        $this->assertDatabaseHas('donations', [
+            'amount' => $amount,
+            'message' => $message,
+            'is_hidden' => $isHidden
+        ]);
+        
+        $response->assertStatus(302);
     }
 }
