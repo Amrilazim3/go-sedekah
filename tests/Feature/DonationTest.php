@@ -4,10 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\DonationRequest;
 use App\Models\User;
-use Database\Seeders\BankDetailSeeder;
-use Database\Seeders\RoleSeeder;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class DonationTest extends TestCase
@@ -74,7 +72,20 @@ class DonationTest extends TestCase
             'message' => $message,
             'is_hidden' => $isHidden
         ]);
-        
+
         $response->assertStatus(302);
+    }
+
+    public function test_set_date_for_verification_expiry_at_column_if_target_amount_has_reached_goal()
+    {
+        $donationRequest = DonationRequest::factory()->create();
+
+        $donationRequest->setVerificationExpiryDate();
+
+        $this->assertTrue(
+            Carbon::parse($donationRequest->verification_expiry_at)->format('Y-m-d')
+            == 
+            date(Carbon::now()->addDays(7)->format('Y-m-d'))
+        );
     }
 }
