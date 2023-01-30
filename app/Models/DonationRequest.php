@@ -31,6 +31,11 @@ class DonationRequest extends Model
         return $this->belongsTo(Bank::class, 'bank_id', 'id');
     }
 
+    public function setVerificationExpiryDate()
+    {
+        $this->verification_expiry_at = Carbon::now()->addDays(7);
+    }
+
     protected function progress(): Attribute
     {
         return new Attribute(
@@ -59,11 +64,11 @@ class DonationRequest extends Model
     {
         return new Attribute(
             get: function () {
-                return $this->attributes['verification_expiry_at'] == null
-                    ? false
-                    : Carbon::parse(
+                return $this->attributes['verification_expiry_at']
+                    ? Carbon::parse(
                         $this->attributes['verification_expiry_at']
-                    )->timezone('Asia/Kuala_Lumpur')->format('Y-m-d H:i');
+                    )->timezone('Asia/Kuala_Lumpur')->format('Y-m-d H:i')
+                    : null;
             }
         );
     }
