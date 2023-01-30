@@ -13,6 +13,10 @@ class Donation extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'is_hidden' => 'boolean'
+    ]; 
+
     protected $appends = [
         'bill_url'
     ];
