@@ -11,9 +11,9 @@ class DonationController extends Controller
     const DONATION_COLUMN = [
         'id',
         'user_id',
+        'bill_id',
         'donation_request_id',
         'amount',
-        'bill_url',
         'created_at'
     ];
 
