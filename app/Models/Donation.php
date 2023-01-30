@@ -13,6 +13,10 @@ class Donation extends Model
 
     protected $guarded = [];
 
+    protected $appends = [
+        'bill_url'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -30,6 +34,18 @@ class Donation extends Model
                 return Carbon::parse(
                     $this->attributes['created_at']
                 )->timezone('Asia/Kuala_Lumpur')->format('Y-m-d H:i');
+            }
+        );
+    }
+
+    protected function billUrl(): Attribute
+    {
+        return new Attribute(
+            get: function () {
+                return config('services.billplz.sandbox') ?
+                    'https://www.billplz-sandbox.com/bills/' . $this->attributes['bill_id']
+                    :
+                    'https://www.billplz.com/bills/' . $this->attributes['bill_id'];
             }
         );
     }
