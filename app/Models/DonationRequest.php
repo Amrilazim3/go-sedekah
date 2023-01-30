@@ -33,7 +33,9 @@ class DonationRequest extends Model
 
     public function setVerificationExpiryDate()
     {
-        $this->verification_expiry_at = Carbon::now()->addDays(7);
+        $this->update([
+            'verification_expiry_at' => Carbon::now()->addDays(7)
+        ]);
     }
 
     protected function progress(): Attribute
