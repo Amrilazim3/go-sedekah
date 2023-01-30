@@ -82,10 +82,10 @@ class DonationController extends Controller
                 null,
                 $user->name,
                 intval($request->amount . "00"),
-                'http://localhost',
+                config('app.url'),
                 $request->message,
                 [
-                    'redirect_url' => 'http://localhost/donations/response'
+                    'redirect_url' => config('app.url') . '/donations/response'
                 ]
             );
 
@@ -121,6 +121,10 @@ class DonationController extends Controller
         $donationRequest->update([
             'currently_received' => $donationRequest->currently_received + $donation->amount
         ]);
+
+        if ($donationRequest->target_amount == $donationRequest->currently_received) {
+            $donationRequest->setVerificationExpiryDate();
+        } 
 
         $donation->update([
             'status' => 'paid'
