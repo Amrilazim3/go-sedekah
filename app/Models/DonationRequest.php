@@ -35,7 +35,10 @@ class DonationRequest extends Model
     {
         return new Attribute(
             get: function () {
-                $percent = ($this->currently_received / $this->target_amount) * 100;
+                $percent = number_format(
+                    ($this->currently_received / $this->target_amount) * 100,
+                    0
+                );
                 return $percent . "%";
             }
         );
