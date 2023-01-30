@@ -24,7 +24,10 @@ class DonationRequestFactory extends Factory
             'title' => $this->faker->text(30),
             'detail' => $this->faker->paragraph(1),
             'currently_received' => 0,
-            'target_amount' => rand(10, 100)
+            'target_amount' => rand(10, 100),
+            'status' => 'pending',
+            'is_verified' => false,
+            'verification_expiry_at' => null,
         ];
     }
 }
