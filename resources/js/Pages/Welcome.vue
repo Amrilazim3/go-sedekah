@@ -35,8 +35,8 @@ const donationRequests = computed(() => {
 const isOpenDonationModel = ref(false);
 const currentOpenDonationId = ref(0);
 const donationForm = useForm({
-    name: "",
-    email: "",
+    name: usePage().props.value.user?.name || "",
+    email: usePage().props.value.user?.email || "",
     amount: "",
     message: "",
     isHidden: false,
@@ -50,6 +50,7 @@ const openDonationModel = (id) => {
 const closeDonationModel = () => {
     isOpenDonationModel.value = false;
     currentOpenDonationId.value = 0;
+    donationForm.reset();
 };
 
 const donate = () => {
@@ -355,7 +356,8 @@ onMounted(() => {
                                         type="text"
                                         class="mt-1 block w-full"
                                         required
-                                        autofocus
+                                        :autofocus="!$page.props.user"
+                                        :readonly="$page.props.user"
                                         placeholder="john doe"
                                     />
                                     <InputError
@@ -374,6 +376,7 @@ onMounted(() => {
                                         type="email"
                                         class="mt-1 block w-full"
                                         required
+                                        :readonly="$page.props.user"
                                         placeholder="johndoe@gmail.com"
                                     />
                                     <InputError
@@ -389,6 +392,7 @@ onMounted(() => {
                                         type="number"
                                         class="mt-1 block w-full"
                                         required
+                                        :autofocus="$page.props.user"
                                         placeholder="50"
                                     />
                                     <InputError
