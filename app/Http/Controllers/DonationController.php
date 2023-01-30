@@ -65,7 +65,7 @@ class DonationController extends Controller
             'message' => ['required', 'max:200']
         ]);
 
-        $user = auth()->user();
+        $user = $request->user();
 
         if ($user == null) {
             $user = User::firstOrCreate([
