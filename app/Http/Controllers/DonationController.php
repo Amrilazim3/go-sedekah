@@ -6,9 +6,11 @@ use App\Models\Bank;
 use App\Models\Donation;
 use App\Models\DonationRequest;
 use App\Models\User;
+use App\Notifications\Donor\SuccessfulDonation;
 use Billplz\Laravel\Billplz;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use Inertia\Inertia;
 
 class DonationController extends Controller
@@ -54,12 +56,12 @@ class DonationController extends Controller
 
     public function store(DonationRequest $donationRequest, Request $request)
     {
-        $maxDonationAmount = $donationRequest->target_amount - $donationRequest->currently_received;
+        $maxDonationAmount = $this->getMaxDonationAmount($donationRequest);
 
         $request->validate([
             'name' => ['required', 'max:20'],
             'email' => ['required', 'email'],
-            'amount' => ['required', 'min:2', 'max:' . $maxDonationAmount],
+            'amount' => ['required', 'integer', 'min:2', 'max:' . $maxDonationAmount],
             'message' => ['required', 'max:200']
         ]);
 
@@ -79,7 +81,7 @@ class DonationController extends Controller
                 $user->email,
                 null,
                 $user->name,
-                intval($request->amount . 000),
+                intval($request->amount . "00"),
                 'http://localhost',
                 $request->message,
                 [
@@ -97,7 +99,7 @@ class DonationController extends Controller
                 'status' => 'pending'
             ]);
         } catch (Exception $e) {
-            return redirect()->back()->withErrors('Something when wrong, please try again.');
+            return redirect()->back()->withErrors('Something when wrong, please try again.', 'billplzError');
         }
 
         $request->session()->flash('jetstream.flash.billplzID', $bill->toArray()['url']);
@@ -109,21 +111,39 @@ class DonationController extends Controller
         $donation = Donation::where('bill_id', $request->billplz['id'])->first();
         $donationRequest = DonationRequest::where('id', $donation->donation_request_id)->first();
 
-        if ($request->billplz['paid'] == 'true') {
-            $newCurrentlyReceived = $donationRequest->currently_received + $donation->amount;
-            
-            $donationRequest->update([
-                'currently_received' => $newCurrentlyReceived
-            ]);
+        if ($request->billplz['paid'] == 'false') {
+            $donation->delete();
 
-            $donation->update([
-                'status' => 'paid'
-            ]);
-
-            // send notification to donation request's owner.
+            $request->session()->flash('jetstream.flash.successPayment', false);
+            return redirect('/');
         }
+
+        $donationRequest->update([
+            'currently_received' => $donationRequest->currently_received + $donation->amount
+        ]);
+
+        $donation->update([
+            'status' => 'paid'
+        ]);
+
+        Notification::send(
+            User::find($donationRequest->user_id),
+            new SuccessfulDonation($donation)
+        );
 
         $request->session()->flash('jetstream.flash.successPayment', true);
         return redirect('/');
+    }
+
+    protected function getMaxDonationAmount(DonationRequest $donationRequest)
+    {
+        $pendingAmount = 0;
+        Donation::where('status', 'pending')->chunk(10, function ($donations) use ($pendingAmount) {
+            foreach ($donations as $donation) {
+                $pendingAmount += $donation->amount;
+            }
+        });
+
+        return $donationRequest->target_amount - ($donationRequest->currently_received + $pendingAmount);
     }
 }
