@@ -8,6 +8,7 @@ use App\Models\DonationRequest;
 use App\Models\User;
 use App\Notifications\Admin\Donation\RequestApproved;
 use App\Notifications\Admin\Donation\RequestRejected;
+use App\Notifications\Admin\Donation\RequestVerified;
 use App\Notifications\Needy\Donation\RequestDeleted;
 use App\Notifications\Needy\Donation\RequestSent;
 use Database\Seeders\BankDetailSeeder;
@@ -187,5 +188,36 @@ class DonationRequestTest extends TestCase
         );
 
         $response->assertRedirectToRoute('donations.index');
+    }
+
+    public function test_admin_user_can_verify_donation_request()
+    {
+        Notification::fake();
+
+        $this->seed(
+            RoleSeeder::class
+        );
+        
+        $donationRequest = DonationRequest::factory()->create();
+
+        $admin = User::factory()->afterCreating(function (User $user) {
+            $user->assignRole('admin');
+        })->create();
+
+        $this->actingAs($admin);
+
+        $response = $this->patch('/admin/donation-request/' . $donationRequest->id . '/verify');
+
+        $this->assertDatabaseHas('donation_requests', [
+            'id' => $donationRequest->id,
+            'is_verified' => 1,
+        ]);
+
+        Notification::assertSentTo(
+            User::find($donationRequest->user_id),
+            RequestVerified::class
+        );
+
+        $response->assertStatus(302);
     }
 }
