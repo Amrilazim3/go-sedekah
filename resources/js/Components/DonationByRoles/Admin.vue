@@ -11,6 +11,7 @@ import {
     ChevronUpIcon,
     XMarkIcon,
     ChevronDownIcon,
+    CheckBadgeIcon,
 } from "@heroicons/vue/20/solid";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/vue/24/outline";
 import { inject } from "vue";
@@ -94,6 +95,28 @@ const rejectRequest = (id) => {
         }
     });
 };
+
+const verifyDonationRequest = (id) => {
+    Swal.fire({
+        title: "Verify this donation request?",
+        text: "Confirm that this user is successfully providing the legit prove to us?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "color: rgb(99 102 241);",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Verify",
+    }).then((result) => {
+        if (result.value) {
+            Inertia.patch(
+                `/admin/donation-request/${id}/verify`,
+                {},
+                {
+                    preserveScroll: false,
+                }
+            );
+        }
+    });
+}
 
 onMounted(() => {
     if (
@@ -387,10 +410,33 @@ onMounted(() => {
                                         >
                                             View More
                                         </a>
+                                        <template
+                                            v-if="request.progress == '100%'"
+                                        >
+                                            <template
+                                                v-if="!request.is_verified"
+                                            >
+                                                <button
+                                                    @click="verifyDonationRequest(request.id)"
+                                                    class="px-1.5 py-1 ml-4 rounded-md bg-indigo-500 hover:bg-opacity-50 text-white"
+                                                >
+                                                    mark as verify
+                                                </button>
+                                            </template>
+                                            <template v-else>
+                                                <div class="inline-flex ml-1.5">
+                                                    <span class="text-blue-500"
+                                                        >verififed</span
+                                                    >
+                                                    <CheckBadgeIcon
+                                                        class="h-3 w-3 text-blue-500 ml-1 self-center"
+                                                    />
+                                                </div>
+                                            </template>
+                                        </template>
                                     </div>
-                                </div>
-                            </div></template
-                        >
+                                </div></div
+                        ></template>
                         <template v-if="request.status == 'pending'">
                             <div class="relative rounded-md shadow-sm">
                                 <div
