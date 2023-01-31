@@ -58,6 +58,9 @@ Route::middleware([
             Route::patch('/donation-request/{donationRequest}/reject', [
                 App\Http\Controllers\Admin\DonationRequestController::class, 'reject'
             ])->name('donationRequest.reject');
+            Route::patch('/donation-request/{donationRequest}/verify', [
+                App\Http\Controllers\Admin\DonationRequestController::class, 'verify'
+            ])->name('donationRequest.verify');
         });
 
     Route::middleware('role:needy')
