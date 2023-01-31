@@ -12,6 +12,7 @@ class DonationController extends Controller
     const DONATION_COLUMN = [
         'id',
         'user_id',
+        'bill_id',
         'donation_request_id',
         'amount',
         'created_at'
@@ -29,7 +30,6 @@ class DonationController extends Controller
 
     public function index(Request $request)
     {
-        // all user donation histories
         $usersData = Donation::select(self::DONATION_COLUMN)
             ->with(['donationRequest' => function ($query) {
                 return $query->select(self::DONATION_REQUEST_COLUMN)
@@ -41,7 +41,6 @@ class DonationController extends Controller
             }])
             ->paginate(13, ['*'], 'users');
 
-        // all user donation requests
         $requestsData = (new DonationRequestController)->index();
 
         return compact("usersData", "requestsData");
