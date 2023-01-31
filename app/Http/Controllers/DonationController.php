@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\VerifyDonationExpiration;
 use App\Models\Bank;
 use App\Models\Donation;
 use App\Models\DonationRequest;
@@ -130,6 +131,8 @@ class DonationController extends Controller
                 User::find($donationRequest->user_id),
                 new VerificationExpiration($donationRequest)
             );
+
+            VerifyDonationExpiration::dispatch($donationRequest)->delay(now()->addDays(7));
         } 
 
         $donation->update([
