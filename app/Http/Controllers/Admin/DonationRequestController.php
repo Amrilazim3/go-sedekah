@@ -108,6 +108,9 @@ class DonationRequestController extends Controller
             new RequestVerified($donationRequest)
         );
 
+        $request->session()->flash('jetstream.flash.banner', 'Donation request successfully verified.');
+        $request->session()->flash('jetstream.flash.bannerStyle', 'success');
+
         return redirect()->route('donations.index');
     }
 }
