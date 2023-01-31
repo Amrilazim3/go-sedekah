@@ -7,6 +7,7 @@ use App\Models\DonationRequest;
 use App\Models\User;
 use App\Notifications\Admin\Donation\RequestApproved;
 use App\Notifications\Admin\Donation\RequestRejected;
+use App\Notifications\Admin\Donation\RequestVerified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
 
@@ -94,5 +95,19 @@ class DonationRequestController extends Controller
             }])
             ->where('status', $status)
             ->paginate(13, ['*'], 'requests');
+    }
+
+    public function verify(DonationRequest $donationRequest, Request $request)
+    {
+        $donationRequest->update([
+            'is_verified' => true
+        ]);
+
+        Notification::send(
+            User::find($donationRequest->user_id),
+            new RequestVerified($donationRequest)
+        );
+
+        return redirect()->route('donations.index');
     }
 }
