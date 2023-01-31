@@ -7,6 +7,7 @@ use App\Models\Donation;
 use App\Models\DonationRequest;
 use App\Models\User;
 use App\Notifications\Donor\SuccessfulDonation;
+use App\Notifications\Needy\Donation\VerificationExpiration;
 use Billplz\Laravel\Billplz;
 use Exception;
 use Illuminate\Http\Request;
@@ -124,6 +125,11 @@ class DonationController extends Controller
 
         if ($donationRequest->target_amount == $donationRequest->currently_received) {
             $donationRequest->setVerificationExpiryDate();
+
+            Notification::send(
+                User::find($donationRequest->user_id),
+                new VerificationExpiration($donationRequest)
+            );
         } 
 
         $donation->update([
