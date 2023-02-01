@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\RecentDonation;
+use App\Models\Donation;
 use App\Models\DonationRequest;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
@@ -30,6 +32,10 @@ class WelcomeController extends Controller
             ->where('status', 'approved')
             ->whereColumn('currently_received', '!=', 'target_amount')
             ->paginate(6);
+
+        RecentDonation::dispatch(
+            Donation::orderBy('created_at', 'desc')->limit(5)->get()
+        );
 
         return Inertia::render('Welcome', [
             'canLogin' => Route::has('login'),
