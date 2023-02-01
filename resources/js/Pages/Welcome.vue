@@ -80,6 +80,11 @@ const donate = () => {
         });
 };
 
+Echo.channel('donation')
+    .listen('RecentDonation', (e) => {
+        console.log(e);
+    });
+
 onMounted(() => {
     usePage().props.value.jetstream.flash?.successPayment
         ? Swal.fire({
