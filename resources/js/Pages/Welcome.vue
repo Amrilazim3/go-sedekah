@@ -3,7 +3,7 @@ import { Head, Link, useForm } from "@inertiajs/inertia-vue3";
 import Footer from "@/Components/Footer.vue";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 import PaginationBar from "@/Components/PaginationBar.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
@@ -25,6 +25,7 @@ const props = defineProps({
     canLogin: Boolean,
     canRegister: Boolean,
     donationRequestsData: Object,
+    recentDonationsData: Object,
 });
 
 const Swal = inject("$swal");
@@ -32,6 +33,7 @@ const Swal = inject("$swal");
 const donationRequests = computed(() => {
     return props.donationRequestsData;
 });
+const recentDonations = reactive(props.recentDonationsData);
 const isOpenDonationModel = ref(false);
 const currentOpenDonationId = ref(0);
 const donationForm = useForm({
@@ -80,10 +82,11 @@ const donate = () => {
         });
 };
 
-Echo.channel('donation')
-    .listen('RecentDonation', (e) => {
-        console.log(e);
-    });
+Echo.channel("donation").listen("RecentDonation", (e) => {
+    recentDonations.pop();
+
+    recentDonations.unshift(e.donation);
+});
 
 onMounted(() => {
     usePage().props.value.jetstream.flash?.successPayment
@@ -227,18 +230,27 @@ onMounted(() => {
                                 Recent Donator
                             </h3>
                             <div class="divide-y divide-gray-100 space-y-2">
-                                <div class="p-1 bg-white rounded-md">
-                                    <p>Amirul adli just donated MYR 5.00</p>
-                                </div>
-                                <div class="p-1 bg-white rounded-md">
-                                    <p>Amirul adli just donated MYR 5.00</p>
-                                </div>
-                                <div class="p-1 bg-white rounded-md">
-                                    <p>Amirul adli just donated MYR 5.00</p>
-                                </div>
-                                <div class="p-1 bg-white rounded-md">
-                                    <p>Amirul adli just donated MYR 5.00</p>
-                                </div>
+                                <template v-if="recentDonations.length > 0">
+                                    <template
+                                        v-for="donation in recentDonations"
+                                        :key="donation.id"
+                                    >
+                                        <div class="p-1 bg-white rounded-md">
+                                            <p>
+                                                <span class="text-indigo-500">
+                                                    {{
+                                                        donation.is_hidden
+                                                            ? "Someone"
+                                                            : donation.user.name
+                                                    }}
+                                                </span>
+                                                just donated
+                                                {{ donation.amount }} MYR
+                                            </p>
+                                        </div>
+                                    </template>
+                                </template>
+                                <template v-else> </template>
                             </div>
                         </div>
                     </div>
