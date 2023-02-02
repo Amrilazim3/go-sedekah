@@ -71,10 +71,9 @@ class DonationController extends Controller
         $user = $request->user();
 
         if ($user == null) {
-            $user = User::firstOrCreate([
+            $user = User::firstOrCreate(['email' => $request->email], [
                 'name' => $request->name,
-                'email' => $request->email,
-                'password' => null,
+                'password' => null
             ]);
         }
 
@@ -145,21 +144,21 @@ class DonationController extends Controller
             new SuccessfulDonation($donation)
         );
 
-        RecentDonation::dispatch(
-            Donation::select(
-                'id',
-                'user_id',
-                'bill_id',
-                'amount',
-                'is_hidden',
-                'created_at',
-            )
-                ->with(['user' => function ($query) {
-                    $query->select('id', 'name');
-                }])
-                ->find($donation->id)
-                ->toArray()
-        );
+        $donationToBroadcast = Donation::select(
+            'id',
+            'user_id',
+            'bill_id',
+            'amount',
+            'is_hidden',
+            'created_at',
+        )
+            ->with(['user' => function ($query) {
+                $query->select('id', 'name');
+            }])
+            ->find($donation->id)
+            ->toArray();
+
+        RecentDonation::dispatch($donationToBroadcast);
 
         $request->session()->flash('jetstream.flash.successPayment', true);
         return redirect('/');
