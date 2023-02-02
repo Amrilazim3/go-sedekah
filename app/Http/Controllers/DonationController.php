@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\RecentDonation;
 use App\Jobs\VerifyDonationExpiration;
 use App\Models\Bank;
 use App\Models\Donation;
@@ -133,7 +134,7 @@ class DonationController extends Controller
             );
 
             VerifyDonationExpiration::dispatch($donationRequest)->delay(now()->addDays(7));
-        } 
+        }
 
         $donation->update([
             'status' => 'paid'
@@ -142,6 +143,24 @@ class DonationController extends Controller
         Notification::send(
             User::find($donationRequest->user_id),
             new SuccessfulDonation($donation)
+        );
+
+        $recentDonation = Donation::select(
+            'id',
+            'user_id',
+            'bill_id',
+            'amount',
+            'created_at',
+        )
+            ->orderBy('created_at', 'desc')
+            ->with(['user' => function ($query) {
+                $query->select('id', 'name');
+            }])
+            ->first()
+            ->toArray();
+
+        RecentDonation::dispatch(
+            $recentDonation
         );
 
         $request->session()->flash('jetstream.flash.successPayment', true);
