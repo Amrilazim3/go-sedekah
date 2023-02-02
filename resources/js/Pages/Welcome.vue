@@ -83,6 +83,12 @@ const donate = () => {
 };
 
 Echo.channel("donation").listen("RecentDonation", (e) => {
+    if (
+        e.donation.id == recentDonations[0].id
+    ) {
+        return false;
+    }
+
     recentDonations.pop();
 
     recentDonations.unshift(e.donation);
