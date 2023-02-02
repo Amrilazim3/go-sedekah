@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\Donation;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -14,11 +15,11 @@ class RecentDonation implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $donations;
+    public $donation;
 
-    public function __construct($donations)
+    public function __construct($donation)
     {
-        $this->donations = $donations;
+        $this->donation = $donation;
     }
 
     public function broadcastOn()
