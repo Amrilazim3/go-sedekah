@@ -145,22 +145,20 @@ class DonationController extends Controller
             new SuccessfulDonation($donation)
         );
 
-        $recentDonation = Donation::select(
-            'id',
-            'user_id',
-            'bill_id',
-            'amount',
-            'created_at',
-        )
-            ->orderBy('created_at', 'desc')
-            ->with(['user' => function ($query) {
-                $query->select('id', 'name');
-            }])
-            ->first()
-            ->toArray();
-
         RecentDonation::dispatch(
-            $recentDonation
+            Donation::select(
+                'id',
+                'user_id',
+                'bill_id',
+                'amount',
+                'is_hidden',
+                'created_at',
+            )
+                ->with(['user' => function ($query) {
+                    $query->select('id', 'name');
+                }])
+                ->find($donation->id)
+                ->toArray()
         );
 
         $request->session()->flash('jetstream.flash.successPayment', true);
