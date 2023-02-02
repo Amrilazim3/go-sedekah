@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\RecentDonation;
 use App\Models\Donation;
 use App\Models\DonationRequest;
 use Illuminate\Foundation\Application;
@@ -33,14 +32,26 @@ class WelcomeController extends Controller
             ->whereColumn('currently_received', '!=', 'target_amount')
             ->paginate(6);
 
-        RecentDonation::dispatch(
-            Donation::orderBy('created_at', 'desc')->limit(5)->get()
-        );
+        $recentDonationsData = Donation::select(
+            'id',
+            'user_id',
+            'bill_id',
+            'amount',
+            'is_hidden',
+            'created_at',
+        )
+            ->orderBy('created_at', 'desc')
+            ->with(['user' => function ($query) {
+                $query->select('id', 'name');
+            }])
+            ->limit(5)
+            ->get();
 
         return Inertia::render('Welcome', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
-            'donationRequestsData' => $donationRequestsData
+            'donationRequestsData' => $donationRequestsData,
+            'recentDonationsData' => $recentDonationsData
         ])
             ->with('jetstream.flash.billplzID', session()->get('jetstream.flash.billplzID'))
             ->with('jetstream.flash.successPayment', session()->get('jetstream.flash.successPayment'));
