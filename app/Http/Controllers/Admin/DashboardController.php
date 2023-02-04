@@ -13,16 +13,13 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        $user = $request->user();
         $start = Carbon::now()->startOfMonth();
         $end = Carbon::now()->endOfMonth();
-        $donationRequestsIds = $user->donationRequests()->pluck('id');
-        
+
         return [
             'accumulatedDonation' => Donation::sum('amount'),
             'thisMonthAccumulatedDonation' => Donation::whereBetween('created_at', [$start, $end])->sum('amount'),
             'thisMonthDonors' => Donation::select('user_id')
-                ->whereIn('donation_request_id', $donationRequestsIds)
                 ->whereBetween('created_at', [$start, $end])
                 ->distinct()
                 ->get()
