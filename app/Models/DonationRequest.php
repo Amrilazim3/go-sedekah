@@ -31,6 +31,11 @@ class DonationRequest extends Model
         return $this->belongsTo(Bank::class, 'bank_id', 'id');
     }
 
+    public function donations()
+    {
+        return $this->hasMany(Donation::class, 'donation_request_id', 'id');
+    }
+
     public function setVerificationExpiryDate()
     {
         $this->update([
