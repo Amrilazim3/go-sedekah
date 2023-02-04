@@ -61,19 +61,19 @@ const props = defineProps({
                     <div
                         class="flex justify-between text-md leading-5 font-medium text-gray-900"
                     >
-                        <h3>For my personal medecine</h3>
-                        <h3 class="text-gray-600 text-sm">5 November 2021</h3>
+                        <h3>{{ props.data.recentDonationRequest.title }}</h3>
+                        <h3 class="text-gray-600 text-sm">
+                            {{ props.data.recentDonationRequest.created_at }}
+                        </h3>
                     </div>
                     <div class="mt-2 sm:flex sm:justify-between">
                         <div class="sm:flex">
                             <div class="mr-6 text-sm leading-5 text-gray-500">
                                 <h4 class="text-gray-700">Details</h4>
                                 <p>
-                                    My teeth last week broke becauase i eat to
-                                    much crab without stop for 3 hours, right
-                                    now my teeh is look old lady that need to be
-                                    replace and the cost for replacement is so
-                                    high
+                                    {{
+                                        props.data.recentDonationRequest.detail
+                                    }}
                                 </p>
                             </div>
                         </div>
@@ -87,7 +87,11 @@ const props = defineProps({
                                 <dd
                                     class="text-sm leading-5 font-medium text-blue-600"
                                 >
-                                    $50
+                                    {{
+                                        props.data.recentDonationRequest
+                                            .currently_received
+                                    }}
+                                    MYR
                                 </dd>
                             </dl>
                             <dl class="sm:ml-4">
@@ -97,7 +101,10 @@ const props = defineProps({
                                 <dd
                                     class="text-sm leading-5 font-medium text-green-600"
                                 >
-                                    $100
+                                    {{
+                                        props.data.recentDonationRequest
+                                            .target_amount
+                                    }}
                                 </dd>
                             </dl>
                         </div>
@@ -131,9 +138,14 @@ const props = defineProps({
         <h3 class="text-lg text-gray-800 font-semibold">Recent Donator</h3>
         <template v-if="props.data.recentDonator">
             <p class="text-gray-800">
-                <span class="text-indigo-500 font-semibold">{{
-                    props.data.recentDonator.user.name
-                }}</span>
+                <template v-if="props.data.recentDonator.is_hidden">
+                    <span class="text-indigo-500 font-semibold">Someone</span>
+                </template>
+                <template v-else>
+                    <span class="text-indigo-500 font-semibold">{{
+                        props.data.recentDonator.user.name
+                    }}</span>
+                </template>
                 donated you {{ props.data.recentDonator.amount }} MYR
             </p>
         </template>
