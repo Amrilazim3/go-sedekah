@@ -20,16 +20,21 @@ const props = defineProps({
                 <h3 class="text-md font-semibold text-indigo-500">
                     Your last donation :
                 </h3>
-                <h3 class="text-md">
-                    {{ props.data.recentDonation.created_at }} -
-                    {{ props.data.recentDonation.amount }} MYR
-                    <span class="text-indigo-500">
-                        ({{
-                            props.data.recentDonation.donation_request.user
-                                .name
-                        }})
-                    </span>
-                </h3>
+                <template v-if="props.data.recentDonation">
+                    <h3 class="text-md">
+                        {{ props.data.recentDonation.created_at }} -
+                        {{ props.data.recentDonation.amount }} MYR
+                        <span class="text-indigo-500">
+                            ({{
+                                props.data.recentDonation.donation_request.user
+                                    .name
+                            }})
+                        </span>
+                    </h3>
+                </template>
+                <template v-else>
+                    <h3>No donation made yet.</h3>
+                </template>
             </div>
         </div>
     </div>
