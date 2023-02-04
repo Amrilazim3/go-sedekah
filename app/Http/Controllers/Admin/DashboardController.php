@@ -32,7 +32,7 @@ class DashboardController extends Controller
                     $query->select(['id', 'name']);
                 }])
                 ->orderByDesc('created_at')
-                ->get(),
+                ->first(),
             'totalUsers' => [
                 'admin' => User::role('admin')->get()->count(),
                 'donor' => User::role('donor')->get()->count(),
