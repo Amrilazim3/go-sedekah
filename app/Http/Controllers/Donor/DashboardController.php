@@ -12,7 +12,7 @@ class DashboardController extends Controller
     {
         return [
             'totalDonationAmount' => Donation::where('user_id', $request->user()->id)->sum('amount'),
-            'recentDonationAmount' => Donation::with(['donationRequest' => function ($query) {
+            'recentDonation' => Donation::with(['donationRequest' => function ($query) {
                 $query->with(['user' => function ($query) {
                     $query->select(['id', 'name']);
                 }]);
