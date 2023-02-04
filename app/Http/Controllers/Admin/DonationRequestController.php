@@ -34,7 +34,7 @@ class DonationRequestController extends Controller
             ->with(['user' => function ($query) {
                 return $query->select(self::USER_COLUMN);
             }])
-            ->paginate(13, ['*'], 'requests');
+            ->paginate(5, ['*'], 'requests');
     }
 
     public function approve(DonationRequest $donationRequest, Request $request)
@@ -83,7 +83,7 @@ class DonationRequestController extends Controller
                         $query->where('name', 'like', '%' . $search . '%');
                     });
             })
-            ->limit(10)
+            ->limit(5)
             ->get();
     }
 
@@ -94,7 +94,7 @@ class DonationRequestController extends Controller
                 return $query->select(self::USER_COLUMN);
             }])
             ->where('status', $status)
-            ->paginate(13, ['*'], 'requests');
+            ->paginate(5, ['*'], 'requests');
     }
 
     public function verify(DonationRequest $donationRequest, Request $request)
