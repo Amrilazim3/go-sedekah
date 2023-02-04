@@ -51,74 +51,79 @@ const props = defineProps({
     <!-- recent donation request -->
     <div>
         <h3 class="text-lg text-gray-800 font-semibold mb-2">
-            Recent Approved Donation Requests
+            Recent Approved Donation Request
         </h3>
-        <div class="relative rounded-md shadow-sm">
-            <div
-                class="px-4 py-5 bg-indigo-100 rounded-tr-md rounded-tl-md sm:p-6"
-            >
-                <div class="flex items-center justify-between">
-                    <div
-                        class="text-md font-semibold leading-5 text-indigo-500"
-                    >
-                        {{ props.data.recentApprovedDonationRequest.user.name }}
-                    </div>
-                </div>
-                <div class="mt-2 flex justify-between leading-5">
-                    <h3 class="text-md font-medium text-gray-900 underline">
-                        {{ props.data.recentApprovedDonationRequest.title }}
-                    </h3>
-                    <h3 class="text-gray-600 text-sm">
-                        {{
-                            props.data.recentApprovedDonationRequest.created_at
-                        }}
-                    </h3>
-                </div>
-                <div class="mt-2 sm:flex sm:justify-between">
-                    <div class="sm:flex">
-                        <div class="mr-6 text-sm leading-5 text-gray-500">
-                            <h4 class="text-gray-700">Details</h4>
-                            <p>
-                                {{
-                                    props.data.recentApprovedDonationRequest
-                                        .detail
-                                }}
-                            </p>
+        <template v-if="props.data.recentApprovedDonationRequest">
+            <div class="relative rounded-md shadow-sm">
+                <div
+                    class="px-4 py-5 bg-indigo-100 rounded-tr-md rounded-tl-md sm:p-6"
+                >
+                    <div class="flex items-center justify-between">
+                        <div
+                            class="text-md font-semibold leading-5 text-indigo-500"
+                        >
+                            {{ props.data.recentApprovedDonationRequest.user.name }}
                         </div>
                     </div>
-                    <div
-                        class="mt-4 sm:mt-0 sm:ml-4 sm:flex-shrink-0 sm:flex sm:justify-end"
-                    >
-                        <dl>
-                            <dt class="text-sm text-gray-700">
-                                Current Donation Received
-                            </dt>
-                            <dd
-                                class="text-sm leading-5 font-medium text-blue-600"
-                            >
-                                {{
-                                    props.data.recentApprovedDonationRequest
-                                        .currently_received
-                                }}
-                            </dd>
-                        </dl>
-                        <dl class="sm:ml-4">
-                            <dt class="text-sm text-gray-700">
-                                Donation Goals
-                            </dt>
-                            <dd
-                                class="text-sm leading-5 font-medium text-green-600"
-                            >
-                                {{
-                                    props.data.recentApprovedDonationRequest
-                                        .target_amount
-                                }}
-                            </dd>
-                        </dl>
+                    <div class="mt-2 flex justify-between leading-5">
+                        <h3 class="text-md font-medium text-gray-900 underline">
+                            {{ props.data.recentApprovedDonationRequest.title }}
+                        </h3>
+                        <h3 class="text-gray-600 text-sm">
+                            {{
+                                props.data.recentApprovedDonationRequest.created_at
+                            }}
+                        </h3>
+                    </div>
+                    <div class="mt-2 sm:flex sm:justify-between">
+                        <div class="sm:flex">
+                            <div class="mr-6 text-sm leading-5 text-gray-500">
+                                <h4 class="text-gray-700">Details</h4>
+                                <p>
+                                    {{
+                                        props.data.recentApprovedDonationRequest
+                                            .detail
+                                    }}
+                                </p>
+                            </div>
+                        </div>
+                        <div
+                            class="mt-4 sm:mt-0 sm:ml-4 sm:flex-shrink-0 sm:flex sm:justify-end"
+                        >
+                            <dl>
+                                <dt class="text-sm text-gray-700">
+                                    Current Donation Received
+                                </dt>
+                                <dd
+                                    class="text-sm leading-5 font-medium text-blue-600"
+                                >
+                                    {{
+                                        props.data.recentApprovedDonationRequest
+                                            .currently_received
+                                    }}
+                                </dd>
+                            </dl>
+                            <dl class="sm:ml-4">
+                                <dt class="text-sm text-gray-700">
+                                    Donation Goals
+                                </dt>
+                                <dd
+                                    class="text-sm leading-5 font-medium text-green-600"
+                                >
+                                    {{
+                                        props.data.recentApprovedDonationRequest
+                                            .target_amount
+                                    }}
+                                </dd>
+                            </dl>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </template>
+        <template v-else>
+            <h3>No approved donation request yet.</h3>
+        </template>
     </div>
 
     <div class="py-8">
