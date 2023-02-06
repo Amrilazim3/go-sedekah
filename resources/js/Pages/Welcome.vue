@@ -83,6 +83,8 @@ const donate = () => {
 };
 
 Echo.channel("donation").listen("RecentDonation", (e) => {
+    console.log(e);
+
     if (
         e.donation.id == recentDonations[0].id
     ) {
