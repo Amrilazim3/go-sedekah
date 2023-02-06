@@ -211,7 +211,7 @@ onMounted(() => {
             <main class="mt-14 w-full">
                 <div
                     style="
-                        background-image: url(https://https://go-sedekah.amrilazim.com/resources/d8f80683-6d12-49cc-a24f-f44853eaaed4.jpeg/resources/d8f80683-6d12-49cc-a24f-f44853eaaed4.jpeg);
+                        background-image: url(https://go-sedekah.amrilazim.com/resources/d8f80683-6d12-49cc-a24f-f44853eaaed4.jpeg/resources/d8f80683-6d12-49cc-a24f-f44853eaaed4.jpeg);
                         background-repeat: no-repeat;
                         background-position: center center;
                         background-size: cover;
