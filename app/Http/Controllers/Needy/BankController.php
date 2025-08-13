@@ -72,20 +72,20 @@ class BankController extends Controller
 
         $bankDetail = BankDetail::where('code', $request->bankCode)->first();
 
-        try {
-            Billplz::bank()->create(
-                $request->name,
-                $request->bankAccountIc,
-                $request->bankAccountNumber,
-                $request->bankCode,
-                false
-            );
-        } catch (Exception $e) {
-            return redirect()->back()->withErrors(
-                'Bank account number cannot be process with our third party api, maybe the number has been used or it does not matching the rule of the chosen bank name, please recheck your number.',
-                'billplzError'
-            );
-        }
+        // try {
+        //     Billplz::bank()->create(
+        //         $request->name,
+        //         $request->bankAccountIc,
+        //         $request->bankAccountNumber,
+        //         $request->bankCode,
+        //         false
+        //     );
+        // } catch (Exception $e) {
+        //     return redirect()->back()->withErrors(
+        //         'Bank account number cannot be process with our third party api, maybe the number has been used or it does not matching the rule of the chosen bank name, please recheck your number.',
+        //         'billplzError'
+        //     );
+        // }
 
         Bank::create([
             'user_id' => $request->user()->id,
